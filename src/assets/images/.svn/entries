@@ -1,0 +1,42 @@
+8
+
+dir
+2994
+svn+ssh://tapio@192.168.0.101/repository/trunk/www_tietokannat/demo/sls/images
+svn+ssh://tapio@192.168.0.101/repository
+
+
+
+2010-02-20T18:40:58.441626Z
+2981
+tapio
+
+
+svn:special svn:externals svn:needs-lock
+
+logo.jpg
+file
+
+
+
+
+2010-02-20T17:53:03.000000Z
+ee725132a4d97f17ed1ad49300e3eb48
+2010-02-20T18:40:58.441626Z
+2981
+tapio
+has-props
+
+shade.jpg
+file
+
+
+
+
+2010-02-20T17:53:38.000000Z
+305f9606d0d9f052cd6d488a42cff75c
+2010-02-20T18:40:58.441626Z
+2981
+tapio
+has-props
+

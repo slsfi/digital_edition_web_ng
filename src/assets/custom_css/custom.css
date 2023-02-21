@@ -1,4 +1,368 @@
-/*
-THIS FILE WILL BE REPLACED BY PROJECT SPECIFIC ITEMS
-DO NOT MODIFY THIS FILE
-*/
+:root {
+  /* Base colors */
+  --primary-color: #2b3d55;
+  --secondary-color: #d1d2c5;
+  --primary-color-rgb: 43, 61, 85; /* RGB-version of --primary-color, used when an alpha channel needs to be added to the color */
+  --text-color-on-primary-color-background: #fff;
+  --text-color-on-secondary-color-background: #000;
+  --default-link-color: #8d1c60;
+  --main-background-color: #ededed;
+
+  /* Custom color variables */
+  --tertiary-color: #375181; /* previous: #203c6e */
+  --tertiary-color-rgb: 55, 81, 129;
+
+  /* TOC, i.e. the left navigation */
+  --toc-text-color: #fff;
+  --toc-background-color: #623247;
+  --toc-border-right-color: #dedede;
+  --toc-arrow-color: var(--toc-text-color);
+  --toc-divider-color: #6d5252;
+  --toc-hover-color: #bc97a7;
+  --toc-description-text-color: #e0e0e0;
+  --toc-collection-title-text-color: var(--toc-text-color);
+  --toc-collection-title-background-color: #3f1f2e;
+  --toc-back-button-text-color: #fff;
+  --toc-back-button-arrow-color: var(--toc-back-button-text-color);
+  --toc-back-button-background-color: #4e2839;
+  --toc-selected-item-text-color: var(--toc-text-color);
+  --toc-selected-item-font-weight: normal;
+  --toc-selected-item-arrow-color: var(--toc-selected-item-text-color);
+  --toc-selected-item-background-color: #8f4f6b;
+  --toc-selected-item-border-color: transparent;
+  --toc-selected-item-divider-color: transparent;
+  --toc-selected-item-description-text-color: #f7f7f7;
+
+  /* Home-page */
+  --page-home-portrait-mode-background-color-below-image: var(
+    --secondary-color
+  );
+
+  /* Introduction-page */
+  --page-introduction-separate-toc-background-color: var(--secondary-color);
+  --page-introduction-separate-toc-text-color: var(
+    --text-color-on-secondary-color-background
+  );
+
+  /* Read-page */
+  --page-read-columns-header-background-color: #ccced3;
+  --page-read-columns-background-color: #fafafa;
+  --page-read-add-column-text-color: var(--dark-color);
+  --page-read-add-column-background-color: #ccced3;
+
+  /* Top-menu */
+  --top-menu-toolbar-bottom-border: 1px solid #647484;
+  /*--top-menu-button-filter:                                 drop-shadow(0 1px 3px rgba(35, 35, 35, .3));*/
+
+  /* Text-changer in read-page */
+  --text-changer-background-color-mobile-mode: #adadad;
+  --text-changer-text-color-mobile-mode: #000;
+
+  /* Facsimile column in read-page */
+  --facsimile-column-page-number-wrapper-background-color: var(
+    --main-background-color
+  );
+
+  /* Elastic search */
+  /*--elastic-search-facet-background-color:                  transparent;*/
+  /*--elastic-search-facet-border-color:                      #ccc;*/
+  /*--elastic-search-hititem-border-color:                    #ccc;*/
+  /*--elastic-search-hititem-hover-background-color:          #fff;*/
+  /*--elastic-search-hititem-hover-border-color:              var(--primary-color);*/
+  /*--elastic-search-search-match-highlight-background-color: #a5d7a5;*/
+  /*--elastic-search-search-match-highlight-text-color:       #000;*/
+  --elastic-search-date-histogram-year-bar-color: var(--primary-color);
+  --elastic-search-date-histogram-year-hover-color: var(--secondary-color);
+  --elastic-search-date-histogram-year-in-range-color: #c71a23;
+
+  /* Simple search */
+  --simple-search-search-match-highlight-background-color: var(--primary-color);
+  --simple-search-search-match-highlight-text-color: var(
+    --text-color-on-primary-color-background
+  );
+  --simple-search-hititem-hover-background-color-rgb: var(--primary-color-rgb);
+  --simple-search-hititem-hover-background-color-alpha: 0.1;
+  --simple-search-hititem-background-color: var(--main-background-color);
+  --simple-search-selected-search-suggestion-background-color: var(
+    --secondary-color
+  );
+
+  /* Media-collections */
+  --media-collection-card-content-background-color: #d9d9d9;
+  --media-collection-card-content-border-top-color: var(--default-link-color);
+  --media-collection-filter-select-background-color: #d9d9d9;
+
+  /* Indices, i.e. person-search, place-search, tag-search and work-search */
+  --index-list-item-background-color: var(--main-background-color);
+  --index-list-divider-background-color: var(--secondary-color);
+
+  /* Tutorial */
+  --tutorial-tooltip-background-color: #4f7b8c;
+  --tutorial-tooltip-text-color: #fff;
+  --tutorial-tooltip-font-size: 1.0625rem;
+
+  /* Info overlay */
+  --infoOverlay-background-color: #333;
+  --infoOverlay-text-color: #e3e3e3;
+  --info-overlay-link-to-reference-color: #f37bc3;
+
+  /* Tooltips */
+  --tooltip-background-color: #fafafa;
+
+  /* Ion-modal */
+  --ion-modal-content-background-color: var(--main-background-color);
+  --ion-modal-item-background-color: var(--main-background-color);
+  --ion-modal-item-divider-border-bottom-color: #dedede;
+
+  /* Ion-popover */
+  --ion-popover-content-background-color: var(--main-background-color);
+  --ion-popover-item-border-bottom-color: #dedede;
+  --ion-popover-list-header-background-color: #ccced3;
+
+  /* Ion-segment */
+  --segment-activated-background-color: var(--primary-color);
+  --segment-activated-text-color: var(--text-color-on-primary-color-background);
+
+  /* Buttons */
+  --button-background-color: var(--primary-color);
+  --button-background-color-rgb: var(--primary-color-rgb);
+  --button-hover-background-color: var(--button-background-color);
+  --button-text-color: var(--text-color-on-primary-color-background);
+  --button-clear-text-color: var(--tertiary-color);
+  --fab-button-primary-background-color: #623247;
+  --fab-button-primary-icon-color: var(
+    --text-color-on-primary-color-background
+  );
+  --fab-button-secondary-background-color: #e9e9e9;
+  --fab-button-secondary-icon-color: #000;
+}
+
+/* Unika stilar för Zacharias Topelius Skrifter */
+
+/* Sidans rubrik på ingångssidan. */
+home-page .portrait-mode .site-title {
+  font-family: "Crimson Pro", "SourceSerif", serif;
+  font-weight: 300;
+  font-style: normal;
+  text-transform: uppercase;
+  font-size: 2.8em;
+  letter-spacing: 0.042em;
+  text-align: center;
+}
+home-page .frontpage-editions-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  column-gap: 1.5em;
+  margin: 2.75em 0;
+}
+home-page .frontpage-editions-list-col {
+  width: 100%;
+  max-width: 440px;
+}
+home-page .frontpage-editions-list p {
+  margin: 0;
+}
+home-page .frontpage-editions-list ul {
+  margin-top: 0;
+}
+home-page .frontpage-editions-list li {
+  padding-bottom: 0.25em;
+}
+
+/* I listan med utgåvor ska utgåvornas titlar inte stå under omslagsbilderna. */
+.digital-edition-list-card-content {
+  display: none;
+}
+
+/* Indrag för strofer i Publicistiken och dramatiken i Läsning för barn. */
+div.tei p.lgIndent {
+  margin-left: 80px !important;
+  text-indent: -35px !important;
+}
+div.tei p.lgIndent.lIndent {
+  margin-left: 115px !important;
+  text-indent: -35px !important;
+}
+
+/* Rubrikstilar för akter och scener i Dramatik. */
+div.tei h2.tei.act {
+  font-style: normal;
+  font-weight: 400;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin: 4em 0 1.25em 0;
+}
+div.tei h3.tei.scene {
+  font-style: italic;
+  font-weight: 400;
+  text-align: center;
+  margin: 2.5em 0 1em 0;
+}
+
+/* Marginaler i Dramatik. */
+div.tei div.drama p.center + p.invisiblelg {
+  margin-bottom: 0 !important;
+}
+div.tei div.drama p.invisiblelg + p.center:not(.topMargin) {
+  margin-top: -1em !important;
+}
+div.tei div.drama h3.scene + p.noIndent + p.invisiblelg + p.l {
+  margin-top: -1em !important;
+}
+div.tei div.drama p.center.topMargin + h5.sub2est {
+  margin-top: 0 !important;
+}
+div.tei div.drama p.center.topMargin + h5.sub2est + p.invisiblelg {
+  margin-bottom: 0 !important;
+}
+div.tei div.drama p.center.topMargin + h5.sub2est + p.invisiblelg + p.l {
+  margin-top: -0.8em !important;
+}
+div.tei div.drama h5.sub2est + p.center.topMargin {
+  margin-top: -0.8em !important;
+}
+div.tei div.drama h5.sub2est + p.invisiblelg {
+  margin-bottom: 0 !important;
+}
+div.tei div.drama h5.sub2est + p.invisiblelg + p.l {
+  margin-top: -0.8em !important;
+}
+
+div.tei p.tei.dramasub {
+  font-size: 1.0589em;
+  font-style: italic;
+  font-weight: normal;
+  text-align: center;
+  margin: 1em 0 1.5em 0;
+  text-indent: 0;
+}
+div.tei p.tei.dramasub + h2.tei.act {
+  margin-top: 2em;
+}
+div.tei h4.tei.castlistheading {
+  font-weight: bold;
+}
+div.tei h5.tei.incorppoem {
+  text-align: left;
+  font-weight: normal;
+  letter-spacing: 0.1em;
+  margin: 1.3em 0 0.5em 45px;
+}
+div.tei h5.tei.incorppoem > .stageincorpheading {
+  letter-spacing: normal;
+}
+div.tei h5.tei.incorppoem + p.tei.invisiblelg {
+  margin-bottom: 0 !important;
+}
+div.tei h6.tei.incorpsub {
+  text-align: center;
+  font-weight: normal;
+  font-style: normal;
+  margin: 1em 0 0 0;
+}
+div.tei .castlistwrapper {
+  margin: 2em 0 1.5em 1.25em;
+}
+div.tei .dramaversereply {
+  margin: 1em 0 0 45px;
+}
+div.tei h5.tei.incorppoem + .dramaversereply {
+  margin-top: 0;
+}
+div.tei .dramaversereply .negIndent {
+  margin-left: -45px;
+  text-indent: 0;
+}
+
+.tei.show_pageNumbering div.dramaversereply span.paragraph_number,
+.tei.show_pageNumbering p.lgIndent span.paragraph_number {
+  margin-left: -80px;
+}
+.tei.show_pageNumbering p.lgIndent.lIndent span.paragraph_number {
+  margin-left: -115px;
+}
+
+div.tei .noMarginsRight {
+  text-align: right;
+  text-indent: 0;
+  margin: 0;
+}
+
+/* Unesco logon i markdown på startsidan. */
+home-page img[src$="#front-page-unesco-logo"] {
+  display: block;
+  margin: 3em auto;
+}
+
+/* Högerställ spalten med verkdel i tabeller över delutgåvorna. */
+page-content table.editions-list td:first-child {
+  text-align: right;
+}
+page-content table.editions-list td {
+  padding-bottom: 0;
+}
+page-content table.editions-list tr:last-child > td {
+  padding-bottom: 0.5em;
+}
+
+/* Bilder i kringtexter */
+page-content figure {
+  margin: 1.75em 0;
+}
+page-content figure.centered {
+  margin: 1.75em auto;
+}
+page-content figure figcaption {
+  font-style: italic;
+  margin-top: 0.5em;
+  font-size: 1rem;
+}
+
+/* Tabell utan marginaler i kringtexter */
+page-content div.md_content markdown table.no_margins_table td {
+  padding: 0 0.75em 0 0;
+}
+page-content div.md_content markdown table.no_margins_table td:last-child {
+  padding: 0;
+}
+
+/* Sökinstruktionerna i avancerade sökningen */
+page-elastic-search ion-row.page-info-row .info.markdown details {
+  padding: 0.5em 0.5em 0;
+}
+
+page-elastic-search ion-row.page-info-row .info.markdown summary {
+  font-weight: bold;
+  margin: -0.5em -0.5em 0;
+  padding: 0.5em;
+}
+
+page-elastic-search ion-row.page-info-row .info.markdown details[open] {
+  border-bottom: 1px solid #aaa;
+  padding: 0.5em;
+}
+
+page-elastic-search ion-row.page-info-row .info.markdown details[open] summary {
+  border-bottom: 1px solid #aaa;
+  margin-bottom: 0.5em;
+}
+
+page-elastic-search ion-row.page-info-row .info.markdown details ul li {
+  line-height: 1.5;
+}
+
+page-elastic-search ion-row.page-info-row .info.markdown details ul li + li {
+  padding-top: 0.75em;
+}
+
+page-elastic-search .page-info-row .info.markdown .query_example {
+  background-color: #fdfdfd;
+  padding: 0.125em 0.25em;
+  color: var(--button-background-color);
+  font-size: 0.889em;
+  font-family: monospace;
+  border-radius: 3px;
+  border: 1px solid var(--button-background-color);
+}
