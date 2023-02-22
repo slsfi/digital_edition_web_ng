@@ -4,13 +4,13 @@
 	font-size: 1.125rem;
 }
 
-ion-content > .scroll-content {
+ion-content::part(scroll) {
 	overflow: auto;
 	display: flex;
 	flex-direction: column;
 }
 
-ion-content.portrait-mode > .scroll-content {
+ion-content.portrait-mode::part(scroll) {
 	flex-direction: row;
 }
 
@@ -215,7 +215,7 @@ p {
 }
 
 @media only screen and (max-width: 900px) {
-	ion-content.portrait-mode > .scroll-content {
+	ion-content.portrait-mode::part(scroll) {
 		flex-direction: column;
 	}
 
@@ -272,7 +272,7 @@ p {
 }
 
 /*The rules below are old and apparently not applied at all. */
-
+/*
 .scroll-content .content.content-md {
 	display: none;
 }
@@ -303,3 +303,4 @@ p {
 		text-align: left;
 	}
 }
+*/
