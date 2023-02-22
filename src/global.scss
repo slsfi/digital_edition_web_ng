@@ -335,6 +335,15 @@
   // automatically applied to the <body> element in the app.
   
   // @font-face rules should go here!
+
+
+  ion-content {
+    --background: var(--main-background-color);
+  }
+
+  ion-toolbar {
+    --background: var(--primary-color);
+  }
   
   
   // START OF ORIGINAL VARIABLES.SCSS RULES
