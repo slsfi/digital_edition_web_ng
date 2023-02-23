@@ -21,7 +21,7 @@ import { TextService } from 'src/app/services/texts/text.service';
 export class HomePage {
   appName?: string;
   appSubtitle?: string;
-  appMachineName: string;
+  appMachineName = '';
   homeContent?: string;
   homeFooterContent?: string;
   imageOrientationPortrait: Boolean = false;
@@ -104,14 +104,8 @@ export class HomePage {
       this.imageUrl = 'assets/images/frontpage-image-landscape.jpg';
     }
 
-    // Get viewport width
-    const vw = Math.max(
-      document.documentElement.clientWidth,
-      window.innerWidth || 0
-    );
-
-    // Change front page image if viewport size max 900px and the image orientation is set to portrait
-    if (vw <= 900 && this.imageOrientationPortrait) {
+    // Change front page image if not in desktop mode and the image orientation is set to portrait
+    if (!this.userSettingsService.isDesktop() && this.imageOrientationPortrait) {
       try {
         const imageUrlMobile = this.config.getSettings(
           'frontpageConfig.portraitImageUrlInMobileMode'
@@ -193,24 +187,24 @@ export class HomePage {
   }
 
   getMdContent(fileID: string) {
-    this.mdContentService.getMdContent(fileID).subscribe(
-      (text) => {
+    this.mdContentService.getMdContent(fileID).subscribe({
+      next: (text) => {
         this.homeContent = text.content;
       },
-      (error) => {
-        this.errorMessage = <any>error;
+      error: (e) => {
+        this.errorMessage = <any>e;
       }
-    );
+    });
   }
 
   getFooterMdContent(fileID: string) {
-    this.mdContentService.getMdContent(fileID).subscribe(
-      (text) => {
+    this.mdContentService.getMdContent(fileID).subscribe({
+      next: (text) => {
         this.homeFooterContent = text.content;
       },
-      (error) => {
-        this.errorMessage = <any>error;
+      error: (e) => {
+        this.errorMessage = <any>e;
       }
-    );
+    });
   }
 }
