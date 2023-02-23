@@ -8,18 +8,32 @@ export class UserSettingsService {
   private _splitPaneOpen = false;
   private _splitPanePossible = true;
   private _mode?: string;
-  private _language?: string;
 
   constructor(
     private platform: Platform,
     private storage: StorageService,
   ) {
-
     this.detectPlatform();
-    // this.detectSplitPane();
   }
 
   detectPlatform() {
+    // mode is either desktop or mobile
+    // auto = mobile on mobile devices and desktop on desktop and tablet devices
+    try {
+      if (this.platform.is('mobile')) {
+        this._mode = 'mobile';
+      } else {
+        this._mode = 'auto';
+      }
+    } catch (e) {
+      this._mode = 'desktop';
+    }
+
+    // ! This is the old code from Ionic3. It doesn't work any more because
+    // getting the mode from storage is async and takes too long --> pages
+    // are loaded before the mode is set and it causes problems when this
+    // service can't tell which platform the app is running on.
+    /*
     this.storage.get('mode').then((mode) => {
       // mode is either desktop or mobile
       if (mode) {
@@ -32,6 +46,7 @@ export class UserSettingsService {
         }
       }
     });
+    */
   }
 
   setAuto() {
