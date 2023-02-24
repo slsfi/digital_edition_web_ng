@@ -1,3 +1,36 @@
+/*
 ion-router-outlet {
     margin-top: 18px;
+}
+*/
+
+ion-split-pane {
+    top: 70px;
+
+    // Styles for the navigation menu on the left
+    .split-pane-side {
+        position: relative;
+        width: 0;
+        max-width: 0;
+        /*
+        transition: 1s all ease-in;
+        transform: none !important;
+        z-index: 7 !important;
+        */
+    }
+    &.split-pane-visible > .split-pane-side {
+        border-right: none;
+    }
+    &.split-pane-visible > .split-pane-side {
+        max-width: 345px;
+    }
+}
+
+// On small screens, make the left navigation menu into an overlay menu so the content doesn't reflow when opening or closing the menu.
+@media only screen and (max-width: 820px) {
+    ion-split-pane.split-pane-visible > .split-pane-side {
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
 }
