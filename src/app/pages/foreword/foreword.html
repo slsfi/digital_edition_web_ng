@@ -7,16 +7,16 @@
         <ion-grid>
             <ion-row class="secondary-toolbar-icons-wrapper" nowrap align-items-center>
               <ion-col *ngIf="showURNButton">
-                <button ion-button clear (click)="showReference()" class="sec-menu-button">
-                  <ion-icon class="urn-icon" name="share-alt"></ion-icon>
+                <ion-button fill="clear" (click)="showReference()" class="sec-menu-button">
+                  <ion-icon class="urn-icon" name="share"></ion-icon>
                   <span *ngIf="!(userSettingsService.isMobile())" class="side-title">{{'Reference.refer' | translate }}</span>
-                </button>
+                </ion-button>
               </ion-col>
               <ion-col *ngIf="showDisplayOptionsButton">
-                <button ion-button clear #settingsIconElement (click)="showReadSettingsPopover($event)" class="sec-menu-button" id="settings-icon">
+                <ion-button fill="clear" #settingsIconElement (click)="showReadSettingsPopover($event)" class="sec-menu-button" id="settings-icon">
                   <ion-icon class="settings-icon" name="settings"></ion-icon>
                   <span *ngIf="!(userSettingsService.isMobile())" class="side-title">{{'Read.Popover.Options' | translate }}</span>
-                </button>
+                </ion-button>
               </ion-col>
             </ion-row>
         </ion-grid>

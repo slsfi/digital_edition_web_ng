@@ -1,10 +1,10 @@
 <ion-header>
   <ion-toolbar>
     <ion-title>{{"Occurrences.Title" | translate}}</ion-title>
-    <ion-buttons end>
-      <button class="close-button" (click)="cancel()" ion-button>
+    <ion-buttons slot="end">
+      <ion-button class="close-button" (click)="cancel()">
         <ion-icon name="close"></ion-icon>
-      </button>
+      </ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
@@ -156,7 +156,7 @@
                     <div id="map" [ngClass]="isFiltersShown()?'map':'map_hidden'"></div>
                 </ion-item>
                 <ion-item text-wrap style="margin-top: 10px;" *ngIf="galleryOccurrenceData.length > 0" (click)="openGallery(galleryOccurrenceData[0])">
-                  <button ion-button outline item-end>{{"TOC.MediaCollections" | translate}}</button>
+                  <ion-button fill="outline" slot="end">{{"TOC.MediaCollections" | translate}}</ion-button>
                 </ion-item>
                 <ion-item-divider class="occurrences_title">{{"Occurrences.Title" | translate}}</ion-item-divider>
                 <ion-list class="occurrences_list">
@@ -184,12 +184,12 @@
                               {{"Occurrences.Song" | translate}}: {{publication.occurrences[0].description}}
                             </div>
                           </ion-item>
-                          <button *ngIf="publication.occurrences[0].textType == 'ms'" ion-button clear item-end>{{"Occurrences.Manuscript" | translate}}</button>
-                          <button *ngIf="publication.occurrences[0].textType == 'var'" ion-button clear item-end>{{"Occurrences.Variation" | translate}}</button>
-                          <button *ngIf="publication.occurrences[0].textType == 'com'" ion-button clear item-end>{{"Occurrences.Commentary" | translate}}</button>
-                          <button *ngIf="publication.occurrences[0].textType == 'facs'" ion-button clear item-end>{{"Occurrences.Facsimile" | translate}}</button>
-                          <button *ngIf="publication.occurrences[0].textType == 'est'" ion-button clear item-end>{{"Occurrences.Established" | translate}}</button>
-                          <button *ngIf="publication.occurrences[0].textType == 'song'" ion-button clear item-end>{{"Occurrences.Song" | translate}}</button>
+                          <ion-button *ngIf="publication.occurrences[0].textType == 'ms'" fill="clear" slot="end">{{"Occurrences.Manuscript" | translate}}</ion-button>
+                          <ion-button *ngIf="publication.occurrences[0].textType == 'var'" fill="clear" slot="end">{{"Occurrences.Variation" | translate}}</ion-button>
+                          <ion-button *ngIf="publication.occurrences[0].textType == 'com'" fill="clear" slot="end">{{"Occurrences.Commentary" | translate}}</ion-button>
+                          <ion-button *ngIf="publication.occurrences[0].textType == 'facs'" fill="clear" slot="end">{{"Occurrences.Facsimile" | translate}}</ion-button>
+                          <ion-button *ngIf="publication.occurrences[0].textType == 'est'" fill="clear" slot="end">{{"Occurrences.Established" | translate}}</ion-button>
+                          <ion-button *ngIf="publication.occurrences[0].textType == 'song'" fill="clear" slot="end">{{"Occurrences.Song" | translate}}</ion-button>
                         </ion-item>
                       </ion-list>
                     </ion-item-group>

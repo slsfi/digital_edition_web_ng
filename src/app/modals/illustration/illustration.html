@@ -6,24 +6,24 @@
 -->
 <ion-header>
   <ion-toolbar *ngIf="showDescription">
-    <ion-buttons end>
-      <button class="close-button" (click)="cancel()" ion-button>
+    <ion-buttons slot="end">
+      <ion-button class="close-button" (click)="cancel()">
         <ion-icon name="close"></ion-icon>
-      </button>
+      </ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content padding class="illustration-content">
-  <ion-fab right *ngIf="zoomImage" class="close-modal-button">
-      <button ion-fab mini (click)="cancel()">
+  <ion-fab horizontal="end" *ngIf="zoomImage" class="close-modal-button">
+      <ion-fab-button (click)="cancel()">
         <ion-icon name="close"></ion-icon>
-      </button>
+      </ion-fab-button>
   </ion-fab>
-  <ion-fab *ngIf="showDescription" class="expand-button" middle right>
-    <button ion-fab mini (click)="zoomImg()">
+  <ion-fab *ngIf="showDescription" class="expand-button" vertical="center" horizontal="end">
+    <ion-fab-button (click)="zoomImg()">
       <ion-icon name="expand"></ion-icon>
-    </button>
+    </ion-fab-button>
   </ion-fab>
   <ion-col *ngIf="showDescription">
     <ion-card class="illustration-box">
@@ -52,15 +52,15 @@
       (touchend)="onTouchEnd($event)"
       (mousedown)="$event.preventDefault();"
     >
-  <ion-fab *ngIf="zoomImage && userSettingsService.isDesktop()" class="zoom-buttons" right middle>
-    <button ion-fab mini color="secondary" (click)="zoomIn()">
+  <ion-fab *ngIf="zoomImage && userSettingsService.isDesktop()" class="zoom-buttons" horizontal="end" vertical="center">
+    <ion-fab-button color="secondary" (click)="zoomIn()">
       <ion-icon name="add"></ion-icon>
-    </button>
-    <button ion-fab mini color="secondary" (click)="zoomOut()">
+    </ion-fab-button>
+    <ion-fab-button color="secondary" (click)="zoomOut()">
       <ion-icon name="remove"></ion-icon>
-    </button>
-    <button ion-fab mini color="secondary" (click)="resetZoom()">
+    </ion-fab-button>
+    <ion-fab-button color="secondary" (click)="resetZoom()">
       <ion-icon name="undo"></ion-icon>
-    </button>
+    </ion-fab-button>
   </ion-fab>
 </ion-content>

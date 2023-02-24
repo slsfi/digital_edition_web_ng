@@ -8,9 +8,9 @@
         <ion-grid>
             <ion-row class="secondary-toolbar-icons-wrapper" nowrap align-items-center justify-content-end>
               <ion-col class="navigation-buttons-col" *ngIf="(userSettingsService.isMobile() === false && userSettingsService.isTablet() === false)">
-                <button ion-button clear class="navigation-buttons" [ngClass]="atStart ? 'disabled-nav-button' : ''" id="epub-arrow-prev" (click)="prev()" *ngIf="!loading">
+                <ion-button fill="clear" class="navigation-buttons" [ngClass]="atStart ? 'disabled-nav-button' : ''" id="epub-arrow-prev" (click)="prev()" *ngIf="!loading">
                   <ion-icon name="arrow-back"></ion-icon>
-                </button>
+                </ion-button>
               </ion-col>
               <ion-col class="navigation-buttons-col current-section-label-col" *ngIf="(userSettingsService.isMobile() === false && userSettingsService.isTablet() === false)">
                 <div class="current-section-label" *ngIf="!loading">
@@ -18,33 +18,33 @@
                 </div>
               </ion-col>
               <ion-col class="navigation-buttons-col" *ngIf="(userSettingsService.isMobile() === false && userSettingsService.isTablet() === false)">
-                <button ion-button clear class="navigation-buttons" [ngClass]="atEnd ? 'disabled-nav-button' : ''" id="epub-arrow-next" (click)="next()" *ngIf="!loading">
+                <ion-button fill="clear" class="navigation-buttons" [ngClass]="atEnd ? 'disabled-nav-button' : ''" id="epub-arrow-next" (click)="next()" *ngIf="!loading">
                   <ion-icon name="arrow-forward"></ion-icon>
-                </button>
+                </ion-button>
               </ion-col>
               <ion-col class="navigation-buttons-toc">
-                <button ion-button clear class="sec-menu-button" (click)="downloadEpub()">
+                <ion-button fill="clear" class="sec-menu-button" (click)="downloadEpub()">
                   <ion-icon name="download" class="intro-dowload-button"></ion-icon>
                   <span *ngIf="!(userSettingsService.isMobile())" class="side-title">{{'Epub.Download' | translate }}</span>
-                </button>
-                <button *ngIf="showURNButton" ion-button clear class="sec-menu-button" (click)="showReference()">
+                </ion-button>
+                <ion-button *ngIf="showURNButton" fill="clear" class="sec-menu-button" (click)="showReference()">
                   <ion-icon class="urn-icon" name="share-alt"></ion-icon>
                   <span *ngIf="!(userSettingsService.isMobile())" class="side-title">{{'Reference.refer' | translate }}</span>
-                </button>
-                <button *ngIf="showDisplayOptionsButton" ion-button clear #settingsIconElement (click)="showReadSettingsPopover($event)" class="sec-menu-button" id="settings-icon">
+                </ion-button>
+                <ion-button *ngIf="showDisplayOptionsButton" fill="clear" #settingsIconElement (click)="showReadSettingsPopover($event)" class="sec-menu-button" id="settings-icon">
                   <ion-icon class="settings-icon" name="settings"></ion-icon>
                   <span *ngIf="!(userSettingsService.isMobile())" class="side-title">{{'Epub.DisplayOptions' | translate }}</span>
-                </button>
-                <button ion-button clear class="sec-menu-button" (click)="toggleSearchMenu()">
+                </ion-button>
+                <ion-button fill="clear" class="sec-menu-button" (click)="toggleSearchMenu()">
                   <ion-icon name="search" class="intro-search-button" *ngIf="!searchMenuOpen"></ion-icon>
                   <ion-icon name="close" class="intro-search-button" *ngIf="searchMenuOpen"></ion-icon>
                   <span *ngIf="!(userSettingsService.isMobile())" class="side-title">{{'Epub.Search' | translate }}</span>
-                </button>
-                <button ion-button clear class="sec-menu-button" [ngClass]="tocMenuOpen ? 'menuOpenTOC' : 'menuClosedTOC'"  (click)="toggleTocMenu()">
+                </ion-button>
+                <ion-button fill="clear" class="sec-menu-button" [ngClass]="tocMenuOpen ? 'menuOpenTOC' : 'menuClosedTOC'" (click)="toggleTocMenu()">
                   <ion-icon name="list" class="intro-toc-button" *ngIf="!tocMenuOpen"></ion-icon>
                   <ion-icon name="close" class="intro-toc-button" *ngIf="tocMenuOpen"></ion-icon>
                   <span *ngIf="!(userSettingsService.isMobile())" class="side-title">{{'Epub.Contents' | translate }}</span>
-                </button>
+                </ion-button>
               </ion-col>
             </ion-row>
         </ion-grid>
@@ -61,9 +61,9 @@
     </ion-row>
     <ion-row class="secondary-toolbar-icons-wrapper" nowrap align-items-center>
       <ion-col class="navigation-buttons-col search-nav-button">
-        <button *ngIf="!loading" ion-button clear class="navigation-buttons" (click)="prevSearch()">
+        <ion-button *ngIf="!loading" fill="clear" class="navigation-buttons" (click)="prevSearch()">
           <ion-icon name="arrow-back"></ion-icon>
-        </button>
+        </ion-button>
       </ion-col>
       <ion-col class="navigation-buttons-col">
           <div class="search-count" *ngIf="!loading">
@@ -72,9 +72,9 @@
           </div>
       </ion-col>
       <ion-col class="navigation-buttons-col search-nav-button">
-        <button *ngIf="!loading" ion-button clear class="navigation-buttons" (click)="nextSearch()">
+        <ion-button *ngIf="!loading" fill="clear" class="navigation-buttons" (click)="nextSearch()">
           <ion-icon name="arrow-forward"></ion-icon>
-        </button>
+        </ion-button>
       </ion-col>
     </ion-row>
   </ion-grid>
@@ -95,9 +95,9 @@
   <ion-grid class="forwardBackward">
       <ion-row class="secondary-toolbar-icons-wrapper" nowrap align-items-center>
         <ion-col class="navigation-buttons-col">
-          <button ion-button clear class="navigation-buttons" [ngClass]="atStart ? 'disabled-nav-button' : ''" id="epub-arrow-prev" (click)="prev()" *ngIf="!loading">
+          <ion-button fill="clear" class="navigation-buttons" [ngClass]="atStart ? 'disabled-nav-button' : ''" id="epub-arrow-prev" (click)="prev()" *ngIf="!loading">
             <ion-icon name="arrow-back"></ion-icon>
-          </button>
+          </ion-button>
         </ion-col>
         <ion-col class="navigation-buttons-col text-changer-current-section-label-col">
           <div class="current-section-label" *ngIf="!loading">
@@ -105,9 +105,9 @@
           </div>
         </ion-col>
         <ion-col class="navigation-buttons-col">
-          <button ion-button clear class="navigation-buttons" [ngClass]="atEnd ? 'disabled-nav-button' : ''" id="epub-arrow-next" (click)="next()" *ngIf="!loading">
+          <ion-button fill="clear" class="navigation-buttons" [ngClass]="atEnd ? 'disabled-nav-button' : ''" id="epub-arrow-next" (click)="next()" *ngIf="!loading">
             <ion-icon name="arrow-forward"></ion-icon>
-          </button>
+          </ion-button>
         </ion-col>
       </ion-row>
   </ion-grid>

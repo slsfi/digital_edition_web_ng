@@ -7,10 +7,10 @@
 <ion-header>
   <ion-toolbar>
     <ion-title>{{'Filter.title' | translate }}</ion-title>
-    <ion-buttons end>
-      <button class="close-button" ion-button (click)="cancel()">
+    <ion-buttons slot="end">
+      <ion-button class="close-button" (click)="cancel()">
         <ion-icon name="close"></ion-icon>
-      </button>
+      </ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
@@ -64,8 +64,8 @@
 
     <hr/>
 
-    <ion-buttons end>
-      <button ion-button outline (click)="cancel()">{{"BasicActions.Cancel" | translate}}</button>
-      <button *ngIf="!showLoading" ion-button (click)="apply()">{{"Filter.apply" | translate}}</button>
+    <ion-buttons slot="end">
+      <ion-button fill="outline" (click)="cancel()">{{"BasicActions.Cancel" | translate}}</ion-button>
+      <ion-button *ngIf="!showLoading" (click)="apply()">{{"Filter.apply" | translate}}</ion-button>
     </ion-buttons>
 </ion-content>

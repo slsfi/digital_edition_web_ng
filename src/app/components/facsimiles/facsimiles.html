@@ -3,7 +3,7 @@
   <h3 *ngIf="!selectedFacsimileIsExternal" [innerHTML]="selectedFacsimileName"></h3>
   <h3 *ngIf="selectedFacsimileIsExternal">{{"Read.Facsimiles.ExternalHeading" | translate}}</h3>
   <div *ngIf="facsimiles.length>1 || (facsimiles.length==1 && externalFacsimilesExist)" class="flex-buttons">
-    <button ion-button (click)="selectFacsimile()">{{"Read.Facsimiles.ChangeFacsimile" | translate}}</button>
+    <ion-button (click)="selectFacsimile()">{{"Read.Facsimiles.ChangeFacsimile" | translate}}</ion-button>
   </div>
 </div>
 
@@ -44,30 +44,30 @@
 </div>
 
 <ng-container *ngIf="facsimiles.length>0">
-  <ion-fab *ngIf="numberOfPages && numberOfPages > 1 && !selectedFacsimileIsExternal" middle left class="leftFacsimileArrow">
-    <button *ngIf="numberOfPages && numberOfPages > 1" ion-fab color="primary" mini (click)="previous()">
+  <ion-fab *ngIf="numberOfPages && numberOfPages > 1 && !selectedFacsimileIsExternal" vertical="center" horizontal="start" class="leftFacsimileArrow">
+    <ion-fab-button *ngIf="numberOfPages && numberOfPages > 1" color="primary" (click)="previous()">
       <ion-icon name="arrow-back"></ion-icon>
-    </button>
+    </ion-fab-button>
   </ion-fab>
   <ion-fab middle right *ngIf="!selectedFacsimileIsExternal" class="rightFacsimileArrowAndControls">
-    <button *ngIf="numberOfPages && numberOfPages > 1" ion-fab color="primary" mini (click)="next()">
+    <ion-fab-button *ngIf="numberOfPages && numberOfPages > 1" color="primary" (click)="next()">
       <ion-icon name="arrow-forward"></ion-icon>
-    </button>
-    <button ion-fab color="secondary" mini (click)="openZoom()">
+    </ion-fab-button>
+    <ion-fab-button color="secondary" (click)="openZoom()">
       <ion-icon name="expand"></ion-icon>
-    </button>
-    <button ion-fab color="secondary" mini (click)="zoomIn()">
+    </ion-fab-button>
+    <ion-fab-button color="secondary" (click)="zoomIn()">
       <ion-icon name="add"></ion-icon>
-    </button>
-    <button ion-fab color="secondary" mini (click)="zoomOut()">
+    </ion-fab-button>
+    <ion-fab-button color="secondary" (click)="zoomOut()">
       <ion-icon name="remove"></ion-icon>
-    </button>
-    <button ion-fab color="secondary" mini (click)="rotate()">
+    </ion-fab-button>
+    <ion-fab-button color="secondary" (click)="rotate()">
       <ion-icon name="refresh"></ion-icon>
-    </button>
-    <button ion-fab color="secondary" mini (click)="resetFacsimile()">
+    </ion-fab-button>
+    <ion-fab-button color="secondary" (click)="resetFacsimile()">
       <ion-icon name="undo"></ion-icon>
-    </button>
+    </ion-fab-button>
   </ion-fab>
 </ng-container>
 
