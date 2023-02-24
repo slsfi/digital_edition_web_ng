@@ -72,6 +72,7 @@ $opacity-hover-transition: opacity 0.2s;
   }
   --primary-color-rgb: 83, 132, 148; /* RGB-version of --primary-color, used when an alpha channel needs to be added to the color */
   --text-color-on-primary-color-background:   #fff;
+  --text-color-on-primary-color-background-rgb:   255, 255, 255;
   --text-color-on-secondary-color-background: #000;
   --default-link-color:                       #538494;
   --main-background-color:                    #ecebe4;
@@ -230,35 +231,12 @@ $opacity-hover-transition: opacity 0.2s;
                                      Times, "Times New Roman", serif;
   --font-stack-tei-editorial-note:   "Helvetica Neue", "Arial Nova", Helvetica,
                                      Arial, sans-serif;
-}
+
+  --opacity-hover: 0.6;
+  --opacity-hover-transition: opacity 0.2s;
 
 
+  // OVERRIDE IONIC CSS VARIABLES
 
-h2 {
-  font-size: 1.6rem;
-}
-
-p {
-  font-size: 1.125rem; /* 18px when 1em = 16px */
-}
-
-.mainMenuItem {
-  cursor: pointer;
-}
-
-div.md_content markdown td {
-  padding: 0.5em;
-  line-height: 1.4;
-  vertical-align: top;
-}
-
-/* ??? */
-ion-list-header ion-label {
-  text-transform: unset;
-}
-
-h1.mainH1Header {
-  font-size: 1.6em;
-  margin-bottom: 1em;
-  font-weight: 700;
+  --ion-font-family: var(--font-stack-app-base);
 }
