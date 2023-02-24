@@ -137,8 +137,11 @@ $opacity-hover-transition: opacity 0.2s;
   --page-read-add-column-background-color:                  var(--secondary-color);
 
   // Top-menu
+  --top-menu-toolbar-height:                                70px;
   --top-menu-toolbar-bottom-border:                         0;
+  --top-menu-toolbar-button-icons-font-size:                1.875rem;
   --top-menu-button-filter:                                 drop-shadow(0 1px 3px rgba(35, 35, 35, .3));
+  --top-menu-logo-height:                                   58px;
 
   // Text-changer in read-page
   --text-changer-background-color-mobile-mode:            #adadad;

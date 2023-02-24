@@ -5,24 +5,26 @@ ion-router-outlet {
 */
 
 ion-split-pane {
-    top: 70px;
+    --border: 1px solid var(--toc-border-right-color);
+    --side-max-width: 0;
+    --side-width: 0;
+    height: 100%;
+    position: relative;
 
     // Styles for the navigation menu on the left
     .split-pane-side {
-        position: relative;
-        width: 0;
-        max-width: 0;
+        /*position: relative;*/
+        /*width: 0;
+        max-width: 0;*/
         /*
         transition: 1s all ease-in;
         transform: none !important;
         z-index: 7 !important;
         */
     }
-    &.split-pane-visible > .split-pane-side {
-        border-right: none;
-    }
-    &.split-pane-visible > .split-pane-side {
-        max-width: 345px;
+    &.split-pane-visible {
+        --side-max-width: 270px;
+        --side-width: 270px;
     }
 }
 
@@ -32,5 +34,6 @@ ion-split-pane {
         position: absolute;
         top: 0;
         left: 0;
+        z-index: 10000;
     }
 }

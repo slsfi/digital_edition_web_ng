@@ -1,12 +1,6 @@
-:host {
-  width: 100%;
-  display: flex;
-  justify-content: flex-end;
-}
-
 img.logo {
   display: block;
-  height: 60px;
+  height: var(--top-menu-logo-height, 60px);
   transition: var(--opacity-hover-transition);
 }
 
