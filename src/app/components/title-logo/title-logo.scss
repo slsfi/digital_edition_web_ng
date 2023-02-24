@@ -1,5 +1,15 @@
-// display: inline;
-.page-title{
-  white-space: pre-line;
-  margin-top: 0;
+:host {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+}
+
+img.logo {
+  display: block;
+  height: 60px;
+  transition: var(--opacity-hover-transition);
+}
+
+img.logo:hover {
+  opacity: var(--opacity-hover);
 }

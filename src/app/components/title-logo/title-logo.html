@@ -1,15 +1,15 @@
-<div *ngIf="userSettingsService.isDesktop() && !userSettingsService.isTablet() && !userSettingsService.isMobile()" style="position: relative;">
-    <a rel="noreferrer" target="_blank" href="{{siteLogoURL}}" float-left>
+<ng-container *ngIf="userSettingsService.isDesktop() && !userSettingsService.isTablet() && !userSettingsService.isMobile()">
+    <a rel="noreferrer" target="_blank" href="{{siteLogoURL}}">
         <img *ngIf="!useMobileLogo" class="logo" alt="logo image" src="assets/images/logo.svg">
         <img *ngIf="useMobileLogo" class="logo" alt="logo image" src="assets/images/logo-mobile.svg">
     </a>
-</div>
-<div *ngIf="userSettingsService.isMobile() || userSettingsService.isTablet()" style="position: relative;">
-    <a *ngIf="!userSettingsService.isTablet()" rel="noreferrer" href="{{siteLogoURL}}" float-left>
+</ng-container>
+<ng-container *ngIf="userSettingsService.isMobile() || userSettingsService.isTablet()">
+    <a *ngIf="!userSettingsService.isTablet()" rel="noreferrer" href="{{siteLogoURL}}">
         <img class="logo" alt="logo image" src="assets/images/logo-mobile.svg">
     </a>
-    <a *ngIf="userSettingsService.isTablet()" rel="noreferrer" href="{{siteLogoURL}}" float-right>
+    <a *ngIf="userSettingsService.isTablet()" rel="noreferrer" href="{{siteLogoURL}}">
         <img *ngIf="!useMobileLogo" class="logo" alt="logo image" src="assets/images/logo.svg">
         <img *ngIf="useMobileLogo" class="logo" alt="logo image" src="assets/images/logo-mobile.svg">
     </a>
-</div>
+</ng-container>

@@ -33,7 +33,6 @@ export class TopMenuComponent {
   public showViewToggle: boolean;
   public showTopURNButton: boolean;
   public showTopMusicButton: boolean;
-  public showColAmount: string;
   public showTopElasticButton: boolean;
   public showTopSimpleSearchButton: boolean;
   public showTopContentButton: boolean;
@@ -49,7 +48,6 @@ export class TopMenuComponent {
     protected storage: StorageService,
   ) {
     this.registerEventListeners();
-    this.showColAmount = 'col-8';
 
     try {
       this.showHelpButton = this.config.getSettings('app.showHelpButton') as any;

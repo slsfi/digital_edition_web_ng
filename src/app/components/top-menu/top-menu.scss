@@ -1,15 +1,68 @@
 @import "../../../theme/variables.scss";
 
 :host {
-    top: 0;
-    width: 100%;
-    height: 30px;
+  top: 0;
+  width: 100%;
+  height: 70px;
+  font-family: var(--font-stack-top-menu);
 
-    &.splitPanePossible ion-toolbar ion-buttons {
-      margin-left: 0 !important;
-    }
+  /*
+  &.splitPanePossible ion-toolbar ion-buttons {
+    margin-left: 0 !important;
+  }
+  */
+}
+
+ion-toolbar {
+  --min-height: 70px;
+  max-height: 70px;
+}
+
+ion-toolbar ion-button {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-right: 1rem;
+  filter: var(--top-menu-button-filter);
+  --transition: color 0.2s;
+  --background-hover: transparent;
+  --ripple-color: transparent;
+  --color-hover: rgba(var(--text-color-on-primary-color-background-rgb), var(--opacity-hover));
+}
+
+ion-toolbar ion-button:first-child {
+  margin-inline-start: 0.5rem;
+}
+
+ion-toolbar ion-button ion-icon {
+  font-size: 1.875rem;
+}
+
+ion-toolbar ion-button .side-title {
+  font-size: 0.625rem;
+  margin-left: -0.5em;
+  font-weight: normal;
+}
+
+@media only screen and (max-width: 820px) {
+  ion-toolbar ion-button {
+    margin-right: 0.5rem;
   }
 
+  ion-toolbar ion-button:first-child {
+    margin-inline-start: 0.125rem;
+  }
+
+  ion-toolbar ion-button .side-title {
+    display: none;
+  }
+}
+
+ion-title.title-logo-wrapper {
+  height: 70px;
+  padding: 0 .25rem;
+}
+
+  /*
   ion-toolbar > .toolbar-content > ion-grid > ion-row {
     flex-wrap: nowrap;
   }
@@ -123,3 +176,5 @@ ion-icon {
     font-size: 1.8rem;
   }
 }
+
+*/
