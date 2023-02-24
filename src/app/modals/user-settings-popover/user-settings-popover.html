@@ -1,7 +1,9 @@
-<ion-list *ngIf="enableLanguageChanges">
+<ion-list *ngIf="enableLanguageChanges" lines="full">
     <ion-list-header class="user-settings-popover-header">
-        <div class="lang-header">{{'About.Language' | translate}}</div>
-        <div class="close" (click)="close()"><ion-icon name="close"></ion-icon></div>
+        <ion-label>{{'About.Language' | translate}}</ion-label>
+        <ion-button class="close" (click)="close()">
+            <ion-icon slot="icon-only" name="close"></ion-icon>
+        </ion-button>
     </ion-list-header>
     <ion-radio-group [(ngModel)]="languageService.language">
         <ion-item *ngFor="let lang of languageService.languages">
@@ -11,9 +13,9 @@
     </ion-radio-group>
 </ion-list>
 
-<ion-list class="view-mode">
+<ion-list lines="full">
     <ion-list-header>
-        {{'About.ViewMode' | translate}}
+        <ion-label>{{'About.ViewMode' | translate}}</ion-label>
     </ion-list-header>
     <ion-radio-group [(ngModel)]="userSettingsService.mode">
         <ion-item>
