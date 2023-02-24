@@ -242,4 +242,6 @@ $opacity-hover-transition: opacity 0.2s;
   // OVERRIDE IONIC CSS VARIABLES
 
   --ion-font-family: var(--font-stack-app-base);
+  --ion-card-background: var(--page-read-columns-background-color);
+  --ion-card-color: var(--dark-color);
 }

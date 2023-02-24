@@ -355,6 +355,12 @@
     --color: var(--text-color-on-primary-color-background);
   }
 
+  // Ion-toolbar styles
+  ion-toolbar.secondary {
+    --background: var(--secondary-color);
+    --color: var(--text-color-on-secondary-color-background);
+  }
+
   // Ion-popover styles
   ion-popover ion-list-header {
     --background: var(--ion-popover-list-header-background-color);
