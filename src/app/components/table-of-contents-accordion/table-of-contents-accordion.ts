@@ -22,7 +22,6 @@ import { TableOfContentsService } from 'src/app/services/toc/table-of-contents.s
   selector: 'table-of-contents-accordion',
   templateUrl: 'table-of-contents-accordion.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  encapsulation: ViewEncapsulation.None,
   styleUrls: ['table-of-contents-accordion.scss']
 })
 export class TableOfContentsAccordionComponent {
