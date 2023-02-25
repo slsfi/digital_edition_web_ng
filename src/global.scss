@@ -316,6 +316,8 @@
     font-weight: 300;
   }
   
+
+
   // STYLES FOR COMMON HTML ELEMENTS
 
   html.md {
@@ -323,9 +325,10 @@
   }
 
   body {
+    background-color: var(--main-background-color, #f2f2f2);
     font-size: 1rem;
+    -webkit-user-select: text;
     user-select: text;
-    background-color: red;
   }
   
   h1, h2, h3, h4, h5, h6 {
@@ -340,6 +343,15 @@
   a {
     color: var(--default-link-color);
   }
+
+
+
+  // STYLES FOR ELEMENTS IN MARKDOWN
+
+  markdown p {
+    line-height: 1.75rem;
+  }
+
 
 
   // STYLES FOR IONIC ELEMENTS
