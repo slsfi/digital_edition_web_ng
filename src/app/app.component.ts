@@ -985,7 +985,7 @@ export class DigitalEditionsApp {
       this.enableContentMenu();
       this.router.navigate(['/publications'], { queryParams: params });
     });
-    this.events.getTopMenuContent().subscribe(() => {
+    this.events.getTopMenuAbout().subscribe(() => {
       this.events.publishSelectedItemInMenu({
         menuID: 'topMenu',
         component: 'app-component'
@@ -1016,7 +1016,7 @@ export class DigitalEditionsApp {
         }
       });
     });
-    this.events.getTopMenuContent().subscribe(() => {
+    this.events.getTopMenuMusic().subscribe(() => {
       this.events.publishSelectedItemInMenu({
         menuID: 'topMenu',
         component: 'app-component'
