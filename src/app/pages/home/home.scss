@@ -1,5 +1,7 @@
 @import "../../../theme/variables.scss";
 
+/* ATTN. Styles for elements in the markdown content must be defined in global.scss. */
+
 :host {
 	font-size: 1.125rem;
 }
@@ -12,19 +14,6 @@ ion-content::part(scroll) {
 
 ion-content.portrait-mode::part(scroll) {
 	flex-direction: row;
-}
-
-h1 {
-	text-transform: none;
-}
-
-h2 {
-	font-size: 1.6rem;
-	margin-top: 0;
-}
-
-p {
-	line-height: 1.8rem;
 }
 
 .banner {
@@ -270,37 +259,3 @@ p {
 		display: none;
 	}
 }
-
-/*The rules below are old and apparently not applied at all. */
-/*
-.scroll-content .content.content-md {
-	display: none;
-}
-
-.background {
-	width: 100%;
-	height: auto;
-	img {
-		width: 100%;
-	}
-}
-
-.fp_h1 {
-	font-size: 2rem;
-}
-
-.foreground {
-	width:100%;
-}
-
-.foreground {
-	border-bottom: 5px solid $orange-color;
-}
-
-.toolbar-ios ion-title {
-	padding: 0;
-	.toolbar-title-ios {
-		text-align: left;
-	}
-}
-*/

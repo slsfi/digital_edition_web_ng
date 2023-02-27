@@ -348,8 +348,89 @@
 
   // STYLES FOR ELEMENTS IN MARKDOWN
 
-  markdown p {
-    line-height: 1.75rem;
+  markdown {
+    font-size: 1.125rem;
+
+    h1, h2, h3, h4 {
+      margin-bottom: 0.5rem;
+    }
+    
+    h1 {
+      font-size: 1.625rem;
+      margin-top: 2rem;
+      margin-bottom: 1.5rem;
+    }
+
+    h1:first-child {
+      margin-top: 0;
+    }
+
+    h2 {
+      font-size: 1.4375rem;
+      margin-top: 1.8rem;
+    }
+    
+    h3 {
+      font-size: 1.25rem;
+      margin-top: 1.5rem;
+    }
+    
+    h2 + h3 {
+      margin-top: 1rem;
+    }
+    
+    h4 {
+      font-size: 1.125rem;
+      font-weight: normal;
+      font-style: italic;
+      margin-top: 1.25rem;
+    }
+    
+    p {
+      line-height: 1.625rem;
+      margin-bottom: 0.8rem;
+      margin-top: 0.8rem;
+    }
+
+    hr {
+      background-color: rgba(0, 0, 0, 0.1);
+    }
+
+    td {
+      padding: 0.5em;
+      line-height: 1.4;
+      vertical-align: top;
+    }
+
+    figure {
+      margin: 1.75em 0;
+    }
+
+    img[src$="#align-left"] {
+      float: left;
+      margin: 0 1rem 1rem 0;
+    }
+    
+    img[src$="#align-right"] {
+      float: right;
+      margin: 0 0 1rem 1rem;
+    }
+
+    img[src$="#align-center"] {
+      display: block;
+      margin: 1rem auto;
+    }
+
+    home-page {
+      h1 {
+        text-transform: none;
+      }
+      
+      h2 {
+        font-size: 1.625rem;
+        margin-top: 0;
+      }
+    }
   }
 
 
