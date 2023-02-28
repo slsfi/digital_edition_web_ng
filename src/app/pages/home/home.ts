@@ -48,7 +48,9 @@ export class HomePage {
     protected textService: TextService
   ) {
     this.appMachineName = this.config.getSettings('app.machineName');
-    this.userSettingsService.temporarilyHideSplitPane();
+    if (this.userSettingsService.isMobile()) {
+      this.userSettingsService.temporarilyHideSplitPane();
+    }
 
     // Get config for front page image and text content
     try {

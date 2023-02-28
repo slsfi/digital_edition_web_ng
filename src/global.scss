@@ -452,6 +452,8 @@
   ion-toolbar.secondary {
     --background: var(--secondary-color);
     --color: var(--text-color-on-secondary-color-background);
+    --min-height: 50px;
+    max-height: 50px;
   }
 
   // Ion-popover styles
@@ -511,6 +513,63 @@
   }
   
 
+  // OTHER GLOBAL STYLES
+
+  /* --- Style block: column containers for all publication pages: cover, title, foreword, introduction and read. --- */
+  ion-content.publication-ion-content::part(scroll) {
+    display: flex;
+    padding: 26px;
+  }
+  .scroll-content-container {
+    max-width: 710px;
+    background-color: var(--page-read-columns-background-color);
+    height: 100%;
+    width: 100%;
+    max-width: 710px;
+    overflow-x: auto;
+    padding: 22px;
+  }
+  @media screen and (max-width: 820px) {
+    // Reduce padding om small screens, center content.
+    ion-content.publication-ion-content::part(scroll) {
+      justify-content: center;
+      padding: 10px;
+    }
+    .scroll-content-container {
+      padding: 12px;
+    }
+  }
+  // Make room for the text-changer at the bottom in mobile mode.
+  ion-content.publication-ion-content.mobile-mode-content::part(scroll) {
+    padding-bottom: 0;
+    justify-content: center;
+  }
+  /* --- */
+
+  /* --- Style block: secondary toolbar content e.g. in: cover, title, foreword, introduction and read. --- */
+  ion-toolbar.secondary ion-button {
+    --background: transparent;
+    --background-hover: transparent !important;
+    --color: var(--text-color-on-secondary-color-background);
+    --color-hover: rgba(var(--text-color-on-secondary-color-background-rgb), var(--opacity-hover));
+    --ripple-color: transparent;
+    --transition: color 0.2s;
+    letter-spacing: normal;
+  }
+  ion-toolbar.secondary .secondary-toolbar-buttons-wrapper ion-button ion-icon {
+    font-size: 1.5625rem !important;
+  }
+  ion-toolbar.secondary .secondary-toolbar-buttons-wrapper ion-button .side-title {
+    font-size: 0.625rem;
+  }
+  @media only screen and (max-width: 820px) {
+    @media only screen and (max-width: 820px) {
+      ion-toolbar.secondary .secondary-toolbar-buttons-wrapper ion-button .side-title {
+        display: none;
+      }
+    }
+  }
+  
 
   /*
 

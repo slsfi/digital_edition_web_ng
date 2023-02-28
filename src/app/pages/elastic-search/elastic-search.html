@@ -225,7 +225,7 @@
                               <p [innerHTML]="'&#8230; ' + highlight + ' &#8230;'" [ngClass]="'highlight ' + ((h > 2)?'hiddenHighlight':'initialHighlight')"></p>
                             </ng-container>
                             <ng-container *ngIf="hit.highlight.text_data.length > 3">
-                              <button ion-button outline class="showAllHitHighlights" (click)="showAllHitHighlights($event)">{{'ElasticSearch.ShowAllHitHighlights' | translate}} (+{{hit.highlight.text_data.length-3}})</button>
+                              <button ion-button fill="outline" class="showAllHitHighlights" (click)="showAllHitHighlights($event)">{{'ElasticSearch.ShowAllHitHighlights' | translate}} (+{{hit.highlight.text_data.length-3}})</button>
                             </ng-container>
                           </div>
                         </ng-container>
@@ -250,7 +250,7 @@
               <button ion-button (click)="loadMore($event)" [disabled]="infiniteLoading">{{"ElasticSearch.ShowMoreHits" | translate}}</button>
             </ion-row>
             <ion-row class="hits-footer" *ngIf="canShowHits() && total > 5">
-              <button ion-button outline (click)="scrollToTop()">{{"ElasticSearch.ScrollToTop" | translate}}</button>
+              <button ion-button fill="outline" (click)="scrollToTop()">{{"ElasticSearch.ScrollToTop" | translate}}</button>
             </ion-row>
           </ion-col>
         </ion-row>

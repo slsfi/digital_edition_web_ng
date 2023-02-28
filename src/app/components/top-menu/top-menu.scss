@@ -30,11 +30,12 @@ ion-toolbar ion-button:first-child {
 
 ion-toolbar ion-button ion-icon {
   font-size: var(--top-menu-toolbar-button-icons-font-size, 1.875rem);
+  margin-right: 0;
 }
 
 ion-toolbar ion-button .side-title {
   font-size: 0.625rem;
-  margin-left: -0.5em;
+  margin-left: 0.5em;
   font-weight: normal;
 }
 

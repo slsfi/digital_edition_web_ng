@@ -1,25 +1,25 @@
-<ion-header no-border *ngIf="!(userSettingsService.isMobile()) && !hasDigitalEditionListChildren">
-  <ion-toolbar color="secondary" class="secondary">
+<ion-header class="ion-no-border" *ngIf="!(userSettingsService.isMobile()) && !hasDigitalEditionListChildren">
+  <ion-toolbar class="secondary">
     <text-changer *ngIf="!(userSettingsService.isMobile())" [parentPageType]="'page-cover'" class="text-changer-desktop-view"></text-changer>
   </ion-toolbar>
 </ion-header>
 
-<ion-content *ngIf="hasDigitalEditionListChildren" padding>
+<ion-content *ngIf="hasDigitalEditionListChildren" class="ion-padding">
   <div class="">
-    <digital-edition-list-children [layoutType]="'auto'" [childrenPdfs]="childrenPdfs" [collectionID]="collectionID"></digital-edition-list-children>
+    <digital-edition-list-children [layoutType]="'auto'" [childrenPdfs]="childrenPdfs" [collectionID]="id"></digital-edition-list-children>
   </div>
 </ion-content>
 
-<ion-content *ngIf="!hasDigitalEditionListChildren && !hasMDCover" padding [ngClass]="printMainContentClasses()">
-  <ion-card>
-    <ion-card-content>
+<ion-content *ngIf="!hasDigitalEditionListChildren && !hasMDCover" class="publication-ion-content" [ngClass]="printMainContentClasses()">
+  <div class="scroll-content-container">
       <div class="tei teiContainer" [innerHTML]="text"></div>
-    </ion-card-content>
-  </ion-card>
+  </div>
 </ion-content>
 
-<div *ngIf="!hasDigitalEditionListChildren && hasMDCover" class="cover-image-wrapper" [ngClass]="printMainContentClasses()">
-  <img class="cover-image" [src]="image_src" [alt]="image_alt">
-</div>
+<ion-content *ngIf="!hasDigitalEditionListChildren && hasMDCover" class="publication-ion-content" [ngClass]="printMainContentClasses()">
+  <div class="cover-image-wrapper" [ngClass]="printMainContentClasses()">
+    <img class="cover-image" [src]="image_src" [alt]="image_alt">
+  </div>
+</ion-content>
 
 <text-changer *ngIf="(userSettingsService.isMobile()) && !hasDigitalEditionListChildren" [parentPageType]="'page-cover'" class="text-changer-mobile-view"></text-changer>

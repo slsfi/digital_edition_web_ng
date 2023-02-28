@@ -3,7 +3,7 @@
     <div class="appearence">{{'Read.Popover.Appearance' | translate}}</div>
     <div class="close" (click)="close()"><ion-icon name="close"></ion-icon></div>
   </ion-list-header>
-  <ion-row justify-content-center align-items-center>
+  <ion-row justify-content-center class="ion-align-items-center">
     <ion-col><button [ngClass]="((readPopoverService.fontsize==0)?'selected-font-size':'')" class="text-button text-xsmall item-block" (click)="setFontSize(0)">A</button></ion-col>
     <ion-col><button [ngClass]="((readPopoverService.fontsize==1)?'selected-font-size':'')" class="text-button text-small item-block" (click)="setFontSize(1)">A</button></ion-col>
     <ion-col><button [ngClass]="((readPopoverService.fontsize==2)?'selected-font-size':'')" class="text-button text-medium item-block" (click)="setFontSize(2)">A</button></ion-col>

@@ -39,16 +39,14 @@ export class TitlePage {
   hasMDTitle = '';
   hasDigitalEditionListChildren = false;
   childrenPdfs = [];
-  protected id?: string;
+  protected id = '';
   protected text: any;
   protected collection: any;
   titleSelected: boolean;
-  collectionID: any;
   showURNButton: boolean;
   showDisplayOptionsButton: Boolean = true;
   textLoading: Boolean = false;
   languageSubscription: Subscription | null;
-  lang: any;
 
   constructor(
     private langService: LanguageService,
@@ -88,17 +86,16 @@ export class TitlePage {
     this.languageSubscription = null;
   }
 
-  async ngOnInit() {
-
-    this.languageSubscription = this.langService.languageSubjectChange().subscribe(lang => {
-      this.lang = lang;
-      if (lang && this.id) {
-        this.loadTitle(lang, this.id);
-      }
-    });
-
+  ngOnInit() {
     this.route.params.subscribe(params => {
       this.id = params['collectionID'];
+      this.checkIfCollectionHasChildrenPdfs();
+
+      this.languageSubscription = this.langService.languageSubjectChange().subscribe(lang => {
+        if (lang) {
+          this.loadTitle(lang, this.id);
+        }
+      });
 
       if (this.id) {
         this.events.publishSelectedItemInMenu({
@@ -106,12 +103,9 @@ export class TitlePage {
           component: 'title-page'
         });
       }
-
-      if (this.lang && this.id) {
-        this.loadTitle(this.lang, this.id);
-      }
     });
 
+    /*
     this.route.queryParams.subscribe(params => {
       if (params['collection']) {
         this.collection = JSON.parse(params['collection']);
@@ -123,6 +117,7 @@ export class TitlePage {
         this.titleSelected = false;
       }
     });
+    */
   }
 
   ngOnDestroy() {
@@ -155,73 +150,70 @@ export class TitlePage {
   }
 
   getMdContent(fileID: string) {
-    this.mdContentService.getMdContent(fileID)
-        .subscribe(
-            text => { this.mdContent = text.content; },
-            error =>  {this.errorMessage = <any>error}
-        );
+    this.mdContentService.getMdContent(fileID).subscribe({
+      next: text => { this.mdContent = text.content; },
+      error: e =>  { this.errorMessage = <any>e; }
+    });
   }
 
   getTocRoot(id: string) {
     if ( (id === 'mediaCollections' || id === undefined) && this.collection) {
       this.events.publishTableOfContentsLoaded({tocItems: this.collection, searchTocItem: false});
     } else {
-      this.tableOfContentsService.getTableOfContents(id)
-      .subscribe(
-          (tocItems: any) => {
+      this.tableOfContentsService.getTableOfContents(id).subscribe({
+          next: (tocItems: any) => {
             tocItems.titleSelected = this.titleSelected;
             this.events.publishTableOfContentsLoaded({tocItems: tocItems, searchTocItem: true, collectionID: tocItems.collectionId, 'caller':  'title'});
         },
-        error =>  {this.errorMessage = <any>error});
+        error: e =>  { this.errorMessage = <any>e; }
+      });
     }
-
   }
 
-  loadTitle(lang: string, collectionId: string) {
-    console.log('load title');
+  loadTitle(lang: string, id: string) {
     this.textLoading = true;
-    this.getTocRoot(collectionId);
-    const isIdText = isNaN(Number(this.id));
+    // this.getTocRoot(id);
+    const isIdText = isNaN(Number(id));
     if (this.hasMDTitle === '') {
       if (isIdText === false) {
-        this.textService.getTitlePage(collectionId, lang).subscribe(
-          res => {
+        this.textService.getTitlePage(id, lang).subscribe({
+          next: res => {
             this.text = this.sanitizer.bypassSecurityTrustHtml(
               res.content.replace(/images\//g, 'assets/images/')
                 .replace(/\.png/g, '.svg')
             );
             this.textLoading = false;
           },
-          error => {
-            this.errorMessage = <any>error;
+          error: e => {
+            this.errorMessage = <any>e;
             this.textLoading = false;
           }
-        );
+        });
       }
     } else {
       if (isIdText === false) {
-        const fileID = `${lang}-${this.hasMDTitle}-${this.id}`;
-        this.mdContentService.getMdContent(fileID).subscribe(
-          res => {
+        const fileID = `${lang}-${this.hasMDTitle}-${id}`;
+        this.mdContentService.getMdContent(fileID).subscribe({
+          next: res => {
             this.mdContent = res.content;
             this.textLoading = false;
           },
-          error => {
-            this.errorMessage = <any>error;
+          error: e => {
+            this.errorMessage = <any>e;
             this.textLoading = false;
           }
-        );
+        });
       } else {
-        this.mdContentService.getMdContent(`${lang}-gallery-intro`).subscribe(
-          text => {
+        this.mdContentService.getMdContent(`${lang}-gallery-intro`).subscribe({
+          next: text => {
             this.mdContent = text.content;
             this.textLoading = false;
           },
-          error =>  {
-            this.errorMessage = <any>error;
+          error: e =>  {
+            this.errorMessage = <any>e;
             this.textLoading = false;
           }
-        );
+        });
       }
     }
     // this.events.publish('pageLoaded:title');
@@ -259,7 +251,7 @@ export class TitlePage {
 
   printMainContentClasses() {
     if (this.userSettingsService.isMobile()) {
-      return 'mobile-mode-title-content';
+      return 'mobile-mode-content';
     } else {
       return '';
     }

@@ -34,16 +34,14 @@ import { TableOfContentsService } from 'src/app/services/toc/table-of-contents.s
 export class ForewordPage {
 
   errorMessage: any;
-  protected id?: string;
+  protected id = '';
   protected text: any;
   protected collection: any;
   forewordSelected?: boolean;
-  collectionID: any;
   showURNButton: boolean;
   showDisplayOptionsButton: Boolean = true;
   textLoading: Boolean = true;
   languageSubscription: Subscription | null;
-  lang: any;
 
   constructor(
     public navCtrl: NavController,
@@ -76,26 +74,24 @@ export class ForewordPage {
   }
 
   ngOnInit() {
-    this.languageSubscription = this.langService.languageSubjectChange().subscribe(lang => {
-      this.lang = lang;
-      if (this.lang && this.id) {
-        this.loadForeword(lang, this.id);
-      }
-    });
-
     this.route.params.subscribe(params => {
       this.id = params['collectionID'];
 
-      if (this.lang && this.id) {
-        this.loadForeword(this.lang, this.id);
-      }
-
-      this.events.publishSelectedItemInMenu({
-        menuID: this.id,
-        component: 'foreword-page'
+      this.languageSubscription = this.langService.languageSubjectChange().subscribe(lang => {
+        if (lang) {
+          this.loadForeword(lang, this.id);
+        }
       });
-    })
 
+      if (this.id) {
+        this.events.publishSelectedItemInMenu({
+          menuID: this.id,
+          component: 'foreword-page'
+        });
+      }
+    });
+
+    /*
     this.route.queryParams.subscribe(params => {
       if (params['collection']) {
         this.collection = JSON.parse(params['collection']);
@@ -106,7 +102,8 @@ export class ForewordPage {
       } else {
         this.forewordSelected = false;
       }
-    })
+    });
+    */
   }
 
   ionViewWillEnter() {
@@ -126,9 +123,9 @@ export class ForewordPage {
 
   loadForeword(lang: string, id: string) {
     this.textLoading = true;
-    this.getTocRoot(id);
-    this.textService.getForewordPage(id, lang).subscribe(
-      res => {
+    //this.getTocRoot(id);
+    this.textService.getForewordPage(id, lang).subscribe({
+      next: res => {
         if (res.content && res.content !== 'File not found') {
           this.text = this.sanitizer.bypassSecurityTrustHtml(
             res.content.replace(/images\//g, 'assets/images/')
@@ -139,38 +136,38 @@ export class ForewordPage {
         }
         this.textLoading = false;
       },
-      error => {
-        this.errorMessage = <any>error;
+      error: e => {
+        this.errorMessage = <any>e;
         this.textLoading = false;
         this.setNoForewordText();
       }
-    );
+    });
     this.events.publishPageLoadedForeword();
   }
 
   setNoForewordText() {
-    this.translateService.get('Read.ForewordPage.NoForeword').subscribe(
-      translation => {
+    this.translateService.get('Read.ForewordPage.NoForeword').subscribe({
+      next: translation => {
         this.text = translation;
       },
-      translationError => { this.text = ''; }
-    );
+      error: translationError => { this.text = ''; }
+    });
   }
 
   getTocRoot(id: string) {
     if (id === 'mediaCollections') {
       this.events.publishTableOfContentsLoaded({tocItems: this.collection, searchTocItem: false});
     } else {
-      this.tableOfContentsService.getTableOfContents(id).subscribe(
-        (tocItems: any) => {
-          console.log(tocItems);
+      this.tableOfContentsService.getTableOfContents(id).subscribe({
+        next: (tocItems: any) => {
+          // console.log(tocItems);
           tocItems.forewordSelected = this.forewordSelected;
           this.events.publishTableOfContentsLoaded({tocItems: tocItems, searchTocItem: true, collectionID: tocItems.collectionId, 'caller':  'foreword'});
         },
-        error => { 
-          this.errorMessage = <any>error;
+        error: e => { 
+          this.errorMessage = <any>e;
          }
-      );
+      });
     }
   }
 
@@ -206,7 +203,7 @@ export class ForewordPage {
 
   printMainContentClasses() {
     if (this.userSettingsService.isMobile()) {
-      return 'mobile-mode-foreword-content';
+      return 'mobile-mode-content';
     } else {
       return '';
     }

@@ -6,7 +6,7 @@
     </ion-title> -->
     <ion-buttons *ngIf="epubFileExists">
         <ion-grid>
-            <ion-row class="secondary-toolbar-icons-wrapper" nowrap align-items-center justify-content-end>
+            <ion-row class="secondary-toolbar-icons-wrapper" class="ion-align-items-center" justify-content-end>
               <ion-col class="navigation-buttons-col" *ngIf="(userSettingsService.isMobile() === false && userSettingsService.isTablet() === false)">
                 <ion-button fill="clear" class="navigation-buttons" [ngClass]="atStart ? 'disabled-nav-button' : ''" id="epub-arrow-prev" (click)="prev()" *ngIf="!loading">
                   <ion-icon name="arrow-back"></ion-icon>
@@ -59,7 +59,7 @@
         <ion-searchbar class="epub-search-bar" (ionChange)=doSearch($event) (ionClear)="clearSearch()" *ngIf="!loading" [(ngModel)]="searchText" placeholder="{{'Epub.SearchPhrase' | translate}}"></ion-searchbar>
       </ion-col>
     </ion-row>
-    <ion-row class="secondary-toolbar-icons-wrapper" nowrap align-items-center>
+    <ion-row class="secondary-toolbar-icons-wrapper" class="ion-align-items-center">
       <ion-col class="navigation-buttons-col search-nav-button">
         <ion-button *ngIf="!loading" fill="clear" class="navigation-buttons" (click)="prevSearch()">
           <ion-icon name="arrow-back"></ion-icon>
@@ -93,7 +93,7 @@
 
 <div class="text-changer-mobile-view" *ngIf="(userSettingsService.isMobile() === true || userSettingsService.isTablet() === true) && epubFileExists">
   <ion-grid class="forwardBackward">
-      <ion-row class="secondary-toolbar-icons-wrapper" nowrap align-items-center>
+      <ion-row class="secondary-toolbar-icons-wrapper" class="ion-align-items-center">
         <ion-col class="navigation-buttons-col">
           <ion-button fill="clear" class="navigation-buttons" [ngClass]="atStart ? 'disabled-nav-button' : ''" id="epub-arrow-prev" (click)="prev()" *ngIf="!loading">
             <ion-icon name="arrow-back"></ion-icon>

@@ -35,15 +35,13 @@ export class CoverPage {
   errorMessage: any;
   image_alt = '';
   image_src = '';
-  lang = 'sv';
   hasMDCover = false;
   hasDigitalEditionListChildren = false;
   childrenPdfs = [];
-  protected id?: string;
+  protected id = '';
   protected text: any;
   protected collection: any;
   coverSelected: boolean;
-  collectionID: any;
   languageSubscription?: Subscription;
 
   constructor(
@@ -82,35 +80,20 @@ export class CoverPage {
   }
 
   ngOnInit() {
-    this.languageSubscription = this.langService.languageSubjectChange().subscribe(lang => {
-      this.lang = lang;
-      if (this.lang && this.id) {
-        this.loadCover(lang, this.id);
-      }
-    });
     this.route.params.subscribe(params => {
       this.id = params['collectionID'];
-      
-      if (this.lang && this.id) {
-        this.loadCover(this.lang, this.id);
-      }
-
-      if (this.collectionID !== params['collectionID']) {
-        this.events.publishSelectedItemInMenu({
-          menuID: this.collectionID,
-          component: 'cover-page'
-        });
-      }
-      this.collectionID = params['collectionID'];
       this.checkIfCollectionHasChildrenPdfs();
-    });
 
-    this.route.queryParams.subscribe(params => {
-      if ( params['publicationID'] === undefined ) {
-        this.coverSelected = true;
-      } else {
-        this.coverSelected = false;
-      }
+      this.languageSubscription = this.langService.languageSubjectChange().subscribe(lang => {
+        if (lang) {
+          this.loadCover(lang, this.id);
+        }
+      });
+
+      this.events.publishSelectedItemInMenu({
+        menuID: this.id,
+        component: 'cover-page'
+      });
     });
   }
 
@@ -128,45 +111,45 @@ export class CoverPage {
     let configChildrenPdfs = [];
 
     try {
-      configChildrenPdfs = this.config.getSettings(`collectionChildrenPdfs.${this.collectionID}`);
+      configChildrenPdfs = this.config.getSettings(`collectionChildrenPdfs.${this.id}`);
     } catch (e) {}
 
     if (configChildrenPdfs.length) {
       this.childrenPdfs = configChildrenPdfs;
       this.hasDigitalEditionListChildren = true;
-      this.events.publishCollectionWithChildrenPdfsHighlight(this.collectionID);
+      this.events.publishCollectionWithChildrenPdfsHighlight(this.id);
     }
   }
 
   loadCover(lang: string, id: string) {
-    this.getTocRoot(this.collectionID);
+    // this.getTocRoot(id);
     this.events.publishPageLoadedCover();
-    if (!isNaN(Number(this.id))) {
+    if (!isNaN(Number(id))) {
       if (!this.hasMDCover) {
         /**
          * ! The necessary API endpoint for getting the cover page via textService has not been
          * ! implemented, so getting the cover this way does not work. It has to be given in a
          * ! markdown file.
          */
-        this.textService.getCoverPage(id, lang).subscribe(
-          res => {
+        this.textService.getCoverPage(id, lang).subscribe({
+          next: (res) => {
             // in order to get id attributes for tooltips
             this.text = this.sanitizer.bypassSecurityTrustHtml(
               res.content.replace(/images\//g, 'assets/images/')
                 .replace(/\.png/g, '.svg')
             );
           },
-          error => { this.errorMessage = <any>error; }
-        );
+          error: (e) => { this.errorMessage = <any>e; }
+        });
       } else {
-        this.getCoverImageFromMdContent(`${lang}-${this.hasMDCover}-${this.id}`);
+        this.getCoverImageFromMdContent(`${lang}-${this.hasMDCover}-${id}`);
       }
     }
   }
 
   getCoverImageFromMdContent(fileID: string) {
-    this.mdContentService.getMdContent(fileID).subscribe(
-      text => {
+    this.mdContentService.getMdContent(fileID).subscribe({
+      next: (text) => {
         /* Extract image url and alt-text from markdown content. */
         this.image_alt = text.content.match(/!\[(.*?)\]\(.*?\)/)[1];
         if (this.image_alt === null) {
@@ -177,29 +160,26 @@ export class CoverPage {
           this.image_src = '';
         }
       },
-      error =>  {this.errorMessage = <any>error}
-    );
+      error: (e) =>  { this.errorMessage = <any>e; }
+    });
   }
 
   getTocRoot(id: string) {
-    if ( id === 'mediaCollections' || id === undefined ) {
-      return [{}];
+    if ( !(id === 'mediaCollections' || id === undefined ) ) {
+      this.tableOfContentsService.getTableOfContents(id).subscribe({
+        next: (tocItems: any) => {
+          tocItems.coverSelected = true;
+          this.events.publishTableOfContentsLoaded({tocItems: tocItems, searchTocItem: true, collectionID: tocItems.collectionId, 'caller':  'cover'});
+          this.storage.set('toc_' + id, tocItems);
+        },
+        error: (e) =>  { this.errorMessage = <any>e; }
+      });
     }
-    this.tableOfContentsService.getTableOfContents(id).subscribe(
-      (tocItems: any) => {
-        tocItems.coverSelected = this.coverSelected;
-        this.events.publishTableOfContentsLoaded({tocItems: tocItems, searchTocItem: true, collectionID: tocItems.collectionId, 'caller':  'cover'});
-        this.storage.set('toc_' + id, tocItems);
-      },
-      error =>  {this.errorMessage = <any>error}
-    );
-
-    return;
   }
 
   printMainContentClasses() {
     if (this.userSettingsService.isMobile()) {
-      return 'mobile-mode-cover-content';
+      return 'mobile-mode-content';
     } else {
       return '';
     }

@@ -12,7 +12,7 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content padding class="card-background-page">
+<ion-content class="ion-padding card-background-page">
   <ng-container *ngIf="!(userSettingsService.isMobile())">
 
     <div *ngIf="hasDigitalEditionListChildren">
@@ -31,6 +31,6 @@
   </ng-container>
 </ion-content>
 
-<ion-content padding class="card-background-page"  *ngIf="userSettingsService.isDesktop() && showPage">
+<ion-content class="ion-padding card-background-page" *ngIf="userSettingsService.isDesktop() && showPage">
   <cover [id]="collection.id" [language]="translate.currentLang"></cover>
 </ion-content>

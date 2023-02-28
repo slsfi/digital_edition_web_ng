@@ -5,23 +5,23 @@
 
     <ion-buttons>
         <ion-grid>
-            <ion-row class="secondary-toolbar-icons-wrapper" nowrap align-items-center>
+            <ion-row class="secondary-toolbar-icons-wrapper" class="ion-align-items-center">
               <ion-col *ngIf="showTextDownloadButton">
-                <button ion-button clear (click)="showDownloadModal()" class="sec-menu-button">
+                <button ion-button fill="clear" (click)="showDownloadModal()" class="sec-menu-button">
                   <ion-icon *ngIf="!usePrintNotDownloadIcon" class="download-icon" name="download"></ion-icon>
                   <ion-icon *ngIf="usePrintNotDownloadIcon" class="print-icon" name="print"></ion-icon>
                   <span *ngIf="!(userSettingsService.isMobile())" class="side-title">{{'DownloadTexts.Download' | translate }}</span>
                 </button>
               </ion-col>
               <ion-col *ngIf="showURNButton">
-                <button ion-button clear (click)="showReference()" class="sec-menu-button">
+                <button ion-button fill="clear" (click)="showReference()" class="sec-menu-button">
                   <ion-icon class="urn-icon" name="share-alt"></ion-icon>
                   <span *ngIf="!(userSettingsService.isMobile())" class="side-title">{{'Reference.refer' | translate }}</span>
                 </button>
               </ion-col>
               <!--
               <ion-col>
-                <button ion-button clear (click)="showSharePopover($event)" class="sec-menu-button">
+                <button ion-button fill="clear" (click)="showSharePopover($event)" class="sec-menu-button">
                   <ion-icon class="share-icon" name="share"></ion-icon>
                   <span *ngIf="!(userSettingsService.isMobile())" class="side-title">{{'Reference.share' | translate }}</span>
                 </button>
@@ -36,7 +36,7 @@
               </ion-col>
               -->
               <ion-col *ngIf="showDisplayOptionsButton">
-                <button ion-button clear #settingsIconElement (click)="showPopover($event)" class="sec-menu-button" id="settings-icon">
+                <button ion-button fill="clear" #settingsIconElement (click)="showPopover($event)" class="sec-menu-button" id="settings-icon">
                   <ion-icon class="settings-icon" name="settings"></ion-icon>
                   <span *ngIf="!(userSettingsService.isMobile())" class="side-title">{{'Read.Popover.Options' | translate }}</span>
                 </button>
@@ -48,7 +48,7 @@
 </ion-header>
 
 <!-- Main content with scroll -->
-<ion-content padding color="secondary" [ngClass]="printMainContentClasses()" #content>
+<ion-content class="ion-padding" [ngClass]="printMainContentClasses()" #content>
   <div *ngIf="userSettingsService.isDesktop()" class="column-container">
     <ion-fab
       *ngIf="showOccurrencesModal && hasOccurrenceResults && userSettingsService.isDesktop()"
