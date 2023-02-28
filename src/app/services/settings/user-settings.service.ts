@@ -14,6 +14,7 @@ export class UserSettingsService {
     private storage: StorageService,
   ) {
     this.detectPlatform();
+    console.log('initializing user settings service');
   }
 
   detectPlatform() {
@@ -65,7 +66,7 @@ export class UserSettingsService {
 
   isMobile() {
     if (this._mode === 'auto') {
-      return this.platform.is('mobile')
+      return this.platform.is('mobile');
     } else {
       return this._mode === 'mobile';
     }
