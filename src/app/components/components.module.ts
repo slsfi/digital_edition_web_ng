@@ -87,10 +87,6 @@ export function createTranslateLoader(http: HttpClient) {
     IllustrationsComponent,
     DateHistogram,
     MathJaxComponent,
-  ],
-  providers: [
-    UserSettingsService,
-    LanguageService
   ]
 })
 export class ComponentsModule { }
