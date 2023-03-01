@@ -148,29 +148,28 @@ export class DigitalEditionList implements OnInit {
   getDigitalEditions() {
     this.digitalEditionsFirstHalf = [];
     this.digitalEditionsSecondHalf = [];
-    this.digitalEditionListService.getDigitalEditions()
-      .subscribe(
-        digitalEditions => {
-          this.digitalEditions = digitalEditions;
-          if ( this.hasMediaCollections && this.galleryInReadMenu ) {
-            const mediaColl = new DigitalEdition({id: 'mediaCollections', title: 'media'});
-            this.digitalEditions?.unshift(mediaColl);
-          }
-          let de = digitalEditions;
-          this.events.publishDigitalEditionListRecieveData({ digitalEditions })
-          this.setPDF(de);
-          if ( this.collectionSortOrder !== undefined && Object.keys(this.collectionSortOrder).length > 0 )  {
-            de = this.sortListDefined(de, this.collectionSortOrder);
-          }
-          if (this.collectionsToShow !== undefined && this.collectionsToShow.length > 0) {
-            this.filterCollectionsToShow(de);
-          }
-          if (this.showEpubsInList && Object.keys(this.availableEpubs).length > 0) {
-            this.prependEpubsToDigitalEditions();
-          }
-        },
-        error => { this.errorMessage = <any>error }
-      );
+    this.digitalEditionListService.getDigitalEditions().subscribe({
+      next: digitalEditions => {
+        this.digitalEditions = digitalEditions;
+        if ( this.hasMediaCollections && this.galleryInReadMenu ) {
+          const mediaColl = new DigitalEdition({id: 'mediaCollections', title: 'media'});
+          this.digitalEditions?.unshift(mediaColl);
+        }
+        let de = digitalEditions;
+        this.events.publishDigitalEditionListRecieveData({ digitalEditions });
+        this.setPDF(de);
+        if ( this.collectionSortOrder !== undefined && Object.keys(this.collectionSortOrder).length > 0 )  {
+          de = this.sortListDefined(de, this.collectionSortOrder);
+        }
+        if (this.collectionsToShow !== undefined && this.collectionsToShow.length > 0) {
+          this.filterCollectionsToShow(de);
+        }
+        if (this.showEpubsInList && Object.keys(this.availableEpubs).length > 0) {
+          this.prependEpubsToDigitalEditions();
+        }
+      },
+      error: e => { this.errorMessage = <any>e; }
+    });
   }
 
   sortListDefined(list: any, sort: any) {
@@ -228,13 +227,13 @@ export class DigitalEditionList implements OnInit {
   }
 
   getTocRoot(collection: DigitalEdition) {
-    this.tableOfContentsService.getTableOfContents(collection.id)
-      .subscribe(
-        tocItems => {
-          this.tocItems = tocItems as any;
-          this.openFirstPage(collection);
-        },
-        error => { this.errorMessage = <any>error });
+    this.tableOfContentsService.getTableOfContents(collection.id).subscribe({
+      next: tocItems => {
+        this.tocItems = tocItems as any;
+        this.openFirstPage(collection);
+      },
+      error: e => { this.errorMessage = <any>e; }
+    });
   }
 
   setPDF(de: any) {

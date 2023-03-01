@@ -1,30 +1,26 @@
-<div *ngIf="layoutType == 'auto'">
-  <ion-grid *ngIf="userSettingsService.isDesktop() && !userSettingsService.isTablet()">
+<!-- The old template had different layout types (auto/grid/list) which are used in different scenarios (e.g. list for mobile), but this should work decently in most cases. -->
+  <ion-grid>
     <ion-row>
-      <ion-col style="display: flex; justify-content: center;" *ngFor="let edition of digitalEditions" menuClose
-      col-sm-12 col-md-6 col-xl-4 col-xxl-3 col-xxxl-2 (click)="openCollection(edition, false)">
-        <ion-card class="digital-edition"
-          style="padding: 20px; position: relative; background-color: white;">
-          <ion-card-header class="digital-edition-list-card-header">
-            <img
+      <ion-col size="12" size-sm="6" size-md="4" size-xl="3" *ngFor="let edition of digitalEditions" (click)="openCollection(edition, false)">
+        <ion-card class="digital-edition">
+          <ion-card-header class="digital-edition-list-card-header" [ngClass]="edition.isDownload ? 'download-only-edition' : ''">
+            <img [ngClass]="edition.isDownload ? 'download-only-edition' : ''"
               src="{{editionImages[edition.id] ? (editionImages[edition.id]).replace('.','_thumb.') : (editionImages.default).replace('.','_thumb.')}}">
-            <ion-icon class="download" *ngIf="edition.isDownload" name="download">
-            </ion-icon>
+            <div class="corner-download-icon"><ion-icon *ngIf="edition.isDownload" name="download"></ion-icon></div>
           </ion-card-header>
           <ion-card-content class="digital-edition-list-card-content">
-            <div style="background-color: white; text-align: center;">
-              <h2>{{ ('TOC-translation.' + edition.title | translate) !== 'TOC-translation.' + edition.title  ?  ('TOC-translation.' + edition.title | translate) : edition.title }}</h2>
-              <div class="book_download_container">
-                <div class="download_link"><p class="download_pdf" *ngIf="edition['pdf']" (click)="downloadBook($event, edition, 'pdf')">PDF</p></div>
-                <div class="download_link"><p class="download_epub" *ngIf="edition['epub']" (click)="downloadBook($event, edition, 'epub')">EPUB</p></div>
-              </div>
+            <h2>{{ ('TOC-translation.' + edition.title | translate) !== 'TOC-translation.' + edition.title  ?  ('TOC-translation.' + edition.title | translate) : edition.title }}</h2>
+            <div class="book_download_container">
+              <ion-button class="download_link" *ngIf="edition['pdf']" (click)="downloadBook($event, edition, 'pdf')">PDF</ion-button>
+              <ion-button class="download_link" *ngIf="edition['epub']" (click)="downloadBook($event, edition, 'epub')">EPUB</ion-button>
             </div>
           </ion-card-content>
         </ion-card>
       </ion-col>
     </ion-row>
   </ion-grid>
-
+<!--
+<div *ngIf="layoutType == 'auto'">
   <ion-grid *ngIf="userSettingsService.isTablet()">
     <ion-row>
       <ion-col style="display: flex; justify-content: center;" *ngFor="let edition of digitalEditions" menuClose
@@ -161,3 +157,4 @@
     </ion-row>
   </ion-grid>
 </div>
+-->
