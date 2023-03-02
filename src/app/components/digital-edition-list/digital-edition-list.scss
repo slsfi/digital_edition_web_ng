@@ -1,3 +1,52 @@
+ion-card-header.digital-edition-list-card-header {
+  cursor: pointer;
+
+  &.download-only-edition {
+    cursor: default;
+  }
+
+  img.download-only-edition {
+    clip-path: polygon(calc(100% - 50px) 0%,100% 50px,100% 100%,0% 100%,0% 0%);
+  }
+
+  .corner-download-icon {
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 12px 12px 0 0;
+
+    ion-icon {
+      font-size: 1.5625rem;
+    }
+  }
+}
+
+ion-card-content.digital-edition-list-card-content {
+  h2 {
+    font-size: 1.125rem;
+    line-height: 1.35;
+    text-align: center;
+  }
+
+  ion-icon.download {
+    font-size: 1.5625rem;
+    margin-right: 0.5rem;
+  }
+
+  .book_download_container {
+    display: flex;
+    justify-content: center;
+    gap: 0.5em;
+    margin-top: 0.5em;
+
+    ion-button.download_link {
+      --background: var(--button-background-color);
+      --color: var(--button-text-color);
+    }
+  }
+}
+
+  /* THESE ARE THE OLD STYLES
   .download {
       position: absolute;
       top: 0;
@@ -93,3 +142,4 @@
       margin-left: 15px;
     }
   }
+*/

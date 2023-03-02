@@ -1,4 +1,4 @@
-<ion-content padding>
+<ion-content class="ion-padding">
   <div *ngIf="readContent" [ngClass]="(userSettingsService.isMobile())?'markdown-container-mobile':'markdown-container'">
     <markdown [data]="readContent"></markdown>
   </div>
