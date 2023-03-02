@@ -2037,10 +2037,11 @@ page-introduction div.tei figure {
             cursor: pointer;
             float: right;
             opacity: 1;
-            transition: $opacity-hover-transition;
+            transition: var(--opacity-hover-transition);
+            font-size: 1.5625rem;
         }
-        .infoOverlayButton:hover:not(.disable-hover) {
-            opacity: $opacity-hover;
+        .infoOverlayButton:hover {
+            opacity: var(--opacity-hover);
         }
     }
     .infoOverlayContent {
@@ -2514,5 +2515,91 @@ page-foreword {
             letter-spacing: 0.02em;
             line-height: 1.35;
         }
+    }
+}
+
+/* Misc. styles on elements in page-introduction. Moved from introduction.scss since these apply to dynamically loaded content with innerHTML */
+page-introduction {    
+    #TOC h2 {
+        font-size: 1.1rem;
+        margin-bottom: 0.8rem;
+    }
+    
+    #TOC h5 {
+        font-size: 1rem;
+        margin-bottom: 0.6rem;
+        margin-top: 0.1rem;
+    }
+    
+    /* Links in the intro-toc. */
+    #TOC a {
+        text-decoration: none;
+        color: var(--page-introduction-separate-toc-text-color);
+        transition: var(--opacity-hover-transition);
+    }
+    #TOC a:hover {
+        opacity: var(--opacity-hover);
+    }
+    
+    #TOC p {
+        line-height: .1em;
+    }
+    
+    #TOC h2.contentSection.smallCaps {
+        font-size: 1.2em;
+        margin-bottom: .6em;
+        margin-top: 1.2em;
+        padding-top: .2em;
+        font-variant: small-caps;
+        font-weight: 600;
+        line-height: 1;
+    }
+    
+    #TOC h5.tei.contentSub2 {
+        font-size: 1em;
+        margin-bottom: .4em;
+        margin-top: .1em;
+        font-weight: 600;
+        line-height: 1;
+    }
+    
+    #TOC #toc_text > div > :first-child {
+        margin-top: 0.125rem;
+    }
+    
+    .hideIntro.tei #content {
+        display: none !important;
+    }
+    
+    .work_title {
+        font-style: italic;
+    }
+    
+    div[data-id="cont_introduction"] h2.tei.section {
+        text-align: left !important;
+        font-weight: normal !important;
+        margin: 1.4em 0 1.3em 0 !important;
+        font-size: 1.4em !important;
+    }
+    
+    div[data-id="cont_introduction"] h3.italics {
+        /* text-align, font-style and font-weight are most likely unnecessary here. */
+        text-align: left !important;
+        font-style: italic;
+        font-weight: normal !important;
+        margin: 1.3em 0 1.2em 0 !important;
+        font-size: 1.2em !important;
+    }
+    
+    div[data-id="cont_introduction"] h4 {
+        font-style: italic;
+        text-align: left;
+        font-weight: normal;
+        font-size: 1em;
+        margin: 1.1em 0 1em 0;
+    }
+    
+    div[data-id="content"] {
+        display: none;
     }
 }

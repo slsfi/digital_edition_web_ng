@@ -99,7 +99,7 @@ export class CommonFunctionsService {
     // Find the scrollable container of the element which is to be scrolled into view
     let container = element.parentElement;
     while (container !== null && container.parentElement !== null &&
-      !container.classList.contains('scroll-content')) {
+      !container.classList.contains('scroll-content-container')) {
       container = container.parentElement;
     }
     if (container === null || container.parentElement === null) {
@@ -162,10 +162,10 @@ export class CommonFunctionsService {
           clearInterval(that.intervalTimerId);
         } else {
           iterationsLeft -= 1;
-          const viewElements = document.querySelector('page-read:not([hidden])')?.getElementsByClassName('read-column');
+          const viewElements = document.querySelector('page-read:not([ion-page-hidden])')?.getElementsByClassName('read-column');
           if (viewElements && viewElements[0] !== undefined) {
             const lastViewElement = viewElements[viewElements.length - 1] as HTMLElement;
-            const scrollingContainer = document.querySelector('page-read:not([hidden]) > ion-content > div.scroll-content');
+            const scrollingContainer = document.querySelector('page-read:not([ion-page-hidden]) ion-content.publication-ion-content::part(scroll)');
             if (scrollingContainer !== null) {
               const x = lastViewElement.getBoundingClientRect().right + scrollingContainer.scrollLeft -
               scrollingContainer.getBoundingClientRect().left;

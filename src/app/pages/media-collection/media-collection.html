@@ -9,7 +9,7 @@
     <ion-title>{{mediaTitle}} – {{mediaCollection.length}} {{ ("MediaCollections.photos" | translate) !== "MediaCollections.photos" ?  ("MediaCollections.photos" | translate) : ("photos" | translate) }}</ion-title>
     <ion-buttons end>
       <button *ngIf="showURNButton" ion-button fill="clear" (click)="showReference()" class="sec-menu-button">
-        <ion-icon class="urn-icon" name="share-alt"></ion-icon>
+        <ion-icon class="urn-icon" name="arrow-redo-sharp"></ion-icon>
         <span *ngIf="!(userSettingsService.isMobile())" class="side-title">{{'Reference.refer' | translate }}</span>
       </button>
     </ion-buttons>

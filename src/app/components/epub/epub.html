@@ -28,7 +28,7 @@
                   <span *ngIf="!(userSettingsService.isMobile())" class="side-title">{{'Epub.Download' | translate }}</span>
                 </ion-button>
                 <ion-button *ngIf="showURNButton" fill="clear" class="sec-menu-button" (click)="showReference()">
-                  <ion-icon class="urn-icon" name="share-alt"></ion-icon>
+                  <ion-icon class="urn-icon" name="arrow-redo-sharp"></ion-icon>
                   <span *ngIf="!(userSettingsService.isMobile())" class="side-title">{{'Reference.refer' | translate }}</span>
                 </ion-button>
                 <ion-button *ngIf="showDisplayOptionsButton" fill="clear" #settingsIconElement (click)="showReadSettingsPopover($event)" class="sec-menu-button" id="settings-icon">

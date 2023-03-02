@@ -126,6 +126,7 @@ button {
   }
 }
 
+/* These styles are currently not applied since the text-changer component is encapsulated */
 text-changer.text-changer-desktop-view {
 @media screen and (max-width: 600px) {
   .forwardBackward {
@@ -138,6 +139,7 @@ text-changer.text-changer-desktop-view {
 }
 }
 
+/* These styles are currently not applied since the text-changer component is encapsulated */
 text-changer.text-changer-mobile-view {
   margin: 0;
 

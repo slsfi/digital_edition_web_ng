@@ -182,7 +182,7 @@ export class TopMenuComponent {
       id: document.URL,
       componentProps: {
         type: 'reference',
-        origin: 'top-menu-legacy',
+        origin: 'top-menu',
       }
     });
     modal.present();

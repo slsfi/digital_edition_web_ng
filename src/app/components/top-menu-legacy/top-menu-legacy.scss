@@ -70,7 +70,7 @@ div.title-logo-wrapper {
   }
 
   span {
-    font-family: var(--font-stack-top-menu-legacy);
+    font-family: var(--font-stack-top-menu);
     font-size: 1rem;
   }
 
@@ -82,7 +82,7 @@ div.title-logo-wrapper {
       margin-left: 0;
     }
     button.button-default {
-      filter: var(--top-menu-legacy-button-filter);
+      filter: var(--top-menu-button-filter);
     }
   }
   ion-buttons {
@@ -92,7 +92,7 @@ div.title-logo-wrapper {
     button.bar-button-default {
       padding-left: 20px;
       padding-right: 20px !important;
-      filter: var(--top-menu-legacy-button-filter);
+      filter: var(--top-menu-button-filter);
       transition: $opacity-hover-transition;
     }
     button.bar-button-default:hover:not(.disable-hover) {

@@ -3,7 +3,7 @@
     <text-changer slot="start" *ngIf="!(userSettingsService.isMobile())" [parentPageType]="'page-title'" class="text-changer-desktop-view"></text-changer>
     <ion-buttons slot="end" class="secondary-toolbar-buttons-wrapper">
       <ion-button *ngIf="showURNButton" (click)="showReference()">
-        <ion-icon slot="start" class="urn-icon" name="share"></ion-icon>
+        <ion-icon slot="start" class="urn-icon" name="arrow-redo-sharp"></ion-icon>
         <span *ngIf="!(userSettingsService.isMobile())" class="side-title">{{'Reference.refer' | translate }}</span>
       </ion-button>
       <!--
