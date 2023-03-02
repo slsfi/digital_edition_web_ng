@@ -1,0 +1,41 @@
+<ion-toolbar>
+  <ion-buttons class="top-menu-buttons" slot="start">
+    <ion-button (click)="toggleSplitPane()">
+      <ion-icon *ngIf="!splitPaneOpen" name="menu"></ion-icon>
+      <ion-icon *ngIf="splitPaneOpen" name="close"></ion-icon>
+    </ion-button>
+    <ion-button (click)="front()">
+      <ion-icon name="home"></ion-icon>
+    </ion-button>
+    <ion-button *ngIf="showTopContentButton && userSettingsService.isDesktop()" (click)="content()">
+      {{ 'TopMenu.Read' | translate }}
+    </ion-button>
+    <ion-button *ngIf="showTopAboutButton && userSettingsService.isDesktop()" (click)="about()">
+      {{ 'TopMenu.Info' | translate }}
+    </ion-button>
+    <ion-button *ngIf="showTopMusicButton && userSettingsService.isDesktop()" (click)="music()">
+      {{ 'TopMenu.Music' | translate }}
+    </ion-button>
+    <ion-button *ngIf="showTopSimpleSearchButton" class="simple-search-button" (click)="searchApp()" id="searchIconLegacy">
+      <ion-icon slot="start" name="search"></ion-icon>
+      <span class="side-title">{{ 'TopMenu.SimpleSearch' | translate }}</span>
+    </ion-button>
+    <ion-button *ngIf="showTopElasticButton" class="elastic-search-button" (click)="elasticSearch()" id="elasticSearchIconLegacy">
+      <ion-icon slot="start" name="search"></ion-icon>
+      <span class="side-title">{{ 'TopMenu.AdvancedSearch' | translate }}</span>
+    </ion-button>
+    <ion-button *ngIf="showTopURNButton" (click)="showReference($event)">
+      <ion-icon slot="start" name="share"></ion-icon>
+      <span class="side-title">{{ 'Reference.refer' | translate }}</span>
+    </ion-button>
+    <ion-button *ngIf="showHelpButton" (click)="help()">
+      <ion-icon name="help"></ion-icon>
+    </ion-button>
+    <ion-button *ngIf="showViewToggle" (click)="showUserSettingsPopover($event)" end>
+      <ion-icon name="earth"></ion-icon>
+    </ion-button>
+  </ion-buttons>
+  <div slot="end" class="title-logo-wrapper">
+    <title-logo></title-logo>
+  </div>
+</ion-toolbar>
