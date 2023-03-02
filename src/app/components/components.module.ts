@@ -29,6 +29,7 @@ import { TextChangerComponent } from './text-changer/text-changer';
 import { MathJaxComponent } from './math-jax/math-jax';
 import { SongExampleComponent } from './song-example/song-example';
 import { IllustrationsComponent } from './illustrations/illustrations';
+import { RouterLink } from "@angular/router";
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -55,19 +56,20 @@ export function createTranslateLoader(http: HttpClient) {
     DateHistogram,
     MathJaxComponent,
   ],
-  imports: [
-    IonicModule,
-    PipesModule,
-    TranslateModule.forChild({
-      loader: {
-        provide: TranslateLoader,
-        useFactory: (createTranslateLoader),
-        deps: [HttpClient]
-      }
-    }),
-    CommonModule,
-    FormsModule,
-  ],
+	imports: [
+		IonicModule,
+		PipesModule,
+		TranslateModule.forChild({
+			loader: {
+				provide: TranslateLoader,
+				useFactory: (createTranslateLoader),
+				deps: [HttpClient]
+			}
+		}),
+		CommonModule,
+		FormsModule,
+		RouterLink,
+	],
   exports: [
     TitleLogoComponent,
     TopMenuComponent,

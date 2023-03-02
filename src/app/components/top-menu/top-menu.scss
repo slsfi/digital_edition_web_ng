@@ -22,6 +22,9 @@ ion-toolbar ion-button {
   --background-hover: transparent;
   --ripple-color: transparent;
   --color-hover: rgba(var(--text-color-on-primary-color-background-rgb), var(--opacity-hover));
+  a {
+    color: #fff;
+  }
 }
 
 ion-toolbar ion-button:first-child {

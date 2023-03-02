@@ -3,12 +3,12 @@
 
     <!-- IONIC DOCS: https://ionicframework.com/docs/api/split-pane -->
     <ion-split-pane [when]="splitPaneOpen && splitPanePossible" contentId="content">
-    
+
         <!-- This is the default, main menu -->
         <ion-menu contentId="content" id="contentMenu">
             <ion-content class="toc-menu-content list-item-spacing">
                 <ion-list *ngIf="!readMenuOpen && !galleryMenuOpen && !menuConditionals.songTypesMenuOpen">
-    
+
                     <!-- Home button: src/app/pages/home -->
                     <ion-item *ngIf="genericSettingsService.show('TOC.Home')" (click)="front()" class="mainMenuItem" [ngClass]="tocHomeSelected?'selected-toc-item':''">
                         <p>
@@ -16,7 +16,7 @@
                         </p>
                         <ion-icon name="home" item-right small></ion-icon>
                     </ion-item>
-    
+
                     <!-- Markdown "About"-pages: src/app/pages/content -->
                     <ion-list *ngIf="aboutMenuMarkdown" class="accordion-menu">
                         <ion-item class="header" (tap)="simpleAccordionsExpanded.aboutMenuAccordion = !simpleAccordionsExpanded.aboutMenuAccordion;" tappable>
@@ -35,7 +35,7 @@
                             {{"TOC.About" | translate }}
                         </p>
                     </ion-item>
-    
+
                     <!-- Epubs: src/app/pages/epub -->
                     <ion-list class="accordion-menu" *ngIf="genericSettingsService.show('TOC.EPUB')">
                         <ion-item class="header" [ngClass]="availableEpubs[epubNames[0]]['highlight']?'selected-toc-item':''" *ngIf="epubNames.length == 1" (click)="openPage('epub', null, availableEpubs[epubNames[0]]['filename'])" tappable>
@@ -48,18 +48,18 @@
                             <p>{{"TOC.EPUBS" | translate }}</p>
                         </ion-item>
                         <div [style.height]="simpleAccordionsExpanded.epubs ? '100%' : '0'" class="simple-accordion-options options" *ngIf="epubNames.length > 1">
-                          <ng-container *ngFor="let name of epubNames" >
-                            <ion-list class="accordion-menu">
-                              <ion-item class="mainMenuItem" [ngClass]="availableEpubs[name]['highlight'] ? 'selected-toc-item' : ''" ion-item menuClose detail-push (click)="openPage('epub', null, availableEpubs[name]['filename'])">
-                                  <p>
-                                      {{name | translate }}
-                                  </p>
-                              </ion-item>
-                            </ion-list>
-                          </ng-container>
+                            <ng-container *ngFor="let name of epubNames" >
+                                <ion-list class="accordion-menu">
+                                    <ion-item class="mainMenuItem" [ngClass]="availableEpubs[name]['highlight'] ? 'selected-toc-item' : ''" ion-item menuClose detail-push (click)="openPage('epub', null, availableEpubs[name]['filename'])">
+                                        <p>
+                                            {{name | translate }}
+                                        </p>
+                                    </ion-item>
+                                </ion-list>
+                            </ng-container>
                         </div>
                     </ion-list>
-    
+
                     <!-- Publication collections  -->
                     <ion-list class="accordion-menu" *ngFor="let split of splitReadCollections; let i = index">
                         <div *ngIf="genericSettingsService.show('TOC.Read') && accordionTOC" >
@@ -69,7 +69,7 @@
                               <p *ngIf="i>0">{{"TOC.Read" + i | translate }}</p>
                           </ion-item>
                           <div [style.height]="simpleAccordionsExpanded.collectionsAccordion[i] ? '100%' : '0'" class="simple-accordion-options options">
-    
+
                               <ng-container *ngFor="let collection of collectionsListWithTOC">
                                   <ion-list *ngIf="collection.toc_exists && ( splitReadCollections.length <= 1 || splitReadCollections[i].includes(collection.id) )" class="accordion-menu">
                                       <!-- toggleSingleCollectionAccordion opens accordion  -->
@@ -95,7 +95,7 @@
                         </p>
                         <ion-icon name="arrow-forward" item-right small></ion-icon>
                     </ion-item>
-    
+
                     <!-- Music -->
                     <ion-list *ngIf="accordionMusic" no-margin class="accordion-menu">
                         <ion-item class="header" (tap)="toggleMusicAccordion()" tappable>
@@ -141,7 +141,7 @@
                             </div>
                         </div>
                     </ion-list>
-    
+
                     <!-- Pdf collections: src/app/pages/single-edition -->
                     <ion-list no-margin *ngIf="pdfCollections && showBooks" class="accordion-menu">
                         <ion-item class="header" (tap)="simpleAccordionsExpanded.pdfAccordion = !simpleAccordionsExpanded.pdfAccordion;" tappable>
@@ -158,7 +158,7 @@
                             </ng-container>
                         </div>
                     </ion-list>
-    
+
                     <!-- Media collections: src/app/pages/media-collections -->
                     <ion-list no-margin *ngIf="mediaCollectionOptions && genericSettingsService.show('TOC.MediaCollections') && !galleryInReadMenu" class="accordion-menu">
                         <ion-item class="header" (tap)="simpleAccordionsExpanded.galleryAccordion = !simpleAccordionsExpanded.galleryAccordion" tappable>
@@ -179,42 +179,42 @@
                             </ng-container>
                         </div>
                     </ion-list>
-    
+
                     <!-- Featured facsimiles -->
                     <ion-item *ngIf="genericSettingsService.show('TOC.Facsimiles')" menuClose detail-push (click)="openPage('featured-facsimiles')" class="mainMenuItem">
                         <p>
                             {{"TOC.Facsimiles" | translate }}
                         </p>
                     </ion-item>
-    
+
                     <!-- Person search: src/app/pages/person-search -->
                     <ng-container *ngIf="genericSettingsService.show('TOC.PersonSearch') && !musicAccordion.personSearchTypes.show">
                         <ion-item *ngFor="let ps of personSearchTypes" menuClose detail-push (click)="openPersonSearchPage(ps)" class="mainMenuItem" [ngClass]="tocPersonSearchSelected?'selected-toc-item':''">
                             <p>{{ps.translation | translate }}</p>
                         </ion-item>
                     </ng-container>
-    
+
                     <!-- Place search: src/app/pages/place-search -->
                     <ion-item class="mainMenuItem" [ngClass]="tocPlaceSearchSelected?'selected-toc-item':''" *ngIf="genericSettingsService.show('TOC.PlaceSearch') && !musicAccordion.placeSearch.show" ion-item menuClose detail-push (click)="openPage('place-search')">
                         <p>
                             {{"TOC.PlaceSearch" | translate }}
                         </p>
                     </ion-item>
-    
+
                     <!-- Tag search: src/app/pages/tag-search -->
                     <ion-item class="mainMenuItem" [ngClass]="tocTagSearchSelected?'selected-toc-item':''" *ngIf="genericSettingsService.show('TOC.TagSearch') && !musicAccordion.tagSearch.show" ion-item menuClose detail-push (click)="openPage('tag-search')">
                         <p>
                             {{"TOC.TagSearch" | translate }}
                         </p>
                     </ion-item>
-    
+
                     <!-- Work search: src/app/pages/work-search -->
                     <ion-item class="mainMenuItem" [ngClass]="tocWorkSearchSelected?'selected-toc-item':''" *ngIf="genericSettingsService.show('TOC.WorkSearch')" ion-item menuClose detail-push (click)="openPage('work-search')">
                         <p>
                             {{"TOC.WorkSearch" | translate }}
                         </p>
                     </ion-item>
-    
+
                     <!-- Song types -->
                     <ion-list *ngIf="genericSettingsService.show('TOC.SongTypes') && !songTypesMenuMarkdown" no-margin class="accordion-menu">
                         <ion-item class="header" (tap)="simpleAccordionsExpanded.songTypesAccordion = !simpleAccordionsExpanded.songTypesAccordion;" tappable>
@@ -228,7 +228,7 @@
                         </div>
                     </ion-list>
                 </ion-list>
-    
+
                 <!-- Read Menu -->
                 <!-- THIS IS NOT USED
                 <ng-container *ngIf="readMenuOpen">
@@ -247,7 +247,7 @@
                     </ng-container>
                 </ng-container>
                 -->
-    
+
                 <!-- Gallery Menu -->
                 <!-- THIS IS NOT USED
                 <ng-container *ngIf="galleryMenuOpen">
@@ -265,7 +265,7 @@
                     </ion-item>
                 </ng-container>
                 -->
-    
+
                 <!-- Static Pages Menus In Main TOC -->
                 <ng-container *ngIf="staticPagesMenusInTOC?.length > 0">
                     <ng-container *ngFor="let sp of staticPagesMenusInTOC">
@@ -275,7 +275,7 @@
                         </ng-container>
                     </ng-container>
                 </ng-container>
-    
+
             </ion-content>
             <!--div class="menuResizer" id="menuResizer"></div-->
         </ion-menu>
@@ -303,18 +303,18 @@
             <ion-content class="toc-menu-content list-item-spacing">
                 <!-- TOC Type:  Drilldown -->
                 <table-of-contents-drilldown-menu *ngIf="!accordionTOC"></table-of-contents-drilldown-menu>
-    
+
                 <!-- TOC Type: Accordion -->
                 <table-of-contents-accordion [open]="true" [defaultSelectedItem]='defaultSelectedItem' *ngIf="accordionTOC && options && !openCollectionFromToc" [showBackButton]="true" [options]="options" [collectionId]="currentCollectionId" [collectionName]="currentCollectionName" [settings]="sideMenuSettings"></table-of-contents-accordion>
                 <table-of-contents-accordion *ngIf="currentCollection && accordionTOC && openCollectionFromToc" [defaultSelectedItem]='defaultSelectedItem' [open]="true" [showBackButton]="true" [options]="currentCollection.accordionToc" [collectionId]="currentCollectionId" [collectionName]="currentCollection.title" [settings]="sideMenuSettings"></table-of-contents-accordion>
             </ion-content>
             <!--div class="menuResizer" id="menuResizer"></div-->
         </ion-menu>
-    
+
         <!-- Page content, which is displayed in the right cointainer of <ion-split-pane> -->
         <div class="ion-page" id="content">
             <ion-router-outlet [animated]="false"></ion-router-outlet>
         </div>
-    
+
     </ion-split-pane>
 </ion-app>
