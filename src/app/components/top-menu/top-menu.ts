@@ -10,7 +10,7 @@ import { SearchAppPage } from 'src/app/modals/search-app/search-app';
 import { UserSettingsPopoverPage } from 'src/app/modals/user-settings-popover/user-settings-popover';
 
 /**
- * Generated class for the TopMenuComponent component.
+ * Generated class for the TopMenu component.
  *
  * See https://angular.io/api/core/Component for more info on Angular
  * Components.
@@ -182,7 +182,7 @@ export class TopMenuComponent {
       id: document.URL,
       componentProps: {
         type: 'reference',
-        origin: 'top-menu',
+        origin: 'top-menu-legacy',
       }
     });
     modal.present();

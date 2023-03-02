@@ -1,4 +1,6 @@
 <ion-app>
+    <top-menu-legacy (hamburgerMenuClick)="toggleSplitPane()" [splitPanePossible]="splitPanePossible" [splitPaneOpen]="splitPaneOpen" [ngClass]="{'splitPanePossible': splitPanePossible}"></top-menu-legacy>
+
     <top-menu (hamburgerMenuClick)="toggleSplitPane()" [splitPanePossible]="splitPanePossible" [splitPaneOpen]="splitPaneOpen" [ngClass]="{'splitPanePossible': splitPanePossible}"></top-menu>
 
     <!-- IONIC DOCS: https://ionicframework.com/docs/api/split-pane -->

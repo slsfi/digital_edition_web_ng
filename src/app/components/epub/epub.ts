@@ -581,6 +581,7 @@ export class EpubComponent {
     }
 
     // Select ion-split-pane element in order to observe for mutations
+    const splitPaneElementLegacy = document.querySelector('top-menu-legacy + ion-split-pane');
     const splitPaneElement = document.querySelector('top-menu + ion-split-pane');
 
     // Callback function to execute when mutations are observed

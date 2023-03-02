@@ -24,6 +24,7 @@ ion-toolbar ion-button {
   --color-hover: rgba(var(--text-color-on-primary-color-background-rgb), var(--opacity-hover));
   a {
     color: #fff;
+    text-decoration: none;
   }
 }
 
@@ -60,119 +61,119 @@ div.title-logo-wrapper {
   padding: 0 .5rem 0 .75rem;
 }
 
-  /*
-  ion-toolbar > .toolbar-content > ion-grid > ion-row {
-    flex-wrap: nowrap;
-  }
-
-  .button-inner {
-    font-weight: 600;
-  }
-
-  span {
-    font-family: var(--font-stack-top-menu);
-    font-size: 1rem;
-  }
-
-  .mobile_row {
-    display: flex;
-    justify-content: flex-start;
-    .enable {
-      padding-left: 0;
-      margin-left: 0;
-    }
-    button.button-default {
-      filter: var(--top-menu-button-filter);
-    }
-  }
-  ion-buttons {
-    display: flex !important;
-    width: 100%;
-
-    button.bar-button-default {
-      padding-left: 20px;
-      padding-right: 20px !important;
-      filter: var(--top-menu-button-filter);
-      transition: $opacity-hover-transition;
-    }
-    button.bar-button-default:hover:not(.disable-hover) {
-      opacity: $opacity-hover;
-    }
-    button.bar-button-default:active {
-      opacity: 1;
-    }
-  }
-
-  @media only screen and (max-width: 820px) {
-    ion-buttons {
-      button.bar-button-default {
-        padding-left: 12px;
-        padding-right: 12px !important;
-      }
-    }
-    .side-title {
-      display: none;
-    }
-  }
-
-  ion-toolbar ion-buttons {
-    margin-left: -60px !important;
-    transition: 0.3s margin-left ease-in;
-  }
-
-  .toolbar-content ion-title.title {
-    height: 100%;
-  }
-
-  .side-title {
-    font-size: 10px;
-    margin-left: 8px;
-    font-weight: normal;
-  }
-
-.toolbar-ios ion-title {
-  padding: 0;
+/*
+ion-toolbar > .toolbar-content > ion-grid > ion-row {
+  flex-wrap: nowrap;
 }
 
-.toolbar-md {
-  padding: 0;
+.button-inner {
+  font-weight: 600;
 }
 
-.toolbar {
-  max-height: 70px !important;
-  min-height: 70px !important;
+span {
+  font-family: var(--font-stack-top-menu-legacy);
+  font-size: 1rem;
 }
 
 .mobile_row {
-  background-color: transparent;
+  display: flex;
+  justify-content: flex-start;
+  .enable {
+    padding-left: 0;
+    margin-left: 0;
+  }
+  button.button-default {
+    filter: var(--top-menu-legacy-button-filter);
+  }
+}
+ion-buttons {
+  display: flex !important;
+  width: 100%;
+
+  button.bar-button-default {
+    padding-left: 20px;
+    padding-right: 20px !important;
+    filter: var(--top-menu-legacy-button-filter);
+    transition: $opacity-hover-transition;
+  }
+  button.bar-button-default:hover:not(.disable-hover) {
+    opacity: $opacity-hover;
+  }
+  button.bar-button-default:active {
+    opacity: 1;
+  }
+}
+
+@media only screen and (max-width: 820px) {
+  ion-buttons {
+    button.bar-button-default {
+      padding-left: 12px;
+      padding-right: 12px !important;
+    }
+  }
+  .side-title {
+    display: none;
+  }
+}
+
+ion-toolbar ion-buttons {
+  margin-left: -60px !important;
+  transition: 0.3s margin-left ease-in;
+}
+
+.toolbar-content ion-title.title {
+  height: 100%;
+}
+
+.side-title {
+  font-size: 10px;
+  margin-left: 8px;
+  font-weight: normal;
+}
+
+.toolbar-ios ion-title {
+padding: 0;
+}
+
+.toolbar-md {
+padding: 0;
+}
+
+.toolbar {
+max-height: 70px !important;
+min-height: 70px !important;
+}
+
+.mobile_row {
+background-color: transparent;
 }
 
 .mobile_row > button {
-  background-color: transparent !important; // imp needed to override hover bg-color
-  box-shadow: none !important;  // imp needed to override shadow on click
+background-color: transparent !important; // imp needed to override hover bg-color
+box-shadow: none !important;  // imp needed to override shadow on click
 }
 
 .secondary.toolbar {
-  max-height: 50px !important;
-  min-height: 50px !important;
+max-height: 50px !important;
+min-height: 50px !important;
 }
 
 .split-pane-visible {
-  top-menu {
-    left: $top-menu-left-split-pane;
-  }
+top-menu-legacy {
+  left: $top-menu-legacy-left-split-pane;
+}
 }
 
 .split-pane {
-  margin-top: 10px;
+margin-top: 10px;
 }
 
 ion-icon {
-  font-size: 1.8rem;
+font-size: 1.8rem;
 
-  @media only screen and (max-width: 650px) {
-    font-size: 1.8rem;
-  }
+@media only screen and (max-width: 650px) {
+  font-size: 1.8rem;
+}
 }
 
 */

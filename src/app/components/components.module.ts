@@ -19,7 +19,7 @@ import { PipesModule } from 'src/pipes/pipes.module';
 import { CommonModule } from '@angular/common';
 import { LanguageService } from '../services/languages/language.service';
 import { FormsModule } from '@angular/forms';
-import { TopMenuComponent } from './top-menu/top-menu';
+import { TopMenuLegacyComponent } from './top-menu-legacy/top-menu-legacy';
 import { TitleLogoComponent } from './title-logo/title-logo';
 import { TableOfContentsAccordionComponent } from './table-of-contents-accordion/table-of-contents-accordion';
 import { TableOfContentsDrilldownMenuComponent } from './table-of-contents-drilldown-menu/table-of-contents-drilldown-menu';
@@ -30,6 +30,7 @@ import { MathJaxComponent } from './math-jax/math-jax';
 import { SongExampleComponent } from './song-example/song-example';
 import { IllustrationsComponent } from './illustrations/illustrations';
 import { RouterLink } from "@angular/router";
+import { TopMenuComponent } from "./top-menu/top-menu";
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -38,6 +39,7 @@ export function createTranslateLoader(http: HttpClient) {
 @NgModule({
   declarations: [
     TitleLogoComponent,
+    TopMenuLegacyComponent,
     TopMenuComponent,
     // SplitPaneToggleComponent,
     TableOfContentsDrilldownMenuComponent,
@@ -72,6 +74,7 @@ export function createTranslateLoader(http: HttpClient) {
 	],
   exports: [
     TitleLogoComponent,
+    TopMenuLegacyComponent,
     TopMenuComponent,
     // SplitPaneToggleComponent,
     TableOfContentsDrilldownMenuComponent,

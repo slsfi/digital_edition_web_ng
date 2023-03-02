@@ -101,7 +101,7 @@
     font-style: italic;
     font-weight: 300;
   }
-  
+
   /* Source Serif 4 fonts */
   @font-face {
     font-family: "SourceSerif";
@@ -175,7 +175,7 @@
     font-style: italic;
     font-weight: 300;
   }
-  
+
   /* Mulish fonts */
   @font-face {
     font-family: "Mulish";
@@ -241,7 +241,7 @@
     font-style: italic;
     font-weight: 300;
   }
-  
+
   /* Inter fonts */
   @font-face {
     font-family: "Inter";
@@ -315,7 +315,7 @@
     font-style: italic;
     font-weight: 300;
   }
-  
+
 
 
   // STYLES FOR COMMON HTML ELEMENTS
@@ -330,7 +330,7 @@
     -webkit-user-select: text;
     user-select: text;
   }
-  
+
   h1, h2, h3, h4, h5, h6 {
     font-weight: 700;
   }
@@ -354,7 +354,7 @@
     h1, h2, h3, h4 {
       margin-bottom: 0.5rem;
     }
-    
+
     h1 {
       font-size: 1.625rem;
       margin-top: 2rem;
@@ -369,23 +369,23 @@
       font-size: 1.4375rem;
       margin-top: 1.8rem;
     }
-    
+
     h3 {
       font-size: 1.25rem;
       margin-top: 1.5rem;
     }
-    
+
     h2 + h3 {
       margin-top: 1rem;
     }
-    
+
     h4 {
       font-size: 1.125rem;
       font-weight: normal;
       font-style: italic;
       margin-top: 1.25rem;
     }
-    
+
     p {
       line-height: 1.625rem;
       margin-bottom: 0.8rem;
@@ -410,7 +410,7 @@
       float: left;
       margin: 0 1rem 1rem 0;
     }
-    
+
     img[src$="#align-right"] {
       float: right;
       margin: 0 0 1rem 1rem;
@@ -425,7 +425,7 @@
       h1 {
         text-transform: none;
       }
-      
+
       h2 {
         font-size: 1.625rem;
         margin-top: 0;
@@ -511,7 +511,7 @@
     width: 32px;
     height: 32px;
   }
-  
+
 
   // OTHER GLOBAL STYLES
 
@@ -569,7 +569,7 @@
       }
     }
   }
-  
+
 
   /*
 
@@ -612,57 +612,57 @@
       width: 2rem !important;
       height: 2rem !important;
   }
-  
+
   .button-md {
       height: 2.3rem !important;
   }
-  
+
   .button-md.searchbar-clear-icon {
     height: 100% !important;
   }
-  
+
   .tei.heading{
       font-size: 1.3rem !important;
       text-transform: none;
   }
-  
+
   .tei.places {
       font-size: 1.0rem;
       color: #78756f;
   }
-  
+
   .tei.collections {
       font-size: 1rem;
       color: #78756f;
   }
-  
+
   .tei.place_name,.onki_province,.collection {
       color: #78756f;
   }
-  
+
   // Search match, also defined in read-text.scss.
   match {
       background-color: transparent !important;
   }
-  
+
   img[src*="#fsfd_bild_md_left"] {
       padding: 2px;
       border: 1px solid #c4c4b1;
       float: left;
       margin-right: 10px;
   }
-  
+
   img[src*="#fsfd_bild_md_right"] {
       padding: 2px;
       border: 1px solid #c4c4b1;
       float: right;
       margin-left: 10px;
   }
-  
+
   blockquote {
       font-style: italic;
   }
-  
+
   // This applies to descriptions in TOC, but unclear why declared here and not in table-of-contents-accordion.scss
   .description {
       white-space: normal;
@@ -671,11 +671,11 @@
   .media_description {
       float: left;
   }
-  
-  
-  
+
+
+
   // START OF ORIGINAL APP.SCSS RULES
-  
+
   body {
     -webkit-user-select: text;
     -moz-user-select: text;
@@ -684,52 +684,52 @@
     text-rendering: auto;
     background-color: red;
   }
-  
+
   ion-label {
     overflow: visible!important;
   }
-  
+
   .selectable { -webkit-user-select: text; -moz-user-select: text; -ms-user-select: text; user-select: text; }
-  
+
   ion-app, ion-app.md {
     font-family: var(--font-stack-app-base);
     font-size: 1.4rem;
     background-color: #fff;
   }
-  
+
   mark {
     background-color: $purple-color !important;
     color: white;
   }
-  
-  
-  
+
+
+
   .card-md p {
     font-size: 1.2rem;
   }
-  
+
   p, blockquote {
     line-height: 2.2rem;
   }
-  
-  
-  
+
+
+
   .ion-page {
     min-width: 200px;
     overflow: hidden;
   }
-  
+
   .md .modal-wrapper {
     border-radius: $popover-md-border-radius;
   }
-  
+
   .facsimile-zoom-modal, .illustration-modal {
-  
+
     .close-button {
       font-size: 3rem;
       margin-right: 1.2rem;
     }
-  
+
     .modal-wrapper {
       top: 0;
       left: 0;
@@ -737,11 +737,11 @@
       width: 100%;
       height: 100%;
       border-radius: 0;
-  
+
       .content {
         background-color: rgba(0,0,0,0.0) !important;
       }
-  
+
       img {
         height: auto;
         width: auto;
@@ -756,10 +756,10 @@
       }
     }
   }
-  
+
   .back-to-list-button {
     background-color: var(--toc-back-button-background-color) !important;
-  
+
     .back-button-text {
       color: var(--toc-back-button-text-color);
       font-size: 1rem;
@@ -785,12 +785,12 @@
     top: 0;
     z-index: 999;
   }
-  
+
   // Banner
   .banner {
     position: relative;
     margin-top: 55px;
-  
+
     .foreground {
         position: absolute;
         bottom: 0;
@@ -799,7 +799,7 @@
         background: rgba(0,0,0,0.5);
     }
   }
-  
+
   // Logo and two rows in title
   ion-title {
     .logo {
@@ -808,11 +808,11 @@
       margin: 0 auto;
       float: right;
     }
-  
+
     .toolbar-title{
       padding-right: 0px;
     }
-  
+
     .page-title {
       font-size: 0.9rem;
       text-transform: uppercase;
@@ -820,49 +820,49 @@
       font-weight: bold;
       margin-left: 5px;
     }
-  
+
     .page-subtitle {
       font-size: 0.9rem;
       font-style: italic;
       margin-top: 0px;
     }
   }
-  
+
   .header-md::after {
     display: none;
   }
-  
+
   ion-toolbar.toolbar {
     padding: 0;
   }
-  
+
   ion-nav[main] {
     transition: width 2s;
   }
-  
+
   ion-menu {
     .page-title {
       margin-left: 5px;
     }
-  
+
     ion-content {
       border-right: 1px solid #dedede;
     }
-  
+
     ion-icon {
       color: $forward-arrow-color;
     }
   }
-  
+
   ion-toolbar.secondary {
-  
+
     .toolbar-content  {
       .toolbar-title {
         font-size: 1.5rem;
       }
     }
   }
-  
+
   ion-row.secondary-toolbar-icons-wrapper {
     ion-icon {
       font-size: 1.75rem;
@@ -870,35 +870,35 @@
       cursor: pointer;
     }
   }
-  
+
   ion-label {
     font-size: 1rem;
   }
-  
+
   ion-select {
     .select-text {
       font-size: 1rem;
     }
   }
-  
+
   ion-list {
     ion-label {
       font-size: 1rem !important;
     }
   }
-  
+
   ion-toolbar {
     ion-icon {
       font-size: 2rem;
     }
   }
-  
+
   ion-fab {
     ion-icon {
       font-size: 1.5rem !important;
     }
   }
-  
+
   // Ordinary buttons
   button.button {
     background-color: var(--button-background-color);
@@ -920,7 +920,7 @@
   button.button.activated:not(.button-outline):not(.button-clear) {
     background-color: var(--button-background-color);
   }
-  
+
   // Fab buttons
   button.fab {
     background-color: var(--fab-button-primary-background-color);
@@ -934,7 +934,7 @@
     background-color: var(--fab-button-secondary-background-color);
     color: var(--fab-button-secondary-icon-color);
   }
-  
+
   // Toggle buttons
   ion-toggle.toggle.toggle-checked .toggle-icon {
       background-color: rgba(var(--button-background-color-rgb), 0.2);
@@ -942,7 +942,7 @@
   ion-toggle.toggle.toggle-checked .toggle-inner {
       background-color: var(--button-background-color);
   }
-  
+
   // Radio buttons
   ion-radio.radio .radio-checked {
     border-color: var(--button-background-color);
@@ -953,14 +953,14 @@
   ion-item.item-radio.item-radio-checked ion-label.label {
     color: var(--button-background-color);
   }
-  
+
   // Checkboxes
   ion-checkbox.checkbox .checkbox-checked {
     border-color: var(--button-background-color);
     background-color: var(--button-background-color);
   }
-  
-  
+
+
   // These two rules fix the vertical alignment of icons in fab-buttons.
   .fab[mini],
   .fab-list-active .fab {
@@ -969,16 +969,16 @@
   .fab[mini] .fab-close-icon {
     line-height: 1.75;
   }
-  
+
   .item-block {
     min-height: 2.2rem;
   }
-  
+
   input {
     font-size: 1rem !important;
     line-height: 0rem !important;
   }
-  
+
 
   .front-page-list {
     .list-ios > .item-block:first-child {
@@ -988,15 +988,15 @@
       border-bottom: none !important;
     }
   }
-  
+
   .green-box {
     background-color: #d3de9c;
   }
-  
+
   .brown-box {
     background-color: #e3dbc9;
   }
-  
+
   .select-edition {
     p {
       text-decoration: none;
@@ -1004,40 +1004,40 @@
     }
     p:after {
       content: '';
-  
+
       width: 100%;
       position: absolute;
       left: 0;
       bottom: 1px;
-  
+
       border-width: 0 0 1px;
       border-style: solid;
     }
   }
-  
+
   .item-md p {
     font-size: 1rem;
     color: map-get($map: $colors, $key: 'dark');
   }
-  
+
   // Previously this rule affected all divs and buttons, testing to limit the scope since it's otherwise a very problematic rule. The intention was probably to just affect the searchbar./
   .searchbar input, .searchbar div, .searchbar button {
     font-size: 1rem !important;
     line-height: 1rem !important;
   }
-  
+
   .searchbar-input{
     height: 2rem !important;
   }
   .searchbar-ios{
     background-color: rgba(0,0,0,0.0);
   }
-  
+
   // Ion-content styles
   ion-content.content {
       background-color: var(--main-background-color);
   }
-  
+
   // Primary and secondary toolbar styles
   ion-toolbar.toolbar .toolbar-background {
       background: var(--primary-color);
@@ -1046,8 +1046,8 @@
   ion-toolbar.toolbar.secondary .toolbar-background {
       background: var(--secondary-color);
   }
-  top-menu ion-toolbar.toolbar .toolbar-background {
-      border-bottom: var(--top-menu-toolbar-bottom-border);
+  top-menu-legacy ion-toolbar.toolbar .toolbar-background {
+      border-bottom: var(--top-menu-legacy-toolbar-bottom-border);
   }
   ion-toolbar.toolbar:not(.secondary) .toolbar-content button,
   ion-toolbar.toolbar:not(.secondary) .toolbar-content button:hover:not(.disable-hover) {
@@ -1056,7 +1056,7 @@
   ion-toolbar.secondary.toolbar .toolbar-content .toolbar-title {
     color: var(--text-color-on-secondary-color-background);
   }
-  
+
   // Ion-modal styles
   ion-modal ion-content.content {
     background-color: var(--ion-modal-content-background-color);
@@ -1076,7 +1076,7 @@
     background-color: transparent;
     border-bottom-color: var(--ion-modal-item-divider-border-bottom-color);
   }
-  
+
   // Ion-popover styles
   ion-popover div.popover-content,
   ion-popover div.popover-content ion-item.item {
@@ -1088,7 +1088,7 @@
   ion-popover div.popover-content ion-list-header.list-header {
     background-color: var(--ion-popover-list-header-background-color);
   }
-  
+
   // Table of contents (left navigation) styles
   ion-menu ion-content.toc-menu-content {
     background-color: var(--toc-background-color);
@@ -1105,7 +1105,7 @@
   ion-menu ion-content.toc-menu-content .list-md > .item-block:last-child .item-inner {
     border-bottom: 1px solid var(--toc-divider-color);
   }
-  
+
   ion-menu#contentMenu ion-item.item.selected-toc-item {
     font-weight: var(--toc-selected-item-font-weight);
     background-color: var(--toc-selected-item-background-color);
@@ -1120,7 +1120,7 @@
   ion-menu#contentMenu ion-item.item.selected-toc-item ion-icon {
     color: var(--toc-selected-item-arrow-color) !important;
   }
-  
+
   // Table of content styles for simple accordion lists, including nested lists
   ion-menu {
     &#contentMenu ion-item.mainMenuItem,
@@ -1155,12 +1155,12 @@
       padding-left: 92px;
     }
   }
-  
+
   ion-list.accordion-menu ion-item.header ion-icon.header-icon {
     will-change: transform;
     transition: transform 0.3s ease;
   }
-  
+
   ion-list.accordion-menu ion-item.header ion-icon.header-icon.rotate {
     -webkit-transform: rotate(90deg);
     -moz-transform: rotate(90deg);
@@ -1168,51 +1168,51 @@
     -o-transform: rotate(90deg);
     transform: rotate(90deg);
   }
-  
+
   // The toc-items themselves should not have a bg-color, instead the whole toc-menu has a bg-color.
   ion-list.accordion-menu ion-item.item,
   ion-item.mainMenuItem {
     background-color: unset;
   }
-  
+
   ion-list.accordion-menu > ion-item.item-block:last-child .item-inner {
     border-bottom: 1px solid var(--toc-divider-color);
   }
-  
+
   ion-list.accordion-menu div.options {
     will-change: height;
     transition: height 0.3s ease;
     overflow-y: hidden;
     height: 0;
   }
-  
+
   .mainMenuItem{
     font-weight: 400;
   }
-  
+
   ion-label > p {
     white-space: normal;
     font-size: 1rem !important;
   }
-  
+
   ion-icon.menu-download{
     font-size: 1.5rem !important;
     color:rgba($color: #000000, $alpha: 0.3);
   }
-  
+
   ion-list.accordion-menu{
     margin: 0 !important;
   }
-  
+
   ion-menu .item-md ion-label.label > p {
     margin: 0;
     line-height: 1.5;
   }
-  
+
   ion-menu .item-md ion-label.label {
     margin: 11px 8px 11px 0;
   }
-  
+
   .shadow{
     background-color: rgba(0,0,0,.6);
     top: 0;
@@ -1224,20 +1224,20 @@
     z-index: 3 !important;
     visibility: visible;
   }
-  
+
   ion-nav{
     transform: none !important;
     z-index: 1 !important;
     background-color: $background-color !important;
   }
-  
+
   #tableOfContentsMenu{
     transform: none !important;
     z-index: 7 !important;
   }
-  
-  
-  
+
+
+
   // Adjust placement of read-page/intro settings and share popovers
   .popover_settings .popover-content,
   .share-popover .popover-content {
@@ -1258,12 +1258,12 @@
       right: 6px !important;
     }
   }
-  
+
   // This is the opacity of the darkened background around modals.
   ion-backdrop {
     opacity: 0.3 !important;
   }
-  
+
   // Buttons in the secondary toolbar.
   button.sec-menu-button.button,
   button.sec-menu-button.bar-button {
@@ -1285,14 +1285,14 @@
   button.sec-menu-button.bar-button .side-title {
     font-size: 10px;
   }
-  
+
   @media only screen and (max-width: 820px) {
     button.sec-menu-button.button .side-title,
     button.sec-menu-button.bar-button .side-title {
       display: none;
     }
   }
-  
+
   // Circular buttons with only an icon inside
   button.circular-icon-button.button {
     border-radius: 1.25rem;
@@ -1302,28 +1302,28 @@
   button.circular-icon-button.button ion-icon {
     font-size: 1.25rem;
   }
-  
+
   // Style for alert where a different variant, manuscript or facsimile text can be selected.
   ion-alert.select-text-alert .alert-wrapper,
   ion-alert.custom-select-alert .alert-wrapper {
     max-width: 500px;
     border-radius: $corner-roundness;
-  
+
     .alert-title {
       font-size: 1.125rem;
     }
-  
+
     .alert-radio-group {
       max-height: 50vh;
     }
-  
+
     button.alert-radio-button {
       font-size: 1rem;
-  
+
       .alert-radio-label {
         white-space: normal;
       }
-  
+
       &[aria-checked="true"] {
         .alert-radio-icon {
           border-color: var(--button-background-color);
@@ -1336,12 +1336,12 @@
         }
       }
     }
-  
+
     .alert-button-group button.alert-button {
       color: var(--button-background-color);
     }
   }
-  
+
   // Style for the component in read columns where a different variant, manuscript or facsimile text can be selected.
   .text-select-wrapper {
     padding: 0 0 1rem 0;
@@ -1349,7 +1349,7 @@
     border-bottom: 1px solid #666;
     background-color: var(--page-read-columns-background-color);
     width: 100%;
-  
+
     h3 {
       font-size: 1rem;
       font-weight: 600;
@@ -1357,22 +1357,22 @@
       white-space: normal;
       margin: 0 0 0.5rem 0 !important;
     }
-  
+
     .flex-buttons {
       display: flex;
       align-items: flex-start;
       flex-wrap: wrap;
     }
-  
+
     .flex-buttons button.button {
       font-size: 0.8125rem;
       height: 1.875rem !important;
     }
-  
+
     .flex-buttons + ion-item {
       margin-top: 0.5rem;
     }
-  
+
     .flex-buttons > button.button.align-right {
       margin-left: auto;
     }
@@ -1389,32 +1389,32 @@
     margin: 0;
     padding: 0.5rem;
   }
-  
+
   // Styles for the popover showing sort options for the TOC in sortable TOCs
   .collectionFiltersSelectOptionsPopover .popover-content {
     overflow-y: hidden;
     background-color: #fafafa;
-  
+
     ion-item {
       background-color: #fafafa;
     }
   }
 
   */
-  
-  
-  
+
+
+
   // Load TEI-stylesheets. Moved here from project-variables.scss
   @import './theme/tei';
   @import './theme/tei_comment';
   @import './theme/tei_variant';
   @import './theme/tei_manuscript';
   @import './theme/leaflet';
-  
-  
-  
-  
-  
+
+
+
+
+
   // Intro.js core - these are styles for the tutorial popover
   .introjs-overlay {
     position: absolute;
@@ -1437,7 +1437,7 @@
          -o-transition: all 0.3s ease-out;
             transition: all 0.3s ease-out;
   }
-  
+
   .introjs-fixParent {
     opacity: 1.0 !important;
     -webkit-transform: none !important;
@@ -1446,13 +1446,13 @@
          -o-transform: none !important;
             transform: none !important;
   }
-  
+
   .introjs-showElement,
   tr.introjs-showElement > td,
   tr.introjs-showElement > th {
     z-index: 9999999 !important;
   }
-  
+
   .introjs-disableInteraction {
     z-index: 99999999 !important;
     position: absolute;
@@ -1460,13 +1460,13 @@
     opacity: 0;
     filter: alpha(opacity=0);
   }
-  
+
   .introjs-relativePosition,
   tr.introjs-showElement > td,
   tr.introjs-showElement > th {
     position: relative;
   }
-  
+
   .introjs-helperLayer {
     box-sizing: content-box;
     position: absolute;
@@ -1481,7 +1481,7 @@
          -o-transition: all 0.3s ease-out;
             transition: all 0.3s ease-out;*/
   }
-  
+
   .introjs-tooltipReferenceLayer {
     box-sizing: content-box;
     position: absolute;
@@ -1494,7 +1494,7 @@
          -o-transition: all 0.3s ease-out;
             transition: all 0.3s ease-out;
   }
-  
+
   .introjs-helperLayer *,
   .introjs-helperLayer *:before,
   .introjs-helperLayer *:after {
@@ -1504,7 +1504,7 @@
          -o-box-sizing: content-box;
             box-sizing: content-box;
   }
-  
+
   .introjs-helperNumberLayer {
     box-sizing: content-box;
     position: absolute;
@@ -1535,7 +1535,7 @@
     filter: "progid:DXImageTransform.Microsoft.Shadow(direction=135, strength=2, color=ff0000)"; /* IE10 text shadows */
     box-shadow: 0 2px 5px rgba(0,0,0,.4);
   }
-  
+
   .introjs-arrow {
     border: 5px solid transparent;
     content:'';
@@ -1591,7 +1591,7 @@
     bottom:10px;
     border-right-color:white;
   }
-  
+
   .introjs-tooltip {
     box-sizing: content-box;
     position: absolute;
@@ -1608,12 +1608,12 @@
          -o-transition: opacity 0.1s ease-out;
             transition: opacity 0.1s ease-out;
   }
-  
+
   .introjs-tooltipbuttons {
     text-align: right;
     white-space: nowrap;
   }
-  
+
   /*
    Buttons style by http://nicolasgallagher.com/lab/css3-github-buttons/
    Changed by Afshin Mehrabani
@@ -1650,13 +1650,13 @@
     *display: inline;
     margin-top: 10px;
   }
-  
+
   .introjs-button:hover {
     border-color: #bcbcbc;
     text-decoration: none;
     box-shadow: 0px 1px 1px #e3e3e3;
   }
-  
+
   .introjs-button:focus,
   .introjs-button:active {
     background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#ececec), to(#f4f4f4));
@@ -1664,45 +1664,45 @@
     background-image: -o-linear-gradient(#ececec, #f4f4f4);
     background-image: linear-gradient(#ececec, #f4f4f4);
   }
-  
+
   /* overrides extra padding on button elements in Firefox */
   .introjs-button::-moz-focus-inner {
     padding: 0;
     border: 0;
   }
-  
+
   .introjs-skipbutton {
     box-sizing: content-box;
     margin-right: 5px;
     color: #7a7a7a;
   }
-  
+
   .introjs-prevbutton {
     -webkit-border-radius: 0.2em 0 0 0.2em;
     -moz-border-radius: 0.2em 0 0 0.2em;
     border-radius: 0.2em 0 0 0.2em;
     border-right: none;
   }
-  
+
   .introjs-prevbutton.introjs-fullbutton {
     border: 1px solid #d4d4d4;
     -webkit-border-radius: 0.2em;
     -moz-border-radius: 0.2em;
     border-radius: 0.2em;
   }
-  
+
   .introjs-nextbutton {
     -webkit-border-radius: 0 0.2em 0.2em 0;
     -moz-border-radius: 0 0.2em 0.2em 0;
     border-radius: 0 0.2em 0.2em 0;
   }
-  
+
   .introjs-nextbutton.introjs-fullbutton {
     -webkit-border-radius: 0.2em;
     -moz-border-radius: 0.2em;
     border-radius: 0.2em;
   }
-  
+
   .introjs-disabled, .introjs-disabled:hover, .introjs-disabled:focus {
     color: #9a9a9a;
     border-color: #d4d4d4;
@@ -1712,11 +1712,11 @@
     background-image: none;
     text-decoration: none;
   }
-  
+
   .introjs-hidden {
        display: none;
   }
-  
+
   .introjs-bullets {
     text-align: center;
   }
@@ -1751,7 +1751,7 @@
   .introjs-bullets ul li a.active {
     background: #999;
   }
-  
+
   .introjs-progress {
     box-sizing: content-box;
     overflow: hidden;
@@ -1770,7 +1770,7 @@
     text-align: center;
     background-color: #08c;
   }
-  
+
   .introjsFloatingElement {
     position: absolute;
     height: 0;
@@ -1778,11 +1778,11 @@
     left: 50%;
     top: 50%;
   }
-  
+
   .introjs-fixedTooltip {
     position: fixed;
   }
-  
+
   .introjs-hint {
     box-sizing: content-box;
     position: absolute;
@@ -1798,15 +1798,15 @@
   .introjs-hidehint {
     display: none;
   }
-  
+
   .introjs-fixedhint {
     position: fixed;
   }
-  
+
   .introjs-hint:hover > .introjs-hint-pulse {
     border: 5px solid rgba(60, 60, 60, 0.57);
   }
-  
+
   .introjs-hint-pulse {
     box-sizing: content-box;
     width: 10px;
@@ -1850,7 +1850,7 @@
     z-index: 1;
     opacity: 0;
   }
-  
+
   @-webkit-keyframes introjspulse {
       0% {
           -webkit-transform: scale(0);
@@ -1873,7 +1873,7 @@
           opacity: 0.0;
       }
   }
-  
+
   @-moz-keyframes introjspulse {
       0% {
           -moz-transform: scale(0);
@@ -1896,7 +1896,7 @@
           opacity: 0.0;
       }
   }
-  
+
   @keyframes introjspulse {
       0% {
           transform: scale(0);
@@ -1919,16 +1919,16 @@
           opacity: 0.0;
       }
   }
-  
-  
+
+
   /* Intro.js Modern theme (the tutorial) */
-  
-  
+
+
   .introjs-tooltip {
     background-color: rgba(000, 0, 0, 0.5);
     color: #fff;
   }
-  
+
   .introjs-button,
   .introjs-button:hover, .introjs-button:focus, .introjs-button:active,
   .introjs-disabled, .introjs-disabled:focus, .introjs-disabled:hover {
@@ -1941,8 +1941,8 @@
     box-shadow: none;
     text-shadow: none;
   }
-  
-  
+
+
   .introjs-button:hover, .introjs-button:focus, .introjs-button:active {
     border: 1px solid #fff
   }
@@ -1950,7 +1950,7 @@
     color: #ccc;
     border: 1px solid transparent;
   }
-  
+
   .introjs-arrow {
     border: 10px solid #fff;
   }
@@ -1970,7 +1970,7 @@
   .introjs-arrow.left-bottom, .introjs-arrow.right-bottom {
       bottom: 20px;
   }
-  
+
   .introjs-arrow.left, .introjs-arrow.left-bottom {
     left: -20px;
     border-color: transparent var(--tutorial-tooltip-background-color) transparent transparent;
@@ -1979,8 +1979,8 @@
     right: -20px;
     border-color: transparent transparent transparent var(--tutorial-tooltip-background-color);
   }
-  
-  
+
+
   /** Introjs custom override */
   .introjs-tooltip {
     font-family: var(--font-stack-app-base);
