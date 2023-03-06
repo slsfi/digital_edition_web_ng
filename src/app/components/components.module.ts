@@ -31,6 +31,7 @@ import { SongExampleComponent } from './song-example/song-example';
 import { IllustrationsComponent } from './illustrations/illustrations';
 import { RouterLink } from "@angular/router";
 import { TopMenuComponent } from "./top-menu/top-menu";
+import { SideMenu} from "./side-menu/side-menu";
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -57,6 +58,8 @@ export function createTranslateLoader(http: HttpClient) {
     // TableOfContentLetterFilterComponent,
     DateHistogram,
     MathJaxComponent,
+    SideMenu,
+    SideMenu
   ],
 	imports: [
 		IonicModule,
@@ -92,6 +95,7 @@ export function createTranslateLoader(http: HttpClient) {
     IllustrationsComponent,
     DateHistogram,
     MathJaxComponent,
+    SideMenu
   ]
 })
 export class ComponentsModule { }

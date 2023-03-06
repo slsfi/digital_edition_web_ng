@@ -1,11 +1,8 @@
 <ion-toolbar>
-  <div slot="end" class="title-logo-wrapper">
-    <title-logo></title-logo>
-  </div>
   <ion-buttons class="top-menu-buttons" slot="start">
-    <ion-button (click)="toggleSplitPane()">
-      <ion-icon *ngIf="!splitPaneOpen" name="menu"></ion-icon>
-      <ion-icon *ngIf="splitPaneOpen" name="close"></ion-icon>
+    <ion-button (click)="hamburgerMenuClick.emit()">
+      <ion-icon *ngIf="!showSideMenu" name="menu"></ion-icon>
+      <ion-icon *ngIf="showSideMenu" name="close"></ion-icon>
     </ion-button>
     <ion-button>
       <a [routerLink]="['/home']">
@@ -46,4 +43,7 @@
       <ion-icon name="earth"></ion-icon>
     </ion-button>
   </ion-buttons>
+  <div slot="end" class="title-logo-wrapper">
+    <title-logo></title-logo>
+  </div>
 </ion-toolbar>

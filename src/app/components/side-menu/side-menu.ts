@@ -1,31 +1,31 @@
-import { ChangeDetectorRef, Component, NgZone, ViewChild } from '@angular/core';
-import { Title } from '@angular/platform-browser';
-import { Router } from '@angular/router';
-import { AlertController, MenuController, Platform } from '@ionic/angular';
-import { TranslateService } from '@ngx-translate/core';
-import { TableOfContentsAccordionComponent } from './components/table-of-contents-accordion/table-of-contents-accordion';
-import { DigitalEdition } from './models/digital-edition.model';
-import { SideMenuSettings } from './models/side-menu-settings';
-import { GeneralTocItem } from './models/table-of-contents.model';
-import { TocAccordionMenuOptionModel } from './models/toc-accordion-menu-option.model';
-import { ConfigService } from './services/config/core/config.service';
-import { EventsService } from './services/events/events.service';
-import { GalleryService } from './services/gallery/gallery.service';
-import { LanguageService } from './services/languages/language.service';
-import { MdContentService } from './services/md/md-content.service';
-import { MetadataService } from './services/metadata/metadata.service';
-import { GenericSettingsService } from './services/settings/generic-settings.service';
-import { UserSettingsService } from './services/settings/user-settings.service';
-import { StorageService } from './services/storage/storage.service';
-import { DigitalEditionListService } from './services/toc/digital-edition-list.service';
-import { TableOfContentsService } from './services/toc/table-of-contents.service';
+import { ChangeDetectorRef, Component, Input, NgZone, OnInit, ViewChild } from '@angular/core';
+import { GenericSettingsService } from "../../services/settings/generic-settings.service";
+import { ConfigService } from "../../services/config/core/config.service";
+import { DigitalEdition } from "../../models/digital-edition.model";
+import { Router } from "@angular/router";
+import { TableOfContentsAccordionComponent } from "../table-of-contents-accordion/table-of-contents-accordion";
+import { TocAccordionMenuOptionModel } from "../../models/toc-accordion-menu-option.model";
+import { SideMenuSettings } from "../../models/side-menu-settings";
+import { AlertController, MenuController, Platform } from "@ionic/angular";
+import { TranslateService } from "@ngx-translate/core";
+import { StorageService } from "../../services/storage/storage.service";
+import { LanguageService } from "../../services/languages/language.service";
+import { EventsService } from "../../services/events/events.service";
+import { MdContentService } from "../../services/md/md-content.service";
+import { UserSettingsService } from "../../services/settings/user-settings.service";
+import { Title } from "@angular/platform-browser";
+import { DigitalEditionListService } from "../../services/toc/digital-edition-list.service";
+import { TableOfContentsService } from "../../services/toc/table-of-contents.service";
+import { GalleryService } from "../../services/gallery/gallery.service";
+import { MetadataService } from "../../services/metadata/metadata.service";
 
 @Component({
-  selector: 'ion-app-v2',
-  templateUrl: 'app.component.html',
-  styleUrls: ['app.component.scss'],
+  selector: 'app-side-menu',
+  templateUrl: './side-menu.html',
+  styleUrls: ['./side-menu.scss'],
 })
-export class DigitalEditionsApp {
+export class SideMenu implements OnInit {
+  @Input() showSideMenu: boolean = false;
   @ViewChild('aboutMenuMarkdownAccordion') aboutMenuMarkdownAccordion?: TableOfContentsAccordionComponent
 
   searchTocItem = false;
@@ -34,16 +34,13 @@ export class DigitalEditionsApp {
   language = 'sv';
   languages = [];
   appName?: string;
-  enableLanguageChanges?: false;
   errorMessage?: string;
-  collectionsAccordionOpen = false;
   splitPane = false;
   collectionsList?: any[];
   collectionsListWithTOC?: any[];
   tocData: any;
   pdfCollections?: any[];
   currentContentName?: string;
-  showBackButton = true;
   readMenuOpen = false;
   galleryMenuOpen = false; // legacy
   personSearchTypes = [] as any;
@@ -61,15 +58,12 @@ export class DigitalEditionsApp {
   currentCollectionId: any = '';
   currentCollectionName = '';
   currentCollection: any;
-  currentMarkdownId = null;
   openCollectionFromToc = false;
 
   pageFirstLoad = true;
 
   accordionTOC = false;
   accordionMusic = false;
-
-  storageCollections = {};
 
   defaultSelectedItem: String = 'title';
 
@@ -89,9 +83,6 @@ export class DigitalEditionsApp {
 
   songTypesMarkdownName = 'songTypesMarkdown';
   songTypesMarkdownId = 'songTypesMarkdown';
-  songtypesId = 'songtypes';
-  songtypesName = 'songtypes';
-
   aboutMarkdownId = 'aboutMarkdown';
   aboutMarkdownName = 'About';
 
@@ -194,7 +185,6 @@ export class DigitalEditionsApp {
   tocWorkSearchSelected = false;
   tocHomeSelected = false;
 
-  showSideMenu:boolean = false
   constructor(
     public platform: Platform,
     public translate: TranslateService,
@@ -360,6 +350,10 @@ export class DigitalEditionsApp {
     this.setDefaultOpenAccordions();
   }
 
+
+  ngOnInit(): void {
+  }
+
   async presentAlert() {
     const alert = await this.alertCtrl.create({
       header: this.browserWarning,
@@ -400,14 +394,6 @@ export class DigitalEditionsApp {
     }
   }
 
-  toggleSplitPane() {
-    this.splitPaneOpen ? this.hideSplitPane() : this.showSplitPane();
-  }
-
-  toggleSideMenu() {
-    this.showSideMenu = !this.showSideMenu
-  }
-
   hideSplitPane() {
     this.splitPaneOpen = false;
   }
@@ -420,15 +406,15 @@ export class DigitalEditionsApp {
 
   closeSplitPane() {
     setTimeout(() => {
-        const shadow = document.querySelector('.shadow');
+      const shadow = document.querySelector('.shadow');
 
-        if (shadow !== null) {
-            shadow.addEventListener('click', () => {
-                if (this.splitPaneOpen) {
-                    this.splitPaneOpen = false;
-                }
-            });
-        }
+      if (shadow !== null) {
+        shadow.addEventListener('click', () => {
+          if (this.splitPaneOpen) {
+            this.splitPaneOpen = false;
+          }
+        });
+      }
     }, 1);
   }
 
@@ -497,64 +483,64 @@ export class DigitalEditionsApp {
   }
 
   getCollectionsWithTOC(collections: any, media?: any) {
-      if (this.genericSettingsService.show('TOC.MediaCollections') && this.galleryInReadMenu) {
-        collections.push(media);
-      }
-      if (!collections || !collections.length) {
-        return;
-      }
+    if (this.genericSettingsService.show('TOC.MediaCollections') && this.galleryInReadMenu) {
+      collections.push(media);
+    }
+    if (!collections || !collections.length) {
+      return;
+    }
 
-      if ( this.collectionSortOrder === undefined ) {
-        collections = this.sortListRoman(collections);
-      } else if ( Object.keys(this.collectionSortOrder).length > 0 )  {
-        collections = this.sortListDefined(collections, this.collectionSortOrder);
-      }
+    if ( this.collectionSortOrder === undefined ) {
+      collections = this.sortListRoman(collections);
+    } else if ( Object.keys(this.collectionSortOrder).length > 0 )  {
+      collections = this.sortListDefined(collections, this.collectionSortOrder);
+    }
 
-      const collectionsTmp = [] as any;
-      const pdfCollections = [] as any;
-      collections.forEach((collection: any) => {
-        if ( collection.id !== 'mediaCollections' ) {
-          if (!(this.collectionsWithoutTOC.indexOf(collection.id) !== -1)) {
-            collection['toc_exists'] = true;
-            collection['expanded'] = false;
-            collection['loading'] = false;
-            collection['accordionToc'] = {
-              toc: [],
-              searchTocItem: false,
-              searchTitle: '', // If toc item has to be searched by unique title also
-              currentPublicationId: null
-            };
-          } else {
-            collection['toc_exists'] = false;
-          }
-
-          collection['has_children_pdfs'] = this.collectionHasChildrenPdfs(collection.id);
-
-          if (collection.id in this.collectionDownloads['pdf']) {
-            collection['isDownload'] = true;
-          } else if (collection.id in this.collectionDownloads['epub']) {
-            collection['isDownload'] = true;
-          } else {
-            collection['isDownload'] = false;
-          }
-          collection['highlight'] = false;
-        }
-        if (!collection['has_children_pdfs'] || !this.showBooks) {
-          collectionsTmp.push(collection);
+    const collectionsTmp = [] as any;
+    const pdfCollections = [] as any;
+    collections.forEach((collection: any) => {
+      if ( collection.id !== 'mediaCollections' ) {
+        if (!(this.collectionsWithoutTOC.indexOf(collection.id) !== -1)) {
+          collection['toc_exists'] = true;
+          collection['expanded'] = false;
+          collection['loading'] = false;
+          collection['accordionToc'] = {
+            toc: [],
+            searchTocItem: false,
+            searchTitle: '', // If toc item has to be searched by unique title also
+            currentPublicationId: null
+          };
         } else {
-          pdfCollections.push(collection);
+          collection['toc_exists'] = false;
         }
-      });
-      this.collectionsListWithTOC = collectionsTmp;
 
-      if (this.showBooks) {
-        this.pdfCollections = pdfCollections;
-        this.pdfCollections?.sort(function (a, b) {
-          if (a['title'] < b['title']) { return -1; }
-          if (a['title'] > b['title']) { return 1; }
-          return 0;
-        });
+        collection['has_children_pdfs'] = this.collectionHasChildrenPdfs(collection.id);
+
+        if (collection.id in this.collectionDownloads['pdf']) {
+          collection['isDownload'] = true;
+        } else if (collection.id in this.collectionDownloads['epub']) {
+          collection['isDownload'] = true;
+        } else {
+          collection['isDownload'] = false;
+        }
+        collection['highlight'] = false;
       }
+      if (!collection['has_children_pdfs'] || !this.showBooks) {
+        collectionsTmp.push(collection);
+      } else {
+        pdfCollections.push(collection);
+      }
+    });
+    this.collectionsListWithTOC = collectionsTmp;
+
+    if (this.showBooks) {
+      this.pdfCollections = pdfCollections;
+      this.pdfCollections?.sort(function (a, b) {
+        if (a['title'] < b['title']) { return -1; }
+        if (a['title'] > b['title']) { return 1; }
+        return 0;
+      });
+    }
   }
 
   collectionHasChildrenPdfs(collectionID: any) {
@@ -736,13 +722,6 @@ export class DigitalEditionsApp {
     // Add the new META-Tags
     this.metadataService.addDescription();
     this.metadataService.addKeywords();
-  }
-
-  resizeTOCMenu( event: MouseEvent, splitPaneItem: any, initialtWidth: any ) {
-    const relativeWidth = Number(String(event.clientX).replace('px', ''));
-    if ( relativeWidth > 0 ) {
-      splitPaneItem.style.minWidth =  (initialtWidth + relativeWidth) + 'px';
-    }
   }
 
   toggleMusicAccordion() {
@@ -1096,7 +1075,7 @@ export class DigitalEditionsApp {
       for (const collection of this.collectionsListWithTOC) {
 
         if ((data.collectionID !== undefined && String(collection.id) === String(data.collectionID.id))
-        || (data.collectionID !== undefined && Number(collection.id) === Number(data.collectionID))) {
+          || (data.collectionID !== undefined && Number(collection.id) === Number(data.collectionID))) {
           collection.expanded = true;
           for ( let i = 0; i < this.splitReadCollections.length; i++ ) {
             this.simpleAccordionsExpanded.collectionsAccordion[i] = true;
@@ -1151,16 +1130,6 @@ export class DigitalEditionsApp {
     }
 
     this.enableTableOfContentsMenu();
-  }
-
-  resetCurrentCollection() {
-    this.currentCollection = null;
-    this.currentCollectionId = null;
-    this.currentCollectionName = '';
-    this.options = null;
-  }
-
-  mobileSplitPaneDetector() {
   }
 
   doFor(needle: any, haystack: any, callback: any) {
@@ -1302,30 +1271,6 @@ export class DigitalEditionsApp {
     }
   }
 
-  async getCollectionListAsync() {
-    let loadCollectionsFromAssets = false;
-    try {
-      loadCollectionsFromAssets = this.config.getSettings('LoadCollectionsFromAssets') as any
-    } catch (e) {
-
-    }
-
-    if (loadCollectionsFromAssets) {
-      this.digitalEditionListService.getCollectionsFromAssets()
-        .subscribe(digitalEditions => {
-          return digitalEditions;
-        });
-    } else {
-      this.digitalEditionListService.getDigitalEditions()
-        .subscribe(
-          digitalEditions => {
-            return digitalEditions;
-          },
-          error => { this.errorMessage = <any>error }
-        );
-    }
-  }
-
   menuConditional(menu: any) {
     return this.menuConditionals[menu as keyof typeof this.menuConditionals];
   }
@@ -1370,13 +1315,6 @@ export class DigitalEditionsApp {
     if (homeUrl >= 0 || document.URL.indexOf('#') < 0) {
       this.rootPage = 'HomePage';
     }
-  }
-
-  disableMenu() {
-    this.menu.enable(false, 'readMenu');
-    this.menu.enable(false, 'aboutMenu');
-    this.menu.enable(false, 'contentMenu');
-    this.menu.enable(false, 'tableOfContentsMenu');
   }
 
   enableContentMenu() {
@@ -1490,7 +1428,7 @@ export class DigitalEditionsApp {
           tocItemId = undefined;
         }
       } else if ( (currentTocItem['children'] === undefined && currentTocTier < tocLength - 1)
-      || (currentTocItem === undefined && currentTocTier < tocLength - 1) ) {
+        || (currentTocItem === undefined && currentTocTier < tocLength - 1) ) {
         currentTocTier = currentTocTier + 1;
         currentTocItem = this.tocItems['children'][currentTocTier];
         if (currentTocItem !== undefined) {
@@ -1499,7 +1437,7 @@ export class DigitalEditionsApp {
           tocItemId = undefined;
         }
       } else if ( (currentTocItem === undefined && currentTocTier >= tocLength)
-      || (currentTocItem['children'] === undefined && currentTocTier >= tocLength) ) {
+        || (currentTocItem['children'] === undefined && currentTocTier >= tocLength) ) {
         break;
       }
     }
@@ -1571,7 +1509,7 @@ export class DigitalEditionsApp {
       this.currentCollection = collection;
       try {
         // if (this.options) {
-          this.enableTableOfContentsMenu();
+        this.enableTableOfContentsMenu();
         // }
       } catch (e) {
         console.log('Error enabling enableTableOfContentsMenu');
@@ -1606,22 +1544,6 @@ export class DigitalEditionsApp {
     }
   }
 
-  onShowAccordion(show: boolean) {
-    this.showBackButton = show;
-  }
-
-  /* Legacy code */
-  openGalleries() {
-    const params = { fetch: 'true' };
-    this.router.navigate(['/galleries'], { queryParams: params });
-  }
-
-  /* Legacy code */
-  openGalleryPage(galleryPage: string) {
-    const params = { fetch: 'false' };
-    this.router.navigate([`/gallery/${galleryPage}`], { queryParams: params });
-  }
-
   async getMediaCollections(): Promise<any> {
     return await this.galleryService.getGalleries(this.language);
   }
@@ -1646,7 +1568,7 @@ export class DigitalEditionsApp {
 
   selectMediaCollectionInToc(id: string) {
     if (id && this.mediaCollectionOptions
-    && this.mediaCollectionOptions['accordionToc'] && this.mediaCollectionOptions['accordionToc']['toc']) {
+      && this.mediaCollectionOptions['accordionToc'] && this.mediaCollectionOptions['accordionToc']['toc']) {
       this.mediaCollectionOptions['accordionToc']['toc'].forEach((element: any) => {
         if (id === element.id) {
           element.highlight = true;
@@ -1659,7 +1581,7 @@ export class DigitalEditionsApp {
 
   unSelectAllMediaCollectionsInToc() {
     if (this.mediaCollectionOptions
-    && this.mediaCollectionOptions['accordionToc'] && this.mediaCollectionOptions['accordionToc']['toc']) {
+      && this.mediaCollectionOptions['accordionToc'] && this.mediaCollectionOptions['accordionToc']['toc']) {
       this.mediaCollectionOptions['accordionToc']['toc'].forEach((element: any) => {
         element.highlight = false;
       });

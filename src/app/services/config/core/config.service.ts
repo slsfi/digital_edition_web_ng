@@ -38,7 +38,7 @@ export class ConfigService {
         "showTopElasticButton": true,
         "showTopSimpleSearchButton": false,
         "showTopContentButton": true,
-        "showTopAboutButton": false,
+        "showTopAboutButton": true,
         "CollectionSortOrder": {
           "216":1, "219":2, "220":3, "218":4, "210":5, "208":6, "207":7, "214":8,
           "203":9, "213":10, "202":11, "199":12, "221":13,

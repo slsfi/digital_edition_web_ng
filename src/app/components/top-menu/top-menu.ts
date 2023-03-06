@@ -21,9 +21,7 @@ import { UserSettingsPopoverPage } from 'src/app/modals/user-settings-popover/us
   styleUrls: ['top-menu.scss']
 })
 export class TopMenuComponent {
-  @Input() splitPaneMobile?: boolean;
-  @Input() splitPanePossible?: boolean;
-  @Input() splitPaneOpen?: boolean;
+  @Input() showSideMenu?: boolean;
   @Output() hamburgerMenuClick = new EventEmitter();
 
   public title?: string;
@@ -155,10 +153,6 @@ export class TopMenuComponent {
   public music() {
     this.events.publishTopMenuMusic();
     this.storage.set('showLogo', false);
-  }
-
-  public toggleSplitPane() {
-    this.hamburgerMenuClick.emit();
   }
 
   public async showUserSettingsPopover(myEvent: any) {
