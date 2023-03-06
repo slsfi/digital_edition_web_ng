@@ -63,34 +63,32 @@ export class StaticPagesTocDrilldownMenuComponent {
       this.jsonObjectID = this.language + '-' + tmpObj[1];
     }
 
-    this.mdcontentService.getStaticPagesToc(this.language)
-        .subscribe(
-          data => {
-            if (this.jsonObjectID) {
-              this.pages = this.getNodeById(this.jsonObjectID, data);
+    this.mdcontentService.getStaticPagesToc(this.language).subscribe({
+      next: data => {
+        if (this.jsonObjectID) {
+          this.pages = this.getNodeById(this.jsonObjectID, data);
 
-              if (this.backButtonAtRoot) {
-                this.setFirstItemRoot();
-              }
-              if ( this.pages !== null && this.pages?.children !== undefined ) {
-                this.menuStack.push(this.pages.children);
-                this.titleStack.push(this.pages.title || '');
-              }
-            } else {
-              try {
-                const startIndex: number = Number(this.config.getSettings('staticPages.about_index'));
-                this.pages = data.children[startIndex].children;
-                this.menuStack.push(this.pages);
-                this.titleStack.push(data.children[startIndex].title || '');
-              } catch (e) {
-                this.pages = data.children[3].children;
-                this.menuStack.push(this.pages);
-                this.titleStack.push(data.children[3].title || '');
-              }
-            }
-          },
-          err => console.error(err)
-        );
+          if (this.backButtonAtRoot) {
+            this.setFirstItemRoot();
+          }
+          if ( this.pages !== null && this.pages?.children !== undefined ) {
+            this.menuStack.push(this.pages.children);
+            this.titleStack.push(this.pages.title || '');
+          }
+        } else {
+          try {
+            this.pages = data.children[0].children;
+            this.menuStack.push(this.pages);
+            this.titleStack.push(data.children[0].title || '');
+          } catch (e) {
+            this.pages = data.children[3].children;
+            this.menuStack.push(this.pages);
+            this.titleStack.push(data.children[3].title || '');
+          }
+        }
+      },
+      error: err => { console.error(err); }
+    });
   }
 
   /**

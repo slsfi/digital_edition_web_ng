@@ -87,23 +87,20 @@ export class MusicPage {
   loadContent(lang: string) {
     this.getMdContent(lang + '-09'); // @TODO remove hardcoded thins
     this.getFooterMdContent(lang + '-06'); // @TODO remove hardcoded thins
-    this.events.publishTitleLogoSetTitle(this.config.getSettings('app.page-title.' + lang));
   }
 
   getMdContent(fileID: string) {
-    this.mdContentService.getMdContent(fileID)
-        .subscribe(
-            text => {this.homeContent = text.content; },
-            error =>  {this.errorMessage = <any>error}
-        );
+    this.mdContentService.getMdContent(fileID).subscribe({
+      next: text => { this.homeContent = text.content; },
+      error: e =>  { this.errorMessage = <any>e; }
+    });
   }
 
   getFooterMdContent(fileID: string) {
-    this.mdContentService.getMdContent(fileID)
-        .subscribe(
-            text => {this.homeFooterContent = text.content; },
-            error =>  {this.errorMessage = <any>error}
-        );
+    this.mdContentService.getMdContent(fileID).subscribe({
+      next: text => { this.homeFooterContent = text.content; },
+      error: e =>  { this.errorMessage = <any>e; }
+    });
   }
 
 }

@@ -186,9 +186,6 @@ export class HomePage {
     } else {
       this.appSubtitle = '';
     }
-    this.events.publishTitleLogoSetTitle(
-      this.config.getSettings('app.page-title.' + lang)
-    );
   }
 
   getMdContent(fileID: string) {

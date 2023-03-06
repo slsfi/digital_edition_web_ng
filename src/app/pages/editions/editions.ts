@@ -49,7 +49,6 @@ export class EditionsPage {
 
         // SK 1.3.2023: The following three lines can probably be deleted. They are part of some really old legacy code.
         this.appName = this.config.getSettings('app.name.' + lang);
-        this.events.publishTitleLogoSetTitle(this.config.getSettings('app.page-title.' + lang));
         this.events.publishTitleLogoSetSubTitle('Digitala verk');
       }
     });

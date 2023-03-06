@@ -23,7 +23,6 @@ export class DigitalEditionList implements OnInit {
   digitalEditionsSecondHalf: any = [];
   projectMachineName: string;
   editionImages: any;
-  editionShortTexts: any;
   appLanguage: any;
   grid?: boolean;
   collectionDownloads: any;
@@ -59,7 +58,6 @@ export class DigitalEditionList implements OnInit {
     this.apiEndPoint = this.config.getSettings('app.apiEndpoint') as string;
     this.projectMachineName = this.config.getSettings('app.machineName') as string;
     this.editionImages = this.config.getSettings('editionImages') as any;
-    this.editionShortTexts = this.config.getSettings('editionShortTexts') as string;
     this.appLanguage = (this.config.getSettings('i18n') as any).locale;
     this.collectionDownloads = this.config.getSettings('collectionDownloads') as any;
     try {
@@ -194,6 +192,7 @@ export class DigitalEditionList implements OnInit {
     return list;
   }
 
+  /*
   shortText(edition_id: string): Array<string> {
     let textData = '';
     try {
@@ -212,6 +211,7 @@ export class DigitalEditionList implements OnInit {
     }
     return textData.split('\n');
   }
+  */
 
   filterCollectionsToShow(collections: any) {
     const filtered = [] as any;
