@@ -26,6 +26,8 @@ ion-toolbar ion-button {
   a {
     color: inherit;
     text-decoration: none;
+    display: flex;
+    align-items: center;
   }
 }
 
