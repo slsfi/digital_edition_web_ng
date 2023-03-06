@@ -8,6 +8,7 @@ import { ReferenceDataModalPage } from 'src/app/modals/reference-data-modal/refe
 import { SearchAppPage } from 'src/app/modals/search-app/search-app';
 import { UserSettingsPopoverPage } from 'src/app/modals/user-settings-popover/user-settings-popover';
 import { Subscription } from 'rxjs';
+import {settings} from "../../services/config/config";
 
 /**
  * Generated class for the TopMenu component.
@@ -26,7 +27,7 @@ export class TopMenuComponent {
   @Input() splitPaneOpen?: boolean;
   @Output() hamburgerMenuClick = new EventEmitter();
 
-  public showHelpButton: boolean;
+  public showHelpButton;
   public showViewToggle: boolean;
   public showTopURNButton: boolean;
   public showTopMusicButton: boolean;
@@ -46,11 +47,8 @@ export class TopMenuComponent {
     public languageService: LanguageService,
     private modalController: ModalController
   ) {
-    try {
-      this.showHelpButton = this.config.getSettings('app.showHelpButton') as any;
-    } catch ( e ) {
-      this.showHelpButton = true;
-    }
+    this.showHelpButton = settings.app.showHelpButton ?? true;
+
     try {
       this.showViewToggle = this.config.getSettings('app.showViewToggle') as any;
     } catch ( e ) {

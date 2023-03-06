@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
-import { DomSanitizer } from '@angular/platform-browser';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 import { ModalController, PopoverController } from '@ionic/angular';
-import { Subscription } from 'rxjs';
+import {catchError, map, of, Subscription, switchMap, tap, throwError} from 'rxjs';
 import { ReadPopoverPage } from 'src/app/modals/read-popover/read-popover';
 import { ReferenceDataModalPage } from 'src/app/modals/reference-data-modal/reference-data-modal';
 import { ConfigService } from 'src/app/services/config/core/config.service';
@@ -14,6 +14,9 @@ import { UserSettingsService } from 'src/app/services/settings/user-settings.ser
 import { StorageService } from 'src/app/services/storage/storage.service';
 import { TextService } from 'src/app/services/texts/text.service';
 import { TableOfContentsService } from 'src/app/services/toc/table-of-contents.service';
+
+import { Observable } from 'rxjs';
+import {settings} from "../../services/config/config";
 
 /**
  * Generated class for the TitlePage page.
@@ -40,7 +43,12 @@ export class TitlePage {
   hasDigitalEditionListChildren = false;
   childrenPdfs = [];
   protected id = '';
-  protected text: any;
+
+  protected text: SafeHtml = this.sanitizer.bypassSecurityTrustHtml('<h1>Text from non-Observable</h1>')
+
+  public text$: Observable<SafeHtml> = of("<h1>Text from Obserable</h1>")
+
+
   protected collection: any;
   titleSelected: boolean;
   showURNButton: boolean;
@@ -65,11 +73,8 @@ export class TitlePage {
   ) {
     this.titleSelected = true;
     this.mdContent = '';
-    try {
-      this.hasMDTitle = this.config.getSettings('ProjectStaticMarkdownTitleFolder');
-    } catch (e) {
-      this.hasMDTitle = '';
-    }
+
+    this.hasMDTitle = settings.ProjectStaticMarkdownTitleFolder ?? '';
 
     try {
       this.showURNButton = this.config.getSettings('showURNButton.pageTitle');
@@ -87,6 +92,22 @@ export class TitlePage {
   }
 
   ngOnInit() {
+    this.text$ = this.route.params.pipe(
+
+      // TODO: Ideally we wouldn't have any side-effects
+      tap(({collectionID}) => {       // tap is analogous to "touch", do something, for side-effects
+        this.id = collectionID;       // NOTE: If there are no subscriptions then the code is not used
+        this.checkIfCollectionHasChildrenPdfs();
+      }),
+
+      // "Let's wait something else instead"
+      switchMap( ({collectionID}) => {
+        return this.langService.languageSubjectChange().pipe( switchMap( (lang) => {
+          return this.getTitleContent(lang, collectionID);
+        } ) );
+
+    } ) );
+
     this.route.params.subscribe(params => {
       this.id = params['collectionID'];
       this.checkIfCollectionHasChildrenPdfs();
@@ -174,6 +195,7 @@ export class TitlePage {
     this.textLoading = true;
     // this.getTocRoot(id);
     const isIdText = isNaN(Number(id));
+
     if (this.hasMDTitle === '') {
       if (isIdText === false) {
         this.textService.getTitlePage(id, lang).subscribe({
@@ -182,8 +204,10 @@ export class TitlePage {
               res.content.replace(/images\//g, 'assets/images/')
                 .replace(/\.png/g, '.svg')
             );
+
             this.textLoading = false;
           },
+
           error: e => {
             this.errorMessage = <any>e;
             this.textLoading = false;
@@ -218,6 +242,55 @@ export class TitlePage {
     }
     // this.events.publish('pageLoaded:title');
   }
+
+  getTitleContent(lang: string, id: string): Observable<SafeHtml> {
+    const isIdText = isNaN(Number(id));
+
+    if (this.hasMDTitle === '') {
+      if (!isIdText) {
+        return this.textService.getTitlePage(id, lang).pipe(
+          map(res => {
+            return this.sanitizer.bypassSecurityTrustHtml(
+              res.content.replace(/images\//g, 'assets/images/')
+                .replace(/\.png/g, '.svg')
+            );
+          }),
+          catchError(e => {
+            this.errorMessage = <any>e;
+            return throwError(e);
+          })
+        );
+      } else {
+        return of(this.sanitizer.bypassSecurityTrustHtml(''));
+      }
+    } else {
+      if (!isIdText) {
+        const fileID = `${lang}-${this.hasMDTitle}-${id}`;
+        return this.mdContentService.getMdContent(fileID).pipe(
+          map(res => {
+            return this.sanitizer.bypassSecurityTrustHtml(res.content);
+          }),
+          catchError(e => {
+            this.errorMessage = <any>e;
+            return throwError(e);
+          })
+        );
+      } else {
+        return this.mdContentService.getMdContent(`${lang}-gallery-intro`).pipe(
+          map(res => {
+            return this.sanitizer.bypassSecurityTrustHtml(res.content);
+          }),
+          catchError(e => {
+            this.errorMessage = <any>e;
+            return throwError(e);
+          })
+        );
+      }
+    }
+  }
+
+
+
 
   async showReadSettingsPopover(myEvent: any) {
     const toggles = {

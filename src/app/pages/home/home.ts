@@ -9,6 +9,9 @@ import { MdContentService } from 'src/app/services/md/md-content.service';
 import { UserSettingsService } from 'src/app/services/settings/user-settings.service';
 import { TextService } from 'src/app/services/texts/text.service';
 
+import {settings} from 'src/app/services/config/config';
+
+
 /**
  * HomePage is the first page user sees.
  */
@@ -21,7 +24,6 @@ import { TextService } from 'src/app/services/texts/text.service';
 export class HomePage {
   appName?: string;
   appSubtitle?: string;
-  appMachineName = '';
   homeContent?: string;
   homeFooterContent?: string;
   imageOrientationPortrait: Boolean = false;
@@ -37,6 +39,8 @@ export class HomePage {
   initLanguage?: string;
   languageSubscription: Subscription | null;
 
+  appMachineName = settings.app.machineName ?? "topelius";
+
   constructor(
     public navCtrl: NavController,
     private config: ConfigService,
@@ -47,7 +51,6 @@ export class HomePage {
     private userSettingsService: UserSettingsService,
     protected textService: TextService
   ) {
-    this.appMachineName = this.config.getSettings('app.machineName');
     if (this.userSettingsService.isMobile()) {
       this.userSettingsService.temporarilyHideSplitPane();
     }
