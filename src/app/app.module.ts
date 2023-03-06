@@ -37,7 +37,6 @@ import { ComponentsModule } from './components/components.module';
 import { MarkdownModule } from 'ngx-markdown';
 import { MathJaxModule } from './components/math-jax/math-jax.module';
 import { CommentModalPage } from './modals/comment-modal/comment-modal';
-import { SemanticDataModalPage } from './modals/semantic-data-modal/semantic-data-modal';
 import { ReferenceDataModalPage } from './modals/reference-data-modal/reference-data-modal';
 import { DownloadTextsModalPage } from './modals/download-texts-modal/download-texts-modal';
 import { SharePopoverPageModule } from './modals/share-popover/share-popover.module';
@@ -62,7 +61,6 @@ export function createTranslateLoader(http: HttpClient): TranslateLoader {
   declarations: [
     DigitalEditionsApp,
     CommentModalPage,
-    SemanticDataModalPage,
     ReferenceDataModalPage,
     DownloadTextsModalPage,
   ],
@@ -130,7 +128,6 @@ export function createTranslateLoader(http: HttpClient): TranslateLoader {
     ReadPopoverPage,
     UserSettingsPopoverPage,
     CommentModalPage,
-    SemanticDataModalPage,
     ReferenceDataModalPage,
     FacsimileZoomModalPage,
     DownloadTextsModalPage,
