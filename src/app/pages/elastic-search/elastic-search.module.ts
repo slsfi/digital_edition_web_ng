@@ -8,7 +8,6 @@ import { MarkdownModule } from 'ngx-markdown';
 import { OccurrenceService } from 'src/app/services/occurrence/occurence.service';
 import { ComponentsModule } from 'src/app/components/components.module';
 import { PipesModule } from 'src/pipes/pipes.module';
-import { TableOfContentsModule } from 'src/app/components/table-of-contents/table-of-contents.module';
 import { ElasticSearchService } from 'src/app/services/elastic-search/elastic-search.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -31,7 +30,6 @@ export function createTranslateLoader(http: HttpClient) {
     IonicModule,
     CommonModule,
     FormsModule,
-    TableOfContentsModule,
     PipesModule,
       TranslateModule.forChild({
         loader: {

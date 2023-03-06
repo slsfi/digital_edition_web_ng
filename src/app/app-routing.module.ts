@@ -7,20 +7,12 @@ const routes: Routes = [
     loadChildren: () => import('./pages/home/home.module').then( m => m.HomePageModule)
   },
   {
-    path: 'about',
-    loadChildren: () => import('./pages/about/about.module').then( m => m.AboutPageModule)
-  },
-  {
     path: 'content',
     loadChildren: () => import('./pages/content/content.module').then( m => m.ContentPageModule)
   },
   {
     path: 'publication-cover',
     loadChildren: () => import('./pages/cover/cover.module').then( m => m.CoverPageModule)
-  },
-  {
-    path: 'downloads',
-    loadChildren: () => import('./pages/downloads/downloads.module').then( m => m.DownloadsPageModule)
   },
   {
     path: 'publications',
@@ -43,14 +35,6 @@ const routes: Routes = [
     loadChildren: () => import('./pages/foreword/foreword.module').then( m => m.ForewordPageModule)
   },
   {
-    path: 'galleries',
-    loadChildren: () => import('./pages/galleries/galleries.module').then( m => m.GalleriesPageModule)
-  },
-  {
-    path: 'gallery',
-    loadChildren: () => import('./pages/image-gallery/image-gallery.module').then( m => m.ImageGalleryPageModule)
-  },
-  {
     path: 'publication-introduction',
     loadChildren: () => import('./pages/introduction/introduction.module').then( m => m.IntroductionPageModule)
   },
@@ -65,10 +49,6 @@ const routes: Routes = [
   {
     path: 'media-collections',
     loadChildren: () => import('./pages/media-collections/media-collections.module').then( m => m.MediaCollectionsPageModule)
-  },
-  {
-    path: 'pages-list',
-    loadChildren: () => import('./pages/mobile-pages-list/mobile-pages-list.module').then( m => m.MobilePagesListPageModule)
   },
   {
     path: 'music',
@@ -89,10 +69,6 @@ const routes: Routes = [
   {
     path: 'publication-toc',
     loadChildren: () => import('./pages/single-edition/single-edition.module').then( m => m.SingleEditionPageModule)
-  },
-  {
-    path: 'publication-part-toc',
-    loadChildren: () => import('./pages/single-edition-part/single-edition-part.module').then( m => m.SingleEditionPagePartModule)
   },
   {
     path: 'song',

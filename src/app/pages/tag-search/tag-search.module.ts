@@ -5,7 +5,6 @@ import { HttpClient } from '@angular/common/http';
 import { TagSearchRoutingModule } from './tag-search-routing.module';
 import { TagSearchPage } from './tag-search';
 import { IonicModule } from '@ionic/angular';
-import { TableOfContentsModule } from 'src/app/components/table-of-contents/table-of-contents.module';
 import { PipesModule } from 'src/pipes/pipes.module';
 import { ComponentsModule } from 'src/app/components/components.module';
 import { MarkdownModule } from 'ngx-markdown';
@@ -23,7 +22,6 @@ export function createTranslateLoader(http: HttpClient) {
   ],
   imports: [
     IonicModule,
-    TableOfContentsModule,
     CommonModule,
     FormsModule,
     PipesModule,

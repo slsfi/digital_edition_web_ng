@@ -6,7 +6,6 @@ import { IonicModule } from '@ionic/angular';
 import { OccurrencesPage } from './occurrences';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { TableOfContentsModule } from 'src/app/components/table-of-contents/table-of-contents.module';
 import { PipesModule } from 'src/pipes/pipes.module';
 import { ComponentsModule } from 'src/app/components/components.module';
 
@@ -20,7 +19,6 @@ export function createTranslateLoader(http: HttpClient) {
   ],
   imports: [
     IonicModule,
-    TableOfContentsModule,
     PipesModule,
       TranslateModule.forChild({
         loader: {

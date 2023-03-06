@@ -5,7 +5,6 @@ import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { FeaturedFacsimilePageRoutingModule } from './feature-facsimile-routing.module';
 import { IonicModule } from '@ionic/angular';
 import { FeaturedFacsimilePage } from './featured-facsimile';
-import { TableOfContentsModule } from 'src/app/components/table-of-contents/table-of-contents.module';
 import { PipesModule } from 'src/pipes/pipes.module';
 import { ComponentsModule } from 'src/app/components/components.module';
 import { FacsimileService } from 'src/app/services/facsimile/facsimile.service';
@@ -24,7 +23,6 @@ export function createTranslateLoader(http: HttpClient) {
     IonicModule,
     CommonModule,
     FormsModule,
-    TableOfContentsModule,
     PipesModule,
       TranslateModule.forChild({
         loader: {

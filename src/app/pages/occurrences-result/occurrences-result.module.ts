@@ -5,7 +5,6 @@ import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { OccurrencesResultRoutingModule } from './occurrences-result-routing.module';
 import { OccurrencesResultPage } from './occurrences-result';
 import { IonicModule } from '@ionic/angular';
-import { TableOfContentsModule } from 'src/app/components/table-of-contents/table-of-contents.module';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { PipesModule } from 'src/pipes/pipes.module';
@@ -23,7 +22,6 @@ export function createTranslateLoader(http: HttpClient) {
     IonicModule,
     CommonModule,
     FormsModule,
-    TableOfContentsModule,
     PipesModule,
       TranslateModule.forChild({
         loader: {

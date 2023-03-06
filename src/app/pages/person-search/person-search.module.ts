@@ -10,7 +10,6 @@ import { PipesModule } from 'src/pipes/pipes.module';
 import { ComponentsModule } from 'src/app/components/components.module';
 import { SemanticDataService } from 'src/app/services/semantic-data/semantic-data.service';
 import { OccurrenceService } from 'src/app/services/occurrence/occurence.service';
-import { TableOfContentsModule } from 'src/app/components/table-of-contents/table-of-contents.module';
 import { PersonSearchRoutingModule } from './person-search-routing.module';
 import { OccurrencesPage } from 'src/app/modals/occurrences/occurrences';
 import { OccurrencesPageModule } from 'src/app/modals/occurrences/occurrences.module';
@@ -30,7 +29,6 @@ export function createTranslateLoader(http: HttpClient) {
   ],
   imports: [
     IonicModule,
-    TableOfContentsModule,
     PipesModule,
     CommonModule,
     FormsModule,

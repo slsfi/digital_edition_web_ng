@@ -29,6 +29,7 @@ import { GalleryService } from './services/gallery/gallery.service';
 import { SongService } from './services/song/song.service';
 import { TooltipService } from './services/tooltips/tooltip.service';
 import { SearchDataService } from './services/search/search-data.service';
+import { TableOfContentsService } from './services/toc/table-of-contents.service';
 import { CommonModule } from '@angular/common';
 import { PipesModule } from 'src/pipes/pipes.module';
 import { DigitalEditionListModule } from './components/digital-edition-list/digital-edition-list.module';
@@ -121,6 +122,7 @@ export function createTranslateLoader(http: HttpClient): TranslateLoader {
     AnalyticsService,
     MetadataService,
     EventsService,
+    TableOfContentsService
   ],
   bootstrap: [DigitalEditionsApp],
   entryComponents: [

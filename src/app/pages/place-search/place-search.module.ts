@@ -7,7 +7,6 @@ import { PlaceSearchRoutingModule } from './place-search-routing.module';
 import { IonicModule } from '@ionic/angular';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { TableOfContentsModule } from 'src/app/components/table-of-contents/table-of-contents.module';
 import { PipesModule } from 'src/pipes/pipes.module';
 import { ComponentsModule } from 'src/app/components/components.module';
 import { MarkdownModule } from 'ngx-markdown';
@@ -25,7 +24,6 @@ export function createTranslateLoader(http: HttpClient) {
     IonicModule,
     CommonModule,
     FormsModule,
-    TableOfContentsModule,
     PipesModule,
       TranslateModule.forChild({
         loader: {
