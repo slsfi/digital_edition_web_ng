@@ -37,7 +37,6 @@ export class MediaCollectionPage {
   mediaCollection = [] as any;
   public apiEndPoint: string;
   public projectMachineName: string;
-  removeScanDetails = false as any;
   singleId?: string;
   type?: string;
   language = 'sv';
@@ -81,11 +80,6 @@ export class MediaCollectionPage {
     // this.locationModel = this.navParams.get('location');
     this.apiEndPoint = this.config.getSettings('app.apiEndpoint');
     this.projectMachineName = this.config.getSettings('app.machineName');
-    try {
-      this.removeScanDetails = this.config.getSettings('galleryImages.removeScanDetails');
-    } catch (e) {
-      this.removeScanDetails = false;
-    }
 
     try {
       this.showURNButton = this.config.getSettings('showURNButton.mediaCollection');

@@ -69,7 +69,6 @@ export class ReadPage /*implements OnDestroy*/ {
   estLang: 'none';
   establishedText?: EstablishedText;
   errorMessage?: string;
-  appName?: string;
   tocRoot?: TableOfContentsCategory[];
   popover?: ReadPopoverPage;
   sharePopover?: SharePopoverPage;
@@ -1890,9 +1889,6 @@ export class ReadPage /*implements OnDestroy*/ {
         this.texts = value;
       }
     )
-    this.langService.getLanguage().subscribe((lang) => {
-      this.appName = this.config.getSettings('app.name.' + lang);
-    });
   }
 
   back() {

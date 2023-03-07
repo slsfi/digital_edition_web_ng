@@ -79,7 +79,6 @@ export class ContentPage /*implements OnDestroy*/ {
   ionViewWillEnter() {
     this.events.publishIonViewWillEnter(this.constructor.name);
     this.events.publishPageLoadedContent({'title': this.mdContent?.title});
-    this.events.publishTitleLogoSetTitle(this.config.getSettings('app.page-title.' + this.lang));
   }
 
   ionViewDidEnter() {
@@ -166,19 +165,17 @@ export class ContentPage /*implements OnDestroy*/ {
   }
 
   getMdContent(fileID: string) {
-    // console.log(`Calling getMdContent from content.ts ${fileID}`);
-    this.mdContentService.getMdContent(fileID)
-        .subscribe(
-            text => {
-              this.getSongsByType(text.content);
-              this.getSongExample(text.content);
-              if (this.mdContent) {
-                this.mdContent.content = text.content;
-                this.doAnalytics(this.mdContent.id);
-              }
-            },
-            error =>  {this.errorMessage = <any>error}
-        );
+    this.mdContentService.getMdContent(fileID).subscribe({
+      next: text => {
+        this.getSongsByType(text.content);
+        this.getSongExample(text.content);
+        if (this.mdContent) {
+          this.mdContent.content = text.content;
+          this.doAnalytics(this.mdContent.id);
+        }
+      },
+      error: e =>  { this.errorMessage = <any>e; }
+    });
   }
 
   getSongsByType(markdownText: any) {

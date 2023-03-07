@@ -22,8 +22,7 @@ import {settings} from 'src/app/services/config/config';
   styleUrls: ['home.scss'],
 })
 export class HomePage {
-  appName?: string;
-  appSubtitle?: string;
+  siteHasSubtitle: boolean = false;
   homeContent?: string;
   homeFooterContent?: string;
   imageOrientationPortrait: Boolean = false;
@@ -129,40 +128,19 @@ export class HomePage {
     this.languageSubscription = null;
   }
 
-  ngOnDestroy() {
-    if (this.languageSubscription) {
-      this.languageSubscription.unsubscribe();
-    }
-  }
-
-  ionViewWillLeave() {
-    this.events.publishIonViewWillLeave(this.constructor.name);
-  }
-  ionViewWillEnter() {
-    this.events.publishIonViewWillEnter(this.constructor.name);
-    this.events.publishTableOfContentsUnSelectSelectedTocItem({
-      selected: 'home',
-    });
-    this.events.publishSelectedItemInMenu({
-      menuID: 'home',
-      component: 'home',
-    });
-    this.events.publishMusicAccordionReset(true);
-  }
-
   ngOnInit() {
-    this.languageSubscription = this.languageService
-      .languageSubjectChange()
-      .subscribe((lang) => {
-        if (lang) {
-          this.loadContent(lang);
-        } else {
-          this.languageService.getLanguage().subscribe((language) => {
-            this.loadContent(language);
-          });
-        }
-      });
+    this.languageSubscription = this.languageService.languageSubjectChange().subscribe((lang) => {
+      if (lang) {
+        this.loadContent(lang);
+      } else {
+        this.languageService.getLanguage().subscribe((language) => {
+          this.loadContent(language);
+        });
+      }
+    });
+  }
 
+  ionViewWillEnter() {
     /* Update the variables in textService that keep track of which texts have
        recently been opened in page-read. The purpose of this is to cause
        texts that are cached in storage to be cleared upon the next visit
@@ -176,16 +154,26 @@ export class HomePage {
     }
   }
 
+  ngOnDestroy() {
+    if (this.languageSubscription) {
+      this.languageSubscription.unsubscribe();
+    }
+  }
+
   loadContent(lang: string) {
     this.getMdContent(lang + '-01');
     this.getFooterMdContent(lang + '-06');
-    this.appName = this.config.getSettings('app.name.' + lang);
-    const subTitle = this.config.getSettings('app.subTitle1.' + lang);
-    if (subTitle !== '') {
-      this.appSubtitle = this.config.getSettings('app.subTitle1.' + lang);
-    } else {
-      this.appSubtitle = '';
-    }
+
+    this.translate.get('Site.Subtitle').subscribe({
+      next: translation => {
+        if (translation) {
+          this.siteHasSubtitle = true;
+        } else {
+          this.siteHasSubtitle = false;
+        }
+      },
+      error: e => { this.siteHasSubtitle = false; }
+    });
   }
 
   getMdContent(fileID: string) {

@@ -2,24 +2,13 @@ type Settings = { [key: string]: any }
 
 export const settings: Settings = {
   app: {
-    readContent: "...",
     machineName: "topelius",
     projectId: 10,
-    useLegacyIdsForSemanticData: false,
-    legacyIdPrefix: "",
     apiEndpoint: "https://api.sls.fi/digitaledition",
     name: {
       sv: "Zacharias Topelius Skrifter",
       fi: "Zacharias Topelius Skrifter",
       en: "Zacharias Topelius Skrifter"
-    },
-    subTitle1: {
-      sv: "",
-      fi: ""
-    },
-    subTitle2: {
-      sv: "",
-      fi: ""
     },
     showTopMusicButton: false,
     showHelpButton: false,
@@ -277,20 +266,6 @@ export const settings: Settings = {
     220: "assets/images/verk/omslag/omslag_220_foraldrakorrespondens.jpg",
     221: "assets/images/verk/omslag/omslag_221_lasning_for_barn.jpg"
   },
-  galleryImages: {
-    0: {
-      prefix: "FFiT_",
-      numberOfImages: 120
-    },
-    1: {
-      prefix: "ERiF_",
-      numberOfImages: 39
-    },
-    2: {
-      prefix: "foo_",
-      numberOfImages: 0
-    }
-  },
   show: {
     TOC: {
       Home: false,
@@ -339,7 +314,7 @@ export const settings: Settings = {
   ImageGallery: {
     ShowInReadMenu: false
   },
-    Occurrences: {
+  Occurrences: {
     HideTypeAndDescription: true,
     hideCityRegionCountry: true,
     ShowPublishedStatus: 2
@@ -354,10 +329,7 @@ export const settings: Settings = {
     idNumber: "03",
     hasMenuConditional: false
   }],
-  GoogleAnalyticsId: "G-45Hfdfd2KLT2Y",
   LoadCollectionsFromAssets: false,
-  LoadTitleFromDB: true,
-  StaticMarkdownCovers: false,
   ProjectStaticMarkdownCoversFolder: "08",
   ProjectStaticMarkdownTitleFolder: "",
   showOccurencesModalOnReadPageAfterSearch: {
@@ -387,12 +359,8 @@ export const settings: Settings = {
   HasForeword: true,
   HasIntro: true,
   separeateIntroductionToc: true,
-  SidemenuMobile: true,
   OpenOccurrencesAndInfoOnNewPage: false,
   SingleOccurrenceType: null,
-  HideBackButton: {
-    TopMenu: true
-  },
   MusicPage: {
     collectionsToShow: []
   },

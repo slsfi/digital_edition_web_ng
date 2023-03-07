@@ -72,35 +72,25 @@ export class TooltipService {
 
   getPersonTooltip(id: string): Observable<any> {
     let url = '';
-    const legacyPrefix = this.config.getSettings('app.legacyIdPrefix');
-
-    url = `${this.apiEndPoint}/${this.projectMachineName}/subject/${legacyPrefix}${id}`;
-
+    url = `${this.apiEndPoint}/${this.projectMachineName}/subject/${id}`;
     return this.http.get(url);
   }
 
   getPlaceTooltip(id: string): Observable<any> {
     let url = '';
-    const legacyPrefix = this.config.getSettings('app.legacyIdPrefix');
-
-    url = `${this.apiEndPoint}/${this.projectMachineName}/location/${legacyPrefix}${id}`;
-
+    url = `${this.apiEndPoint}/${this.projectMachineName}/location/${id}`;
     return this.http.get(url);
   }
 
   getTagTooltip(id: string): Observable<any> {
     let url = '';
-    const legacyPrefix = this.config.getSettings('app.legacyIdPrefix');
-
-    url = `${this.apiEndPoint}/${this.projectMachineName}/tag/${legacyPrefix}${id}`;
-
+    url = `${this.apiEndPoint}/${this.projectMachineName}/tag/${id}`;
     return this.http.get(url);
   }
 
   getWorkTooltip(id: string): Observable<any> {
     let url = '';
     url = `${this.apiEndPoint}/${this.projectMachineName}/work/${id}`;
-
     return this.http.get(url);
   }
 

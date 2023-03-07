@@ -38,7 +38,6 @@ export class MediaCollectionsPage {
   prevSub = '';
   public apiEndPoint: string;
   public projectMachineName: string;
-  public removeScanDetails = false;
   mdContent: MdContent;
   language = 'sv';
   constructor(
@@ -56,11 +55,6 @@ export class MediaCollectionsPage {
   ) {
     this.apiEndPoint = this.config.getSettings('app.apiEndpoint');
     this.projectMachineName = this.config.getSettings('app.machineName');
-    try {
-      this.removeScanDetails = this.config.getSettings('galleryImages.removeScanDetails');
-    } catch (e) {
-      this.removeScanDetails = false;
-    }
 
     let fileID = '11-all';
     this.mdContent = new MdContent({id: fileID, title: '...', content: null, filename: null});
