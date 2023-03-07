@@ -50,7 +50,7 @@ export class CommentService {
     const introURL = '/text/' + collection_id + '/' + pub_id + '/com';
     const commentIdURL =
       '/text/' + collection_id + '/' + pub_id + '/com/' + parts[1];
-    let url: String = '';
+    let url: string = '';
 
     if (parts[1]) {
       if (parts[1].length > 1) {
@@ -66,21 +66,20 @@ export class CommentService {
       url = introURL;
     }
 
+    url = this.config.getSettings('app.apiEndpoint') + '/' + this.config.getSettings('app.machineName') + url;
+
     if (this.cache.hasHtml(commentId)) {
       return this.cache.getHtmlAsObservable(id2);
     } else {
-      return ajax(
-        this.config.getSettings('app.apiEndpoint') +
-          '/' +
-          this.config.getSettings('app.machineName') +
-          url
-      ).pipe(
-        map((res: any) => {
-          const body = res.json();
+      return this.http.get(url).pipe(
+        map((res) => {
+          let body = res as any;
+          body = body.content as string;
+
           if (parts[1]) {
             const selector: string = '.' + parts[1];
             const range = document.createRange();
-            const docFrags = range.createContextualFragment(body.content);
+            const docFrags = range.createContextualFragment(body);
             if (docFrags.querySelector(selector)) {
               const htmlElement: Element | null =
                 docFrags.querySelector(selector);
@@ -97,7 +96,7 @@ export class CommentService {
               }
             }
           }
-          return body.content || ' - no content - ';
+          return body || ' - no content - ';
         }),
         catchError(this.handleError)
       );

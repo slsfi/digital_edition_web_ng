@@ -79,6 +79,7 @@ export class TextService {
     return this.http.get(url).pipe(
       map((res) => {
         let body = res as any;
+        body = body.content as string;
 
         try {
           let showReadTextIllustrations = [];
