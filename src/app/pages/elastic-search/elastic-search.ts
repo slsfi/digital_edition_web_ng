@@ -1,13 +1,12 @@
 import { Component, ViewChild, ChangeDetectorRef } from '@angular/core';
-// tslint:disable-next-line:max-line-length
+import { ActivatedRoute } from '@angular/router';
+import { IonContent, LoadingController, ModalController, NavController, Platform, ToastController } from '@ionic/angular';
+import { TranslateService } from '@ngx-translate/core';
+import { Subscription } from 'rxjs';
 import get from 'lodash/get';
 import debounce from 'lodash/debounce';
 import size from 'lodash/size';
-import { TranslateService } from '@ngx-translate/core';
-import { IonContent, LoadingController, ModalController, NavController, Platform, ToastController } from '@ionic/angular';
-import { Subscription } from 'rxjs';
 import { SemanticDataService } from 'src/app/services/semantic-data/semantic-data.service';
-import { ConfigService } from 'src/app/services/config/core/config.service';
 import { TextService } from 'src/app/services/texts/text.service';
 import { LanguageService } from 'src/app/services/languages/language.service';
 import { MdContentService } from 'src/app/services/md/md-content.service';
@@ -17,53 +16,13 @@ import { EventsService } from 'src/app/services/events/events.service';
 import { AnalyticsService } from 'src/app/services/analytics/analytics.service';
 import { CommonFunctionsService } from 'src/app/services/common-functions/common-functions.service';
 import { ElasticSearchService } from 'src/app/services/elastic-search/elastic-search.service';
-import { ActivatedRoute } from '@angular/router';
-
-/*
-
-Specs:
-
-- To the left (probably): all the filters, so the user can decide what filters to use before
-actually performing the search, in order to avoid getting results not relevant.
-
-- Since the filters are always visible, they could simply be updated with the number of results
-in the different categories after the search is finished?
-
-- Results are shown in different tabs according to the following categories:
-  texts by the author ZT (reading texts, variants, manuscripts);
-  texts by editors (introductions, comments, title pages, other info material on the site);
-  results from the indexes (persons, places, literary works (results both from the name fields and the description fields)).
-
-- Filters include:
-  genre -> edition;
-  text type (reading text, variant, manuscript, comment, introduction, index);
-  time period -> decade -> year -> month -> date;
-  sender - receiver (for letters)
-
-
-Use cases:
-
-The user might want to look at the word 'snömos', but only in prose and reading texts (to find out how it was used by the author in the
-19th century). From the results she sees it occurs throughout the decades 1840-1880, so she can take a look directly at the one from 1881.
-The user can then decide to look at only comments containing (i.e. explaining) this word; there are 5 of them (and they are all different).
-
-Another user searches for the name Ulla as free text, only in prose, and gets 2 results (one person).
-Ulla as an index search in prose returns 3 different persons, occurring in total 8 times, because they are mentioned
-in other ways than by their first name in the texts, but connected to index posts containing this first name.
-
-In general, the user of the advanced search might want to use some filters from the start, or at least later choose between the
-results according to their different categorization, so it’s important to always keep an overview of what categories the results belong to.
-
-*/
+import { config } from "src/app/services/config/config";
 
 interface SearchOptions {
   done?: Function;
   initialSearch?: boolean;
 }
 
-/**
- * Elastic search page.
- */
 // @IonicPage({
 //   name: 'elastic-search',
 //   segment: 'elastic-search/:query',
@@ -124,7 +83,6 @@ export class ElasticSearchPage {
   constructor(
     public navCtrl: NavController,
     public semanticDataService: SemanticDataService,
-    protected config: ConfigService,
     public modalCtrl: ModalController,
     private platform: Platform,
     protected textService: TextService,
@@ -140,51 +98,17 @@ export class ElasticSearchPage {
     private cf: ChangeDetectorRef,
     private analyticsService: AnalyticsService,
     public commonFunctions: CommonFunctionsService,
-    private route: ActivatedRoute,
+    private route: ActivatedRoute
   ) {
-    // console.log('constructing elastic search');
-
-    try {
-      this.hitsPerPage = this.config.getSettings('ElasticSearch.hitsPerPage');
-    } catch (e) {
-      console.error('Failed to load Elastic Search Page. Configuration error.', e);
-    }
-    try {
-      this.groupsOpenByDefault = this.config.getSettings('ElasticSearch.groupOpenByDefault');
-    } catch (e) {
-      console.error('Failed to load set facet groups open by default. Configuration error.', e);
-    }
-    try {
-      this.showSortOptions = this.config.getSettings('ElasticSearch.show.sortOptions');
-    } catch (e) {
-      this.showSortOptions = true;
-    }
-    try {
-      this.showFacets = this.config.getSettings('ElasticSearch.show.facets');
-    } catch (e) {
-      this.showFacets = true;
-    }
-    try {
-      this.highlightSearchMatches = this.config.getSettings('show.highlightedSearchMatches');
-    } catch (e) {
-      this.highlightSearchMatches = true;
-    }
-    try {
-      this.textTitleHighlightType = this.config.getSettings('ElasticSearch.textTitleHighlightType');
-    } catch (e) {
-      this.textTitleHighlightType = 'unified';
-    }
-    try {
-      this.textHighlightType = this.config.getSettings('ElasticSearch.textHighlightType');
-    } catch (e) {
-      this.textHighlightType = 'unified';
-    }
-    try {
-      this.textHighlightFragmentSize = this.config.getSettings('ElasticSearch.textHighlightFragmentSize');
-    } catch (e) {
-      this.textHighlightFragmentSize = 150;
-    }
-
+    this.hitsPerPage = config.ElasticSearch?.hitsPerPage ?? 20;
+    this.groupsOpenByDefault = config.ElasticSearch?.groupOpenByDefault ?? undefined;
+    this.showSortOptions = config.ElasticSearch?.show?.sortOptions ?? true;
+    this.showFacets = config.ElasticSearch?.show?.facets ?? true;
+    this.highlightSearchMatches = config.show?.highlightedSearchMatches ?? true;
+    this.textTitleHighlightType = config.ElasticSearch?.textTitleHighlightType ?? 'unified';
+    this.textHighlightType = config.ElasticSearch?.textHighlightType ?? 'unified';
+    this.textHighlightFragmentSize = config.ElasticSearch?.textHighlightFragmentSize ?? 150;
+    
     if (this.textTitleHighlightType !== 'fvh' && this.textTitleHighlightType !== 'unified' && this.textTitleHighlightType !== 'plain') {
       this.textTitleHighlightType = 'unified';
     }
@@ -291,7 +215,7 @@ export class ElasticSearchPage {
             title: translation,
             cssClass: 'custom-select-alert'
           };
-        }, error => { }
+        }
       );
     });
   }
@@ -564,15 +488,13 @@ export class ElasticSearchPage {
       queries: this.queries,
       facetGroups: this.facetGroups,
       range: this.range,
-    }).subscribe(
-      (data: any) => {
+    }).subscribe({
+      next: data => {
         // console.log('aggregation data', data);
         this.populateFacets(data.aggregations);
       },
-      (error: any) => {
-        console.error('Error fetching aggregations', error);
-      }
-    );
+      error: e => { console.error('Error fetching aggregations', e); }
+    });
 
     // Fetch suggestions
     /*
@@ -985,11 +907,10 @@ export class ElasticSearchPage {
   }
 
   getMdContent(fileID: string) {
-    this.mdContentService.getMdContent(fileID)
-      .subscribe(
-        text => { this.mdContent = text.content; },
-        error => { this.mdContent = ''; }
-      );
+    this.mdContentService.getMdContent(fileID).subscribe({
+      next: text => { this.mdContent = text.content; },
+      error: e => { this.mdContent = ''; }
+    });
   }
 
   showAllHitHighlights(event: any) {

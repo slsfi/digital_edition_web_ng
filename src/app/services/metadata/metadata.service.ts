@@ -1,9 +1,9 @@
+import { Inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import {Inject, Injectable} from '@angular/core';
-import { ConfigService } from '../config/core/config.service';
-import { LanguageService } from '../languages/language.service';
 import { TranslateService } from '@ngx-translate/core';
-import {DOCUMENT} from "@angular/common";
+import { LanguageService } from '../languages/language.service';
+import { config } from "src/app/services/config/config";
+import { DOCUMENT } from "@angular/common";
 
 /*
   Generated class for the MetadataService provider.
@@ -16,18 +16,13 @@ export class MetadataService {
   private siteMetadata: Object | any;
   private appName?: String;
   constructor(
-    private config: ConfigService,
     private languageService: LanguageService,
     private translate: TranslateService,
 
     @Inject(DOCUMENT) private _doc: Document
   )
   {
-    try {
-      this.siteMetadata = this.config.getSettings('siteMetaData') as Object;
-    } catch (e) {
-      this.siteMetadata = {};
-    }
+    this.siteMetadata = config.siteMetaData ?? {};
   }
 
   clearHead() {

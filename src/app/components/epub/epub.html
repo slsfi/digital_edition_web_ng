@@ -27,7 +27,7 @@
                   <ion-icon class="urn-icon" name="arrow-redo-sharp"></ion-icon>
                   <span *ngIf="!(userSettingsService.isMobile())" class="side-title">{{'Reference.refer' | translate }}</span>
                 </ion-button>
-                <ion-button *ngIf="showDisplayOptionsButton" fill="clear" #settingsIconElement (click)="showReadSettingsPopover($event)" class="sec-menu-button" id="settings-icon">
+                <ion-button *ngIf="showViewOptionsButton" fill="clear" #settingsIconElement (click)="showReadSettingsPopover($event)" class="sec-menu-button" id="settings-icon">
                   <ion-icon class="settings-icon" name="settings"></ion-icon>
                   <span *ngIf="!(userSettingsService.isMobile())" class="side-title">{{'Epub.DisplayOptions' | translate }}</span>
                 </ion-button>

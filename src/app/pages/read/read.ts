@@ -9,7 +9,6 @@ import { DownloadTextsModalPage } from 'src/app/modals/download-texts-modal/down
 import { OccurrencesPage } from 'src/app/modals/occurrences/occurrences';
 import { ReadPopoverPage } from 'src/app/modals/read-popover/read-popover';
 import { SearchAppPage } from 'src/app/modals/search-app/search-app';
-import { SharePopoverPage } from 'src/app/modals/share-popover/share-popover';
 import { EstablishedText } from 'src/app/models/established-text.model';
 import { OccurrenceResult } from 'src/app/models/occurrence.model';
 import { TableOfContentsItem } from 'src/app/models/table-of-contents-item.model';
@@ -18,7 +17,6 @@ import { AnalyticsService } from 'src/app/services/analytics/analytics.service';
 import { PublicationCacheService } from 'src/app/services/cache/publication-cache.service';
 import { CommentService } from 'src/app/services/comments/comment.service';
 import { CommonFunctionsService } from 'src/app/services/common-functions/common-functions.service';
-import { ConfigService } from 'src/app/services/config/core/config.service';
 import { EventsService } from 'src/app/services/events/events.service';
 import { LanguageService } from 'src/app/services/languages/language.service';
 import { SemanticDataService } from 'src/app/services/semantic-data/semantic-data.service';
@@ -28,6 +26,7 @@ import { StorageService } from 'src/app/services/storage/storage.service';
 import { TextService } from 'src/app/services/texts/text.service';
 import { TableOfContentsService } from 'src/app/services/toc/table-of-contents.service';
 import { TooltipService } from 'src/app/services/tooltips/tooltip.service';
+import { config } from "src/app/services/config/config";
 import { DragScrollComponent } from 'src/directives/ngx-drag-scroll/public-api';
 
 /**
@@ -71,7 +70,6 @@ export class ReadPage /*implements OnDestroy*/ {
   errorMessage?: string;
   tocRoot?: TableOfContentsCategory[];
   popover?: ReadPopoverPage;
-  sharePopover?: SharePopoverPage;
   subTitle?: string;
   cacheItem = false;
   collectionTitle?: string;
@@ -97,7 +95,7 @@ export class ReadPage /*implements OnDestroy*/ {
   illustrationsViewShown: Boolean = false;
   simpleWorkMetadata?: Boolean;
   showURNButton: Boolean;
-  showDisplayOptionsButton: Boolean = true;
+  showViewOptionsButton: Boolean = true;
   showTextDownloadButton: Boolean = false;
   usePrintNotDownloadIcon: Boolean = false;
   backdropWidth: number;
@@ -195,7 +193,6 @@ export class ReadPage /*implements OnDestroy*/ {
     private renderer2: Renderer2,
     private ngZone: NgZone,
     private elementRef: ElementRef,
-    private config: ConfigService,
     public popoverCtrl: PopoverController,
     public readPopoverService: ReadPopoverService,
     public actionSheetCtrl: ActionSheetController,
@@ -213,7 +210,7 @@ export class ReadPage /*implements OnDestroy*/ {
     private analyticsService: AnalyticsService,
     public commonFunctions: CommonFunctionsService,
     private route: ActivatedRoute,
-    private router: Router,
+    private router: Router
   ) {
     this.isCached();
     this.searchResult = null;
@@ -237,15 +234,10 @@ export class ReadPage /*implements OnDestroy*/ {
 
     this.backdropWidth = 0;
 
-    try {
-      this.appUsesAccordionToc = this.config.getSettings('AccordionTOC');
-    } catch (e) {
-      console.log(e);
-    }
+    this.appUsesAccordionToc = config.AccordionTOC ?? undefined;
 
     try {
-      const i18n = this.config.getSettings('i18n');
-      // console.log('i18n: ', i18n);
+      const i18n = config.i18n ?? undefined;
 
       if (i18n.multilingualEST !== undefined) {
         this.multilingualEST = i18n.multilingualEST;
@@ -266,40 +258,36 @@ export class ReadPage /*implements OnDestroy*/ {
       console.error(e);
     }
 
-    try {
-      this.showURNButton = this.config.getSettings('showURNButton.pageRead');
-    } catch (e) {
-      this.showURNButton = true;
-    }
+    this.showURNButton = config.page?.read?.showURNButton ?? true;
+    this.showViewOptionsButton = config.page?.read?.showViewOptionsButton ?? true;
 
     try {
-      this.showDisplayOptionsButton = this.config.getSettings('showDisplayOptionsButton.pageRead');
-    } catch (e) {
-      this.showDisplayOptionsButton = true;
-    }
-
-    try {
-      const textDownloadOptions = this.config.getSettings('textDownloadOptions');
-      if (textDownloadOptions.enabledEstablishedFormats !== undefined &&
+      const textDownloadOptions = config.textDownloadOptions ?? undefined;
+      if (
+        textDownloadOptions !== undefined &&
+        textDownloadOptions.enabledEstablishedFormats !== undefined &&
         textDownloadOptions.enabledEstablishedFormats !== null &&
-        Object.keys(textDownloadOptions.enabledEstablishedFormats).length !== 0) {
-          for (const [key, value] of Object.entries(textDownloadOptions.enabledEstablishedFormats)) {
+        Object.keys(textDownloadOptions.enabledEstablishedFormats).length !== 0
+      ) {
+        for (const [key, value] of Object.entries(textDownloadOptions.enabledEstablishedFormats)) {
+          if (value) {
+            this.showTextDownloadButton = true;
+            break;
+          }
+        }
+      }
+      if (!this.showTextDownloadButton) {
+        if (
+          textDownloadOptions.enabledCommentsFormats !== undefined &&
+          textDownloadOptions.enabledCommentsFormats !== null &&
+          Object.keys(textDownloadOptions.enabledCommentsFormats).length !== 0
+        ) {
+          for (const [key, value] of Object.entries(textDownloadOptions.enabledCommentsFormats)) {
             if (value) {
               this.showTextDownloadButton = true;
               break;
             }
           }
-      }
-      if (!this.showTextDownloadButton) {
-        if (textDownloadOptions.enabledCommentsFormats !== undefined &&
-          textDownloadOptions.enabledCommentsFormats !== null &&
-          Object.keys(textDownloadOptions.enabledCommentsFormats).length !== 0) {
-            for (const [key, value] of Object.entries(textDownloadOptions.enabledCommentsFormats)) {
-              if (value) {
-                this.showTextDownloadButton = true;
-                break;
-              }
-            }
         }
       }
       if (textDownloadOptions.usePrintNotDownloadIcon !== undefined) {
@@ -310,15 +298,10 @@ export class ReadPage /*implements OnDestroy*/ {
     }
 
     // Hide some or all of the display toggles (variations, facsimiles, established etc.)
-    this.displayToggles = this.config.getSettings('settings.displayTypesToggles');
+    this.displayToggles = config.settings?.displayTypesToggles ?? [];
 
-    try {
-      this.toolTipsSettings = this.config.getSettings('settings.toolTips');
-    } catch (e) {
-      this.toolTipsSettings = undefined;
-    }
-
-    this.show = this.config.getSettings('defaults.ReadModeView');
+    this.toolTipsSettings = config.settings?.toolTips ?? undefined;
+    this.show = config.defaults?.ReadModeView ?? 'established';
   }
 
   ngOnInit() {
@@ -914,7 +897,7 @@ export class ReadPage /*implements OnDestroy*/ {
   viewModeExpires() {
     const today = new Date();
     const expires = new Date();
-    const daysUntilExpires = this.config.getSettings('cache.viewmodes.daysUntilExpires');
+    const daysUntilExpires = config.cache?.viewmodes?.daysUntilExpires ?? 1;
 
     expires.setDate(today.getDate() + daysUntilExpires);
 
@@ -970,7 +953,7 @@ export class ReadPage /*implements OnDestroy*/ {
    * And if no config for this was set at all it sets established as the default.
    */
   setConfigDefaultReadModeViews() {
-    const defaultReadModes: any = this.config.getSettings('defaults.ReadModeView');
+    const defaultReadModes: any = config.defaults?.ReadModeView ?? 'established';
     if (defaultReadModes !== undefined && defaultReadModes.length > 0) {
       if (defaultReadModes instanceof Array) {
         let defaultReadModeForMobileSelected = false;
@@ -2001,14 +1984,10 @@ export class ReadPage /*implements OnDestroy*/ {
     }
 
     if (this.simpleWorkMetadata === undefined) {
-      try {
-        this.simpleWorkMetadata = this.config.getSettings('useSimpleWorkMetadata');
-      } catch (e) {
-        this.simpleWorkMetadata = false;
-      }
+      this.simpleWorkMetadata = config.useSimpleWorkMetadata ?? false;
     }
 
-    if (this.simpleWorkMetadata === false || this.simpleWorkMetadata === undefined) {
+    if (this.simpleWorkMetadata === false) {
       this.semanticDataService.getSingleObjectElastic('work', id).subscribe(
         tooltip => {
           if ( tooltip.hits.hits[0] === undefined || tooltip.hits.hits[0]['_source'] === undefined ) {
@@ -2650,14 +2629,6 @@ export class ReadPage /*implements OnDestroy*/ {
       component: ReadPopoverPage,
       cssClass: 'popover_settings'
     });
-    popover.present(myEvent);
-  }
-
-  async showSharePopover(myEvent: any) {
-    const popover = await this.popoverCtrl.create({
-      component: SharePopoverPage,
-      cssClass: 'share-popover'
-    })
     popover.present(myEvent);
   }
 

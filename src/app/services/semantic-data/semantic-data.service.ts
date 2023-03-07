@@ -1,13 +1,12 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { CommonFunctionsService } from '../common-functions/common-functions.service';
-import { ConfigService } from '../config/core/config.service';
+import { config } from "src/app/services/config/config";
 
 @Injectable()
 export class SemanticDataService {
   textCache: any;
-  useLegacy: boolean;
   elasticSubjectIndex: string;
   elasticLocationIndex: string;
   elasticWorkIndex: string;
@@ -15,17 +14,9 @@ export class SemanticDataService {
   flattened: any;
 
   constructor(
-    private config: ConfigService,
     public commonFunctions: CommonFunctionsService,
     private http: HttpClient
   ) {
-    try {
-      this.useLegacy = !!this.config.getSettings(
-        'app.useLegacyIdsForSemanticData'
-      ) as boolean;
-    } catch (e) {
-      this.useLegacy = false;
-    }
     this.elasticSubjectIndex = 'subject';
     this.elasticLocationIndex = 'location';
     this.elasticWorkIndex = 'work';
@@ -44,7 +35,7 @@ export class SemanticDataService {
         bool: {
           must: [
             {
-              term: { project_id: this.config.getSettings('app.projectId') },
+              term: { project_id: config.app.projectId },
             },
           ],
         },
@@ -67,7 +58,7 @@ export class SemanticDataService {
         bool: {
           must: [
             {
-              term: { project_id: this.config.getSettings('app.projectId') },
+              term: { project_id: config.app.projectId },
             },
           ],
         },
@@ -91,7 +82,7 @@ export class SemanticDataService {
         bool: {
           must: [
             {
-              term: { project_id: this.config.getSettings('app.projectId') },
+              term: { project_id: config.app.projectId },
             },
           ],
         },
@@ -113,9 +104,9 @@ export class SemanticDataService {
 
   getPlace(id: string): Observable<any> {
     return this.http.get(
-      this.config.getSettings('app.apiEndpoint') +
+      config.app.apiEndpoint +
         '/' +
-        this.config.getSettings('app.machineName') +
+        config.app.machineName +
         '/location/' +
         id
     );
@@ -123,9 +114,9 @@ export class SemanticDataService {
 
   getPerson(id: string): Observable<any> {
     return this.http.get(
-      this.config.getSettings('app.apiEndpoint') +
+      config.app.apiEndpoint +
         '/' +
-        this.config.getSettings('app.machineName') +
+        config.app.machineName +
         '/subject/' +
         id
     );
@@ -133,9 +124,9 @@ export class SemanticDataService {
 
   getTag(id: string): Observable<any> {
     return this.http.get(
-      this.config.getSettings('app.apiEndpoint') +
+      config.app.apiEndpoint +
         '/' +
-        this.config.getSettings('app.machineName') +
+        config.app.machineName +
         '/tag/' +
         id
     );
@@ -143,9 +134,9 @@ export class SemanticDataService {
 
   getWork(id: string): Observable<any> {
     return this.http.get(
-      this.config.getSettings('app.apiEndpoint') +
+      config.app.apiEndpoint +
         '/' +
-        this.config.getSettings('app.machineName') +
+        config.app.machineName +
         '/work/' +
         id
     );
@@ -153,9 +144,9 @@ export class SemanticDataService {
 
   getSemanticData(id: string): Observable<any> {
     return this.http.get(
-      this.config.getSettings('app.apiEndpoint') +
+      config.app.apiEndpoint +
         '/' +
-        this.config.getSettings('app.machineName') +
+        config.app.machineName +
         '/tag/' +
         id
     );
@@ -163,7 +154,7 @@ export class SemanticDataService {
 
   getAllPerson(): Observable<any> {
     return this.http.get(
-      this.config.getSettings('app.apiEndpoint') + '/subjects'
+      config.app.apiEndpoint + '/subjects'
     );
   }
 
@@ -178,18 +169,18 @@ export class SemanticDataService {
     }
 
     return this.http.get(
-      this.config.getSettings('app.apiEndpoint') +
+      config.app.apiEndpoint +
         '/' +
-        this.config.getSettings('app.machineName') +
+        config.app.machineName +
         occurrenceURL
     );
   }
 
   getSubjectOccurrences(subject_id?: Number): Observable<any> {
     return this.http.get(
-      this.config.getSettings('app.apiEndpoint') +
+      config.app.apiEndpoint +
         '/' +
-        this.config.getSettings('app.machineName') +
+        config.app.machineName +
         '/subject/occurrences/' +
         (subject_id ? subject_id + '/' : '')
     );
@@ -197,9 +188,9 @@ export class SemanticDataService {
 
   getSubjects(): Observable<any> {
     return this.http.get(
-      this.config.getSettings('app.apiEndpoint') +
+      config.app.apiEndpoint +
         '/' +
-        this.config.getSettings('app.machineName') +
+        config.app.machineName +
         '/subjects'
     );
   }
@@ -210,14 +201,7 @@ export class SemanticDataService {
     filters?: any,
     max?: any
   ) {
-    let showPublishedStatus = 2;
-    try {
-      showPublishedStatus = this.config.getSettings(
-        'PersonSearch.ShowPublishedStatus'
-      ) as number;
-    } catch (e) {
-      showPublishedStatus = 2;
-    }
+    const showPublishedStatus = config.PersonSearch?.ShowPublishedStatus ?? 2;
 
     if (filters === null || filters === undefined) {
       filters = {};
@@ -236,7 +220,7 @@ export class SemanticDataService {
           must: [
             {
               term: {
-                project_id: { value: this.config.getSettings('app.projectId') },
+                project_id: { value: config.app.projectId },
               },
             },
             { term: { published: { value: showPublishedStatus } } },
@@ -358,7 +342,7 @@ export class SemanticDataService {
                 must: [
                   {
                     term: {
-                      project_id: this.config.getSettings('app.projectId'),
+                      project_id: config.app.projectId,
                     },
                   },
                   {
@@ -372,7 +356,7 @@ export class SemanticDataService {
                 must: [
                   {
                     term: {
-                      project_id: this.config.getSettings('app.projectId'),
+                      project_id: config.app.projectId,
                     },
                   },
                   {
@@ -404,14 +388,7 @@ export class SemanticDataService {
     filters?: any,
     max?: any
   ) {
-    let showPublishedStatus = 2;
-    try {
-      showPublishedStatus = this.config.getSettings(
-        'LocationSearch.ShowPublishedStatus'
-      ) as number;
-    } catch (e) {
-      showPublishedStatus = 2;
-    }
+    const showPublishedStatus = config.LocationSearch?.ShowPublishedStatus ?? 2;
 
     if (filters === null || filters === undefined) {
       filters = {};
@@ -430,7 +407,7 @@ export class SemanticDataService {
           must: [
             {
               term: {
-                project_id: { value: this.config.getSettings('app.projectId') },
+                project_id: { value: config.app.projectId },
               },
             },
             { term: { published: { value: showPublishedStatus } } },
@@ -527,7 +504,7 @@ export class SemanticDataService {
                 must: [
                   {
                     term: {
-                      project_id: this.config.getSettings('app.projectId'),
+                      project_id: config.app.projectId,
                     },
                   },
                   {
@@ -541,7 +518,7 @@ export class SemanticDataService {
                 must: [
                   {
                     term: {
-                      project_id: this.config.getSettings('app.projectId'),
+                      project_id: config.app.projectId,
                     },
                   },
                   {
@@ -604,14 +581,7 @@ export class SemanticDataService {
   }
 
   getTagElastic(after_key?: any, searchText?: any, filters?: any, max?: any) {
-    let showPublishedStatus = 2;
-    try {
-      showPublishedStatus = this.config.getSettings(
-        'TagSearch.ShowPublishedStatus'
-      ) as number;
-    } catch (e) {
-      showPublishedStatus = 2;
-    }
+    const showPublishedStatus = config.TagSearch?.ShowPublishedStatus ?? 2;
 
     if (filters === null || filters === undefined) {
       filters = {};
@@ -630,7 +600,7 @@ export class SemanticDataService {
           must: [
             {
               term: {
-                project_id: { value: this.config.getSettings('app.projectId') },
+                project_id: { value: config.app.projectId },
               },
             },
             { term: { published: { value: showPublishedStatus } } },
@@ -721,13 +691,13 @@ export class SemanticDataService {
 
   getSubjectOccurrencesById(id: string): Observable<any> {
     return this.http.get(
-      this.config.getSettings('app.apiEndpoint') + '/occurrences/subject/' + id
+      config.app.apiEndpoint + '/occurrences/subject/' + id
     );
   }
 
   getOccurrences(type: string, id: string): Observable<any> {
     return this.http.get(
-      this.config.getSettings('app.apiEndpoint') +
+      config.app.apiEndpoint +
         '/occurrences/' +
         type +
         '/' +
@@ -737,21 +707,21 @@ export class SemanticDataService {
 
   getLocationOccurrencesById(id: string): Observable<any> {
     return this.http.get(
-      this.config.getSettings('app.apiEndpoint') + '/occurrences/location/' + id
+      config.app.apiEndpoint + '/occurrences/location/' + id
     );
   }
 
   getTagOccurrencesById(id: string): Observable<any> {
     return this.http.get(
-      this.config.getSettings('app.apiEndpoint') + '/occurrences/tag/' + id
+      config.app.apiEndpoint + '/occurrences/tag/' + id
     );
   }
 
   getWorkOccurrencesById(id: string): Observable<any> {
     return this.http.get(
-      this.config.getSettings('app.apiEndpoint') +
+      config.app.apiEndpoint +
         '/' +
-        this.config.getSettings('app.machineName') +
+        config.app.machineName +
         '/workregister/work/project/occurrences/' +
         id
     );
@@ -759,9 +729,9 @@ export class SemanticDataService {
 
   getLocationOccurrences(id?: any): Observable<any> {
     return this.http.get(
-      this.config.getSettings('app.apiEndpoint') +
+      config.app.apiEndpoint +
         '/' +
-        this.config.getSettings('app.machineName') +
+        config.app.machineName +
         '/location/occurrences/' +
         (id ? id + '/' : '')
     );
@@ -769,9 +739,9 @@ export class SemanticDataService {
 
   getTagOccurrences(id?: any): Observable<any> {
     return this.http.get(
-      this.config.getSettings('app.apiEndpoint') +
+      config.app.apiEndpoint +
         '/' +
-        this.config.getSettings('app.machineName') +
+        config.app.machineName +
         '/tag/occurrences/' +
         (id ? id + '/' : '')
     );
@@ -779,16 +749,16 @@ export class SemanticDataService {
 
   getWorkOccurrences(): Observable<any> {
     return this.http.get(
-      this.config.getSettings('app.apiEndpoint') +
+      config.app.apiEndpoint +
         '/' +
-        this.config.getSettings('app.machineName') +
+        config.app.machineName +
         '/workregister/manifestations/'
     );
   }
 
   getAllPlaces(): Observable<any> {
     return this.http.get(
-      this.config.getSettings('app.apiEndpoint') + '/tooltips/locations'
+      config.app.apiEndpoint + '/tooltips/locations'
     );
   }
 
@@ -797,9 +767,9 @@ export class SemanticDataService {
     id: any[]
   ): Observable<any> {
     return this.http.get(
-      this.config.getSettings('app.apiEndpoint') +
+      config.app.apiEndpoint +
         '/' +
-        this.config.getSettings('app.machineName') +
+        config.app.machineName +
         '/occurrences/collection/' +
         object_type +
         '/' +
@@ -809,9 +779,9 @@ export class SemanticDataService {
 
   getPublicationTOC(collection_id: any): Observable<any> {
     return this.http.get(
-      this.config.getSettings('app.apiEndpoint') +
+      config.app.apiEndpoint +
         '/' +
-        this.config.getSettings('app.machineName') +
+        config.app.machineName +
         '/toc/' +
         collection_id
     );
@@ -833,9 +803,9 @@ export class SemanticDataService {
 
   private getSearchUrl(index: any): string {
     return (
-      this.config.getSettings('app.apiEndpoint') +
+      config.app.apiEndpoint +
       '/' +
-      this.config.getSettings('app.machineName') +
+      config.app.machineName +
       '/search/elastic/' +
       index
     );

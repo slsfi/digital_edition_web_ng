@@ -1,15 +1,15 @@
 import { Component, OnInit, Input } from '@angular/core';
+import { Router } from '@angular/router';
+import { NavController, Platform } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
 import { GeneralTocItem } from 'src/app/models/table-of-contents.model';
 import { DigitalEdition } from 'src/app/models/digital-edition.model';
-import { NavController, Platform } from '@ionic/angular';
 import { DigitalEditionListService } from 'src/app/services/toc/digital-edition-list.service';
 import { TableOfContentsService } from 'src/app/services/toc/table-of-contents.service';
 import { EventsService } from 'src/app/services/events/events.service';
 import { UserSettingsService } from 'src/app/services/settings/user-settings.service';
 import { AnalyticsService } from 'src/app/services/analytics/analytics.service';
-import { Router } from '@angular/router';
-import { ConfigService } from 'src/app/services/config/core/config.service';
+import { config } from "src/app/services/config/config";
 
 @Component({
   selector: 'digital-editions-list',
@@ -45,7 +45,6 @@ export class DigitalEditionList implements OnInit {
 
   constructor(
     private digitalEditionListService: DigitalEditionListService,
-    private config: ConfigService,
     public translate: TranslateService,
     private platform: Platform,
     protected tableOfContentsService: TableOfContentsService,
@@ -55,56 +54,22 @@ export class DigitalEditionList implements OnInit {
     private navCtrl: NavController,
     private router: Router
   ) {
-    this.apiEndPoint = this.config.getSettings('app.apiEndpoint') as string;
-    this.projectMachineName = this.config.getSettings('app.machineName') as string;
-    this.editionImages = this.config.getSettings('editionImages') as any;
-    this.appLanguage = (this.config.getSettings('i18n') as any).locale;
-    this.collectionDownloads = this.config.getSettings('collectionDownloads') as any;
-    try {
-      this.hasCover = this.config.getSettings('HasCover') as any;
-    } catch (e) {
-      this.hasCover = true;
-    }
-    try {
-      this.hasTitle = this.config.getSettings('HasTitle') as any;
-    } catch (e) {
-      this.hasTitle = true;
-    }
-    try {
-      this.hasForeword = this.config.getSettings('HasForeword') as any;
-    } catch (e) {
-      this.hasForeword = true;
-    }
-    try {
-      this.hasIntro = this.config.getSettings('HasIntro') as any;
-    } catch (e) {
-      this.hasIntro = true;
-    }
-    try {
-      this.collectionSortOrder = this.config.getSettings('app.CollectionSortOrder');
-    } catch (e) {
-      this.collectionSortOrder = undefined;
-    }
-    try {
-      this.hasMediaCollections = this.config.getSettings('show.TOC.MediaCollections') as any;
-    } catch (e) {
-      this.hasMediaCollections = false;
-    }
-    try {
-      this.galleryInReadMenu = this.config.getSettings('ImageGallery.ShowInReadMenu') as any;
-    } catch (e) {
-      this.galleryInReadMenu = false;
-    }
-    try {
-      this.showEpubsInList = this.config.getSettings('show.epubsInDigitalEditionList') as any;
-    } catch (e) {
-      this.showEpubsInList = false;
-    }
-    try {
-      this.availableEpubs = this.config.getSettings('AvailableEpubs') as any;
-    } catch (e) {
-      this.availableEpubs = [];
-    }
+    this.apiEndPoint = config.app?.apiEndpoint ?? '';
+    this.projectMachineName = config.app?.machineName ?? '';
+    this.editionImages = config.editionImages ?? undefined;
+    this.appLanguage = config.i18n?.locale ?? 'sv';
+    this.collectionDownloads = config.collectionDownloads ?? undefined;
+    this.hasCover = config.HasCover ?? true;
+    this.hasTitle = config.HasTitle ?? true;
+    this.hasForeword = config.HasForeword ?? true;
+    this.hasIntro = config.HasIntro ?? true;
+    this.collectionSortOrder = config.app?.CollectionSortOrder ?? undefined;
+    this.hasMediaCollections = config.show?.TOC?.MediaCollections ?? false;
+    this.galleryInReadMenu = config.ImageGallery?.ShowInReadMenu ?? false;
+    this.showEpubsInList = config.show?.epubsInDigitalEditionList ?? false;
+    this.availableEpubs = config.AvailableEpubs ?? [];
+    this.pdfsAreDownloadOnly = config.collectionDownloads?.isDownloadOnly ?? false;
+    this.hideBooks = config.show?.TOC?.Books ?? false;
   }
 
   ngOnInit() {
@@ -114,22 +79,7 @@ export class DigitalEditionList implements OnInit {
       this.grid = true;
     }
 
-    if (this.config.getSettings('collectionDownloads.isDownloadOnly')) {
-      this.pdfsAreDownloadOnly = this.config.getSettings('collectionDownloads.isDownloadOnly') as any;
-    }
-
-    let loadCollectionsFromAssets = false;
-    try {
-      loadCollectionsFromAssets = this.config.getSettings('LoadCollectionsFromAssets') as any
-    } catch (e) {
-
-    }
-
-    try {
-      this.hideBooks = this.config.getSettings('show.TOC.Books') as any
-    } catch (e) {
-      this.hideBooks = false;
-    }
+    let loadCollectionsFromAssets = config.LoadCollectionsFromAssets ?? false;
 
     if (loadCollectionsFromAssets) {
       this.digitalEditionListService.getCollectionsFromAssets()

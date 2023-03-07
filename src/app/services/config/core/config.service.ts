@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { get } from "lodash";
-
-import {settings} from "../config";
+import { config } from "../config";
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +10,7 @@ export class ConfigService {
 
 
   getSettings(key: string) {
-    const result = get(settings, key);
+    const result = get(config, key);
 
     if (result === undefined) {
       throw new Error(

@@ -1,12 +1,10 @@
 import { Component, Input, ViewChild, Output, EventEmitter } from '@angular/core';
 import { Router } from '@angular/router';
-import { Platform } from '@ionic/angular';
-import { StaticPage } from 'src/app/models/static-pages.model';
-import { ConfigService } from 'src/app/services/config/core/config.service';
 import { EventsService } from 'src/app/services/events/events.service';
 import { LanguageService } from 'src/app/services/languages/language.service';
 import { MdContentService } from 'src/app/services/md/md-content.service';
-import { UserSettingsService } from 'src/app/services/settings/user-settings.service';
+import { config } from "src/app/services/config/config";
+import { StaticPage } from 'src/app/models/static-pages.model';
 
 /**
  * Generated class for the StaticPagesTocDrilldownMenuComponent component.
@@ -35,15 +33,12 @@ export class StaticPagesTocDrilldownMenuComponent {
   constructor(
     private events: EventsService,
     public mdcontentService: MdContentService,
-    private platform: Platform,
     public languageService: LanguageService,
-    private config: ConfigService,
-    private userSettingsService: UserSettingsService,
-    private router: Router,
+    private router: Router
   ) {
     this.menuStack = [];
     this.titleStack = [];
-    this.language = this.config.getSettings('i18n.locale') as any;
+    this.language = config.i18n?.locale ?? 'sv';
     this.events.getLanguageStaticChange().subscribe(() => {
       this.languageService.getLanguage().subscribe((lang: string) => {
         this.menuStack = [];

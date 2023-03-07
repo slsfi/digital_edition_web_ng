@@ -3,7 +3,6 @@ import { ActivatedRoute } from '@angular/router';
 import { NavController, Platform, PopoverController } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
 import { AnalyticsService } from 'src/app/services/analytics/analytics.service';
-import { ConfigService } from 'src/app/services/config/core/config.service';
 import { EventsService } from 'src/app/services/events/events.service';
 import { UserSettingsService } from 'src/app/services/settings/user-settings.service';
 
@@ -22,7 +21,6 @@ export class EpubPage {
   constructor(
     protected navCtrl: NavController,
     protected popoverCtrl: PopoverController,
-    protected config: ConfigService,
     protected translate: TranslateService,
     protected events: EventsService,
     protected platform: Platform,

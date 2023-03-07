@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { NavController, ModalController, NavParams } from '@ionic/angular';
 import { DomSanitizer } from '@angular/platform-browser';
+import { NavController, ModalController, NavParams } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
 import { EventsService } from 'src/app/services/events/events.service';
 import { StorageService } from 'src/app/services/storage/storage.service';
@@ -32,8 +32,7 @@ export class ReferenceDataModalPage {
                 private sanitizer: DomSanitizer,
                 private referenceDataService: ReferenceDataService,
                 private events: EventsService,
-                public translate: TranslateService,
-
+                public translate: TranslateService
   ) {
     // Get url to use for resolving URNs
     this.urnResolverUrl = this.referenceDataService.getUrnResolverUrl();
@@ -46,24 +45,27 @@ export class ReferenceDataModalPage {
     }
 
     // Check if these label translations exist
-    this.translate.get('Reference.thisPage').subscribe(
-      translation => {
+    this.translate.get('Reference.thisPage').subscribe({
+      next: translation => {
         if (translation && translation !== 'Reference.thisPage') {
           this.thisPageTranslation = true;
         } else {
           this.thisPageTranslation = false;
         }
-      }, error => { this.thisPageTranslation = false; }
-    );
-    this.translate.get('Reference.permaLink').subscribe(
-      translation => {
+      },
+      error: e => { this.thisPageTranslation = false; }
+    });
+
+    this.translate.get('Reference.permaLink').subscribe({
+      next: translation => {
         if (translation && translation !== 'Reference.permaLink') {
           this.permaLinkTranslation = true;
         } else {
           this.permaLinkTranslation = false;
         }
-      }, error => { this.permaLinkTranslation = false; }
-    );
+      },
+      error: e => { this.permaLinkTranslation = false; }
+    });
 
     const id = decodeURIComponent(String(params.get('id')).split('#')[1]);
     const idParts = id.split('/');
@@ -94,8 +96,8 @@ export class ReferenceDataModalPage {
 
   getReferenceData(id: string) {
     this.referenceData = 'Loading referenceData ..';
-    this.referenceDataService.getReferenceData(id).subscribe(
-      (data: any) => {
+    this.referenceDataService.getReferenceData(id).subscribe({
+      next: data => {
         this.referenceData = data;
         if ( String(data).length === 0 && id.includes('/') ) {
           let newId = '';
@@ -123,10 +125,8 @@ export class ReferenceDataModalPage {
           });
         }
       },
-      (error: any) =>  {
-          this.referenceData = 'Unable to get referenceData';
-      }
-    );
+      error: e => { this.referenceData = 'Unable to get referenceData'; }
+    });
   }
 
    dismiss() {

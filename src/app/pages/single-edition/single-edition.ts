@@ -1,12 +1,12 @@
 import { Component } from '@angular/core';
-
-import { TranslateService } from '@ngx-translate/core';
 import { DomSanitizer } from '@angular/platform-browser';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Platform, PopoverController } from '@ionic/angular';
+import { TranslateService } from '@ngx-translate/core';
+import { ReadPopoverPage } from 'src/app/modals/read-popover/read-popover';
 import { DigitalEdition } from 'src/app/models/digital-edition.model';
 import { GeneralTocItem, TableOfContentsCategory } from 'src/app/models/table-of-contents.model';
-import { Platform, PopoverController } from '@ionic/angular';
 import { TableOfContentsService } from 'src/app/services/toc/table-of-contents.service';
-import { ConfigService } from 'src/app/services/config/core/config.service';
 import { TextService } from 'src/app/services/texts/text.service';
 import { HtmlContentService } from 'src/app/services/html/html-content.service';
 import { LanguageService } from 'src/app/services/languages/language.service';
@@ -15,9 +15,9 @@ import { UserSettingsService } from 'src/app/services/settings/user-settings.ser
 import { MdContentService } from 'src/app/services/md/md-content.service';
 import { PdfService } from 'src/app/services/pdf/pdf.service';
 import { AnalyticsService } from 'src/app/services/analytics/analytics.service';
-import { ActivatedRoute, Router } from '@angular/router';
+import { config } from "src/app/services/config/config";
 import { global } from '../../../app/global';
-import { ReadPopoverPage } from 'src/app/modals/read-popover/read-popover';
+
 
 /**
  * Desktop version shows collection cover page.
@@ -63,7 +63,6 @@ export class SingleEditionPage {
   constructor(
     protected popoverCtrl: PopoverController,
     protected tableOfContentsService: TableOfContentsService,
-    protected config: ConfigService,
     protected textService: TextService,
     protected htmlService: HtmlContentService,
     protected translate: TranslateService,
@@ -79,37 +78,16 @@ export class SingleEditionPage {
     private router: Router
   ) {
     this.collectionDescription = { content: null };
-    this.language = this.config.getSettings('i18n.locale');
+    this.language = config.i18n?.locale ?? 'sv';
     this.langService.getLanguage().subscribe((lang) => {
-      this.show = this.config.getSettings('defaults.ReadModeView');
+      this.show = config.defaults?.ReadModeView ?? 'established';
     });
 
-    try {
-      this.hasCover = this.config.getSettings('HasCover');
-    } catch (e) {
-      this.hasCover = false;
-    }
-    try {
-      this.hasTitle = this.config.getSettings('HasTitle');
-    } catch (e) {
-      this.hasTitle = false;
-    }
-    try {
-      this.hasForeword = this.config.getSettings('HasForeword');
-    } catch (e) {
-      this.hasForeword = false;
-    }
-    try {
-      this.hasIntro = this.config.getSettings('HasIntro');
-    } catch (e) {
-      this.hasIntro = false;
-    }
-
-    try {
-      this.defaultSelectedItem = this.config.getSettings('defaultSelectedItem');
-    } catch (e) {
-      this.defaultSelectedItem = 'cover';
-    }
+    this.hasCover = config.HasCover ?? false;
+    this.hasTitle = config.HasTitle ?? false;
+    this.hasForeword = config.HasForeword ?? false;
+    this.hasIntro = config.HasIntro ??= false;
+    this.defaultSelectedItem = config.defaultSelectedItem ?? 'cover';
   }
 
   async ngOnInit() {
@@ -127,7 +105,7 @@ export class SingleEditionPage {
         this.collection.title = global.getSubtitle();
       }
 
-      const collectionImages = this.config.getSettings('editionImages');
+      const collectionImages = config.editionImages;
       if ( this.collection?.id !== undefined  && this.collection.id !== 'mediaCollections' ) {
         this.image = collectionImages[this.collection.id];
         this.setCollectionTitle();

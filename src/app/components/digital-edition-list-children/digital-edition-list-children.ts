@@ -1,8 +1,9 @@
 import { Component, Input } from '@angular/core';
+import { Router } from '@angular/router';
 import { UserSettingsService } from 'src/app/services/settings/user-settings.service';
 import { AnalyticsService } from 'src/app/services/analytics/analytics.service';
-import { Router } from '@angular/router';
-import { ConfigService } from 'src/app/services/config/core/config.service';
+import { config } from "src/app/services/config/config";
+
 
 /**
  * Generated class for the DigitalEditionListChildrenComponent component.
@@ -27,17 +28,12 @@ export class DigitalEditionListChildrenComponent {
 
   constructor(
     public userSettingsService: UserSettingsService,
-    private config: ConfigService,
     private analyticsService: AnalyticsService,
     private router: Router
   ) {
-    this.apiEndPoint = this.config.getSettings('app.apiEndpoint') as any;
-    this.projectMachineName = this.config.getSettings('app.machineName') as any;
-    try {
-      this.collectionDownloads = this.config.getSettings('collectionDownloads') as any;
-    } catch (e) {
-      this.collectionDownloads = [];
-    }
+    this.apiEndPoint = config.app?.apiEndpoint ?? '';
+    this.projectMachineName = config.app?.machineName ?? '';
+    this.collectionDownloads = config.collectionDownloads ?? [];
   }
 
   ngOnInit() {

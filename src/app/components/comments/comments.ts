@@ -52,7 +52,8 @@ export class CommentsComponent {
   }
 
   ngOnInit() {
-    if ( this.external !== undefined && this.external !== null ) {
+    console.log('link', this.link);
+    if ( this.external ) {
       const extParts = String(this.external).split(' ');
       this.textService.getCollectionAndPublicationByLegacyId(extParts[0] + '_' + extParts[1]).subscribe(data => {
         if ( data[0] !== undefined ) {
@@ -75,8 +76,9 @@ export class CommentsComponent {
   }
 
   setText() {
-    this.commentService.getComment(this.link || '').subscribe(
-      text => {
+    console.log('link', this.link);
+    this.commentService.getComment(this.link || '').subscribe({
+      next: text => {
         this.textLoading = false;
         if (text === '' || text === null || text === undefined || text.length < 1) {
           this.translate.get('Read.Comments.NoComments').subscribe(
@@ -95,12 +97,12 @@ export class CommentsComponent {
         }
         this.doAnalytics();
       },
-      error =>  {
+      error: e =>  {
         console.error('Error loading comments...', this.link);
-        this.errorMessage = <any>error;
+        this.errorMessage = <any>e;
         this.textLoading = false;
       }
-    );
+    });
   }
 
   doAnalytics() {

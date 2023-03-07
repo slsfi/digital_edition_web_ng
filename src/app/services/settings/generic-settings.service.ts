@@ -1,16 +1,14 @@
 import { Injectable } from '@angular/core';
-import { ConfigService } from '../config/core/config.service';
+import { config } from "src/app/services/config/config";
 
 @Injectable()
 export class GenericSettingsService {
 
-  constructor(
-    private config: ConfigService,
-  ) {
+  constructor() {
   }
 
   appName() {
-    return this.config.getSettings('app.machineName');
+    return config.app.machineName;
   }
 
   /**
@@ -19,11 +17,7 @@ export class GenericSettingsService {
    * @param settingPath - path for json object key
    */
   show(settingPath: any) {
-    try {
-      return this.config.getSettings('show.' + settingPath);
-    } catch (e) {
-      return null;
-    }
+    return config.show?.[settingPath] ?? null;
   }
 
   /**
@@ -32,11 +26,7 @@ export class GenericSettingsService {
    * @param settingPath - path for json object key
    */
   hideTopMenuBackButton(settingPath: any) {
-    try {
-      return this.config.getSettings(`HideBackButton.${settingPath}`);
-    } catch (e) {
-      return false;
-    }
+    return config.HideBackButton?.[settingPath] ?? false;
   }
 
 }

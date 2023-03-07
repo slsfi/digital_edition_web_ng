@@ -1,14 +1,13 @@
-import { TranslateService } from '@ngx-translate/core';
 import { Component, Input, ElementRef, ViewChild, Output, EventEmitter, NgZone } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
-import { ConfigService } from 'src/app/services/config/core/config.service';
+import { AlertButton, AlertController, AlertInput, ToastController } from '@ionic/angular';
+import { TranslateService } from '@ngx-translate/core';
 import { ReadPopoverService } from 'src/app/services/settings/read-popover.service';
 import { TextService } from 'src/app/services/texts/text.service';
-import { AlertButton, AlertController, AlertInput, ToastController } from '@ionic/angular';
 import { AnalyticsService } from 'src/app/services/analytics/analytics.service';
 import { CommonFunctionsService } from 'src/app/services/common-functions/common-functions.service';
 import { StorageService } from 'src/app/services/storage/storage.service';
-
+import { config } from "src/app/services/config/config";
 
 /**
  * Generated class for the ManuscriptsComponent component.
@@ -39,12 +38,10 @@ export class VariationsComponent {
   errorMessage?: string;
   normalized = true;
   varID: string;
-  legendTitle?: string;
   textLoading: Boolean = true;
   showOpenLegendButton: Boolean = false;
 
   constructor(
-    private config: ConfigService,
     protected sanitizer: DomSanitizer,
     protected readPopoverService: ReadPopoverService,
     protected textService: TextService,
@@ -61,21 +58,7 @@ export class VariationsComponent {
     this.selectedVariationName = '';
     this.variations = [];
     this.varID = '';
-
-    try {
-      this.showOpenLegendButton = this.config.getSettings('showOpenLegendButton.variations');
-    } catch (e) {
-      this.showOpenLegendButton = false;
-    }
-
-    this.translate.get('Read.Legend.Title').subscribe(
-      translation => {
-        this.legendTitle = translation;
-      },
-      translationError => {
-        this.legendTitle = '';
-      }
-    );
+    this.showOpenLegendButton = config.showOpenLegendButton?.variations ?? false;
   }
 
   ngOnInit() {

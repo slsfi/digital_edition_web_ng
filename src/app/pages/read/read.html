@@ -13,13 +13,7 @@
         <ion-icon slot="start" class="urn-icon" name="arrow-redo-sharp"></ion-icon>
         <span *ngIf="!(userSettingsService.isMobile())" class="side-title">{{'Reference.refer' | translate }}</span>
       </ion-button>
-    <!--
-    <ion-button (click)="showSharePopover($event)" class="sec-menu-button">
-      <ion-icon slot="start" class="share-icon" name="social-share"></ion-icon>
-      <span *ngIf="!(userSettingsService.isMobile())" class="side-title">{{'Reference.share' | translate }}</span>
-    </ion-button>
-    -->
-      <ion-button *ngIf="showDisplayOptionsButton" #settingsIconElement (click)="showPopover($event)" class="sec-menu-button" id="settings-icon">
+      <ion-button *ngIf="showViewOptionsButton" #settingsIconElement (click)="showPopover($event)" class="sec-menu-button" id="settings-icon">
         <ion-icon slot="start" class="settings-icon" name="settings"></ion-icon>
         <span *ngIf="!(userSettingsService.isMobile())" class="side-title">{{'Read.Popover.Options' | translate }}</span>
       </ion-button>

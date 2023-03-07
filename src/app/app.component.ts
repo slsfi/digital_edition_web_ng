@@ -6,7 +6,6 @@ import { TranslateService } from '@ngx-translate/core';
 import { TableOfContentsAccordionComponent } from './components/table-of-contents-accordion/table-of-contents-accordion';
 import { DigitalEdition } from './models/digital-edition.model';
 import { TocAccordionMenuOptionModel } from './models/toc-accordion-menu-option.model';
-import { ConfigService } from './services/config/core/config.service';
 import { EventsService } from './services/events/events.service';
 import { GalleryService } from './services/gallery/gallery.service';
 import { LanguageService } from './services/languages/language.service';
@@ -17,6 +16,7 @@ import { UserSettingsService } from './services/settings/user-settings.service';
 import { StorageService } from './services/storage/storage.service';
 import { DigitalEditionListService } from './services/toc/digital-edition-list.service';
 import { TableOfContentsService } from './services/toc/table-of-contents.service';
+import { config } from "src/app/services/config/config";
 
 @Component({
   selector: 'ion-app-v2',
@@ -158,7 +158,6 @@ export class DigitalEditionsApp {
     public translate: TranslateService,
     public storage: StorageService,
     public languageService: LanguageService,
-    private config: ConfigService,
     private menu: MenuController,
     public events: EventsService,
     public mdcontentService: MdContentService,
@@ -177,9 +176,9 @@ export class DigitalEditionsApp {
     this.mediaCollectionOptions = {};
 
     this.aboutPages = [];
-    this.apiEndPoint = this.config.getSettings('app.apiEndpoint');
-    this.collectionDownloads = this.config.getSettings('collectionDownloads');
-    this.projectMachineName = this.config.getSettings('app.machineName');
+    this.apiEndPoint = config.app?.apiEndpoint ?? '';
+    this.collectionDownloads = config.collectionDownloads ?? undefined;
+    this.projectMachineName = config.app?.machineName ?? '';
     try {
       this.showBooks = this.genericSettingsService.show('TOC.Books');
     } catch (e) {
@@ -195,72 +194,29 @@ export class DigitalEditionsApp {
       this.splitReadCollections = [''];
     }
 
-    try {
-      this.collectionSortOrder = this.config.getSettings('app.CollectionSortOrder');
-    } catch (e) {
-      this.collectionSortOrder = undefined;
-    }
+    this.collectionSortOrder = config.app?.CollectionSortOrder ?? undefined;
+
     this.songTypesMenuMarkdownConfig();
     this.aboutMenuMarkdownConfig();
-    try {
-      this.accordionTOC = this.config.getSettings('AccordionTOC') as any;
-    } catch (e) {
-      this.accordionTOC = false;
-    }
-
-    try {
-      this.openCollectionFromToc = this.config.getSettings('OpenCollectionFromToc') as any;
-    } catch (e) {
-      this.openCollectionFromToc = false;
-    }
-
-    try {
-      this.galleryInReadMenu = this.config.getSettings('ImageGallery.ShowInReadMenu') as any;
-    } catch (e) {
-      this.galleryInReadMenu = true;
-    }
-
-    try {
-      this.accordionMusic = this.config.getSettings('AccordionMusic') as any;
-    } catch (e) {
-      this.accordionMusic = false;
-    }
-
-    try {
-      this.hasCover = this.config.getSettings('HasCover') as any;
-    } catch (e) {
-      this.hasCover = false;
-    }
-    try {
-      this.hasTitle = this.config.getSettings('HasTitle') as any;
-    } catch (e) {
-      this.hasTitle = false;
-    }
-    try {
-      this.hasForeword = this.config.getSettings('HasForeword') as any;
-    } catch (e) {
-      this.hasForeword = false;
-    }
-    try {
-      this.hasIntro = this.config.getSettings('HasIntro') as any;
-    } catch (e) {
-      this.hasIntro = false;
-    }
-
-    try {
-      this.availableEpubs = this.config.getSettings('AvailableEpubs') as any;
+    
+    this.accordionTOC = config.AccordionTOC ?? false;
+    this.openCollectionFromToc = config.OpenCollectionFromToc ?? false;
+    this.galleryInReadMenu = config.ImageGallery?.ShowInReadMenu ?? true;
+    this.accordionMusic = config.AccordionMusic ?? false;
+    this.hasCover = config.HasCover ?? false;
+    this.hasTitle = config.HasTitle ?? false;
+    this.hasForeword = config.HasForeword ?? false;
+    this.hasIntro = config.HasIntro ?? false;
+    this.availableEpubs = config.AvailableEpubs ?? undefined;
+    if (this.availableEpubs !== undefined) {
       this.epubNames = Object.keys(this.availableEpubs);
-    } catch (e) {
+    } else {
       this.availableEpubs = [];
       this.epubNames = [];
     }
     this.unSelectAllEpubsInToc();
 
-    try {
-      this.defaultSelectedItem = this.config.getSettings('defaultSelectedItem') as any;
-    } catch (e) {
-      this.defaultSelectedItem = 'title';
-    }
+    this.defaultSelectedItem = config.defaultSelectedItem ?? 'title';
 
     this.getCollectionsWithoutTOC();
     this.registerEventListeners();
@@ -317,26 +273,15 @@ export class DigitalEditionsApp {
   }
 
   songTypesMenuMarkdownConfig() {
-    try {
-      this.songTypesMenuMarkdown = this.config.getSettings('SongTypesMenuMarkdown') as any;
-    } catch (e) {
-      this.songTypesMenuMarkdown = false;
-    }
+    this.songTypesMenuMarkdown = config.SongTypesMenuMarkdown ?? false;
   }
 
   aboutMenuMarkdownConfig() {
-    try {
-      this.aboutMenuMarkdown = this.config.getSettings('AboutMenuAccordion') as any;
-    } catch (e) {
-      this.aboutMenuMarkdown = false;
-    }
+    this.aboutMenuMarkdown = config.AboutMenuAccordion ?? false;
   }
 
   getCollectionsWithoutTOC() {
-    try {
-      this.collectionsWithoutTOC = this.config.getSettings('CollectionsWithoutTOC') as any;
-    } catch (e) {
-    }
+    this.collectionsWithoutTOC = config.CollectionsWithoutTOC ?? [];
   }
 
   toggleSideMenu() {
@@ -438,13 +383,7 @@ export class DigitalEditionsApp {
 
   collectionHasChildrenPdfs(collectionID: any) {
     let hasChildrenPdfs = false;
-    let childrenPdfs = [] as any;
-
-    try {
-      childrenPdfs = this.config.getSettings(`collectionChildrenPdfs.${collectionID}`);
-    } catch (e) {
-      hasChildrenPdfs = false;
-    }
+    let childrenPdfs = config.collectionChildrenPdfs?.[collectionID] ?? [];
 
     if (childrenPdfs.length) {
       hasChildrenPdfs = true;
@@ -507,14 +446,11 @@ export class DigitalEditionsApp {
       return;
     }
 
-    try {
-      this.musicAccordion.personSearchTypes.show = this.config.getSettings('MusicAccordionShow.PersonSearchTypes') as any;
-      this.musicAccordion.tagSearch.show = this.config.getSettings('MusicAccordionShow.TagSearch') as any;
-      this.musicAccordion.placeSearch.show = this.config.getSettings('MusicAccordionShow.PlaceSearch') as any;
-      this.musicAccordion.music.show = this.config.getSettings('MusicAccordionShow.Music') as any;
-      this.musicAccordion.playmanTraditionPage.show = this.config.getSettings('MusicAccordionShow.PlaymanTraditionPage') as any;
-    } catch (e) {
-    }
+    this.musicAccordion.personSearchTypes.show = config.MusicAccordionShow?.PersonSearchTypes ?? undefined;
+    this.musicAccordion.tagSearch.show = config.MusicAccordionShow?.TagSearch ?? undefined;
+    this.musicAccordion.placeSearch.show = config.MusicAccordionShow?.PlaceSearch ?? undefined;
+    this.musicAccordion.music.show = config.MusicAccordionShow?.Music ?? undefined;
+    this.musicAccordion.playmanTraditionPage.show = config.MusicAccordionShow?.PlaymanTraditionPage ?? undefined;
   }
 
   resetMusicAccordion() {
@@ -526,13 +462,10 @@ export class DigitalEditionsApp {
       return;
     }
 
-    try {
-      this.simpleAccordionsExpanded.songTypesAccordion = this.config.getSettings('AccordionsExpandedDefault.SongTypes') as any;
-      this.simpleAccordionsExpanded.musicAccordion = this.config.getSettings('AccordionsExpandedDefault.Music') as any;
-      for ( let i = 0; i < this.splitReadCollections.length; i++ ) {
-        this.simpleAccordionsExpanded.collectionsAccordion[i] = this.config.getSettings('AccordionsExpandedDefault.Collections') as any;
-      }
-    } catch (e) {
+    this.simpleAccordionsExpanded.songTypesAccordion = config.AccordionsExpandedDefault?.SongTypes ?? false;
+    this.simpleAccordionsExpanded.musicAccordion = config.AccordionsExpandedDefault?.Music ?? false;
+    for ( let i = 0; i < this.splitReadCollections.length; i++ ) {
+      this.simpleAccordionsExpanded.collectionsAccordion[i] = config.AccordionsExpandedDefault?.Collections ?? false;
     }
   }
 
@@ -802,8 +735,11 @@ export class DigitalEditionsApp {
 
         if (this.aboutMenuMarkdown && this.aboutOptionsMarkdown.toc && this.aboutOptionsMarkdown.toc.length) {
           let firstAboutPageID = this.aboutOptionsMarkdown.toc[0].id;
-          if ( (this.config.getSettings('StaticPagesMenus') as any)[0]['initialAboutPage'] !== undefined ) {
-            firstAboutPageID = this.language + '-' + (this.config.getSettings('StaticPagesMenus') as any)[0]['initialAboutPage'];
+          if (
+            config.page?.about?.markdownFolderNumber !== undefined &&
+            config.page?.about?.initialPageNode !== undefined
+          ) {
+            firstAboutPageID = this.language + '-' + config.page.about.markdownFolderNumber + '-' + config.page.about.initialPageNode;
           } else {
             if (this.aboutOptionsMarkdown.toc[0].type === 'folder') {
               firstAboutPageID = this.aboutOptionsMarkdown.toc[0].children[0].id;
@@ -813,10 +749,13 @@ export class DigitalEditionsApp {
         } else {
 
           this.enableAboutMenu();
-          if ( (this.config.getSettings('StaticPagesMenus') as any)[0]['initialAboutPage'] === undefined ) {
+          if (
+            config.page?.about?.markdownFolderNumber === undefined ||
+            config.page?.about?.initialPageNode === undefined
+          ) {
             this.staticPagesMenus['initialAboutPage'] = this.language + '-03-01';
           } else {
-            this.staticPagesMenus['initialAboutPage'] = this.language + '-' + (this.config.getSettings('StaticPagesMenus') as any)[0]['initialAboutPage'];
+            this.staticPagesMenus['initialAboutPage'] = this.language + '-' + config.page.about.markdownFolderNumber + '-' + config.page.about.initialPageNode;
           }
           this.openStaticPage(this.staticPagesMenus['initialAboutPage']);
         }
@@ -861,10 +800,7 @@ export class DigitalEditionsApp {
 
     this.events.getDigitalEditionListRecieveData().subscribe((data: any) => {
       this.collectionsList = data.digitalEditions;
-      let sortCollectionsByRomanNumerals = false;
-      try {
-        sortCollectionsByRomanNumerals = this.config.getSettings('SortCollectionsByRomanNumerals') as any;
-      } catch (e) { }
+      const sortCollectionsByRomanNumerals = config.SortCollectionsByRomanNumerals ?? false;
 
       if (sortCollectionsByRomanNumerals) {
         this.sortCollectionsRoman();
@@ -1070,12 +1006,7 @@ export class DigitalEditionsApp {
   }
 
   getCollectionList() {
-    let loadCollectionsFromAssets = false;
-    try {
-      loadCollectionsFromAssets = this.config.getSettings('LoadCollectionsFromAssets') as any
-    } catch (e) {
-
-    }
+    const loadCollectionsFromAssets = config.LoadCollectionsFromAssets ?? false;
 
     if (loadCollectionsFromAssets) {
       this.digitalEditionListService.getCollectionsFromAssets()
@@ -1094,16 +1025,8 @@ export class DigitalEditionsApp {
   }
 
   getStaticPagesMenus() {
-    try {
-      this.staticPagesMenus = this.config.getSettings('StaticPagesMenus') as any;
-    } catch (e) {
-
-    }
-    try {
-      this.staticPagesMenusInTOC = this.config.getSettings('StaticPagesMenusInTOC') as any;
-    } catch (e) {
-
-    }
+    this.staticPagesMenus = config.StaticPagesMenus ?? [];
+    this.staticPagesMenusInTOC = config.StaticPagesMenusInTOC ?? [];
 
     for (const menu of this.staticPagesMenusInTOC) {
       if (menu.menuID === 'songTypesMenu') {
@@ -1246,7 +1169,7 @@ export class DigitalEditionsApp {
     if (this.hasCover === false && this.hasTitle === false && this.hasForeword === false && this.hasIntro === false) {
       this.getTocRoot(collection);
     } else {
-      const downloadOnly = this.config.getSettings('collectionDownloads.isDownloadOnly');
+      const downloadOnly = config.collectionDownloads?.isDownloadOnly ?? false;
       if (collection.isDownload && downloadOnly) {
         if (collection.id in this.collectionDownloads['pdf']) {
           const dURL = this.apiEndPoint + '/' + this.projectMachineName + '/files/' + collection.id + '/pdf/' +

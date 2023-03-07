@@ -19,7 +19,6 @@ import { PipesModule } from 'src/pipes/pipes.module';
 import { CommonModule } from '@angular/common';
 import { LanguageService } from '../services/languages/language.service';
 import { FormsModule } from '@angular/forms';
-import { TopMenuLegacyComponent } from './top-menu-legacy/top-menu-legacy';
 import { TitleLogoComponent } from './title-logo/title-logo';
 import { TableOfContentsAccordionComponent } from './table-of-contents-accordion/table-of-contents-accordion';
 import { TableOfContentsDrilldownMenuComponent } from './table-of-contents-drilldown-menu/table-of-contents-drilldown-menu';
@@ -41,7 +40,6 @@ export function createTranslateLoader(http: HttpClient) {
 @NgModule({
 	declarations: [
 		TitleLogoComponent,
-		TopMenuLegacyComponent,
 		TopMenuComponent,
 		// SplitPaneToggleComponent,
 		TableOfContentsDrilldownMenuComponent,
@@ -78,7 +76,6 @@ export function createTranslateLoader(http: HttpClient) {
 	],
   exports: [
     TitleLogoComponent,
-    TopMenuLegacyComponent,
     TopMenuComponent,
     // SplitPaneToggleComponent,
     TableOfContentsDrilldownMenuComponent,

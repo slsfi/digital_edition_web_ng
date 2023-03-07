@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { NavController, ModalController, NavParams } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
 import { EventsService } from 'src/app/services/events/events.service';
-import { ConfigService } from 'src/app/services/config/core/config.service';
 import { TextService } from 'src/app/services/texts/text.service';
 import { CommentService } from 'src/app/services/comments/comment.service';
 import { ReadPopoverService } from 'src/app/services/settings/read-popover.service';
@@ -10,6 +9,7 @@ import { TableOfContentsService } from 'src/app/services/toc/table-of-contents.s
 import { LanguageService } from 'src/app/services/languages/language.service';
 import { AnalyticsService } from 'src/app/services/analytics/analytics.service';
 import { CommonFunctionsService } from 'src/app/services/common-functions/common-functions.service';
+import { config } from "src/app/services/config/config";
 
 @Component({
   selector: 'page-download-texts-modal',
@@ -51,7 +51,6 @@ export class DownloadTextsModalPage {
     public navCtrl: NavController,
     public viewCtrl: ModalController,
     params: NavParams,
-    private config: ConfigService,
     private textService: TextService,
     private commentService: CommentService,
     private events: EventsService,
@@ -63,28 +62,12 @@ export class DownloadTextsModalPage {
     public commonFunctions: CommonFunctionsService
   ) {
     // Get configs
-    this.appMachineName = this.config.getSettings('app.machineName') as string;
-    this.apiEndPoint = this.config.getSettings('app.apiEndpoint') as string;
-    try {
-      this.siteUrl = this.config.getSettings('siteMetaData.website.url') as string;
-    } catch (e) {
-      this.siteUrl = '';
-    }
-    try {
-      this.downloadFormatsIntro = this.config.getSettings('textDownloadOptions.enabledIntroductionFormats') as object;
-    } catch (e) {
-      this.downloadFormatsIntro = undefined;
-    }
-    try {
-      this.downloadFormatsEst = this.config.getSettings('textDownloadOptions.enabledEstablishedFormats') as object;
-    } catch (e) {
-      this.downloadFormatsEst = undefined;
-    }
-    try {
-      this.downloadFormatsCom = this.config.getSettings('textDownloadOptions.enabledCommentsFormats') as object;
-    } catch (e) {
-      this.downloadFormatsCom = undefined;
-    }
+    this.appMachineName = config.app?.machineName ?? '';
+    this.apiEndPoint = config.app?.apiEndpoint ?? '';
+    this.siteUrl = config.siteMetaData?.website?.url ?? '';
+    this.downloadFormatsIntro = config.textDownloadOptions?.enabledIntroductionFormats ?? undefined;
+    this.downloadFormatsEst = config.textDownloadOptions?.enabledEstablishedFormats ?? undefined;
+    this.downloadFormatsCom = config.textDownloadOptions?.enabledCommentsFormats ?? undefined;
 
     // Process download formats options
     if (this.downloadFormatsIntro === undefined ||
@@ -153,8 +136,8 @@ export class DownloadTextsModalPage {
     }
 
     // Get translations
-    this.translate.get('DownloadTexts').subscribe(
-      translation => {
+    this.translate.get('DownloadTexts').subscribe({
+      next: translation => {
         if (this.readTextsMode) {
           if (translation.Instructions) {
             this.showInstructions = true;
@@ -192,23 +175,24 @@ export class DownloadTextsModalPage {
         } else {
           this.textSizeTranslation = 'Text size';
         }
-      }, error => {
+      },
+      error: e => {
         this.showInstructions = false;
         this.showCopyright = false;
       }
-    );
+    });
 
     // Get collection title from database
-    this.textService.getCollection(this.collectionId as string).subscribe(
-      (collectionData: any) => {
+    this.textService.getCollection(this.collectionId as string).subscribe({
+      next: collectionData => {
         if (collectionData[0] !== undefined) {
           this.collectionTitle = collectionData[0]['name'];
         } else {
           this.collectionTitle = '';
         }
       },
-      (error: any) => { this.collectionTitle = ''; }
-    );
+      error: e => { this.collectionTitle = ''; }
+    });
 
     // Get publication title from TOC (this way we can also get correct chapter titles for publications with chapters)
     if (this.readTextsMode) {
@@ -234,33 +218,32 @@ export class DownloadTextsModalPage {
 
     // Get translation for comments-column title
     if (this.readTextsMode) {
-      this.translate.get('Read.Comments.Title').subscribe(
-        translation => {
+      this.translate.get('Read.Comments.Title').subscribe({
+        next: translation => {
           if (translation && translation !== 'Read.Comments.Title') {
             this.commentTitle = translation;
           } else {
             this.commentTitle = '';
           }
-        }, error => { this.commentTitle = ''; }
-      );
+        },
+        error: e => { this.commentTitle = ''; }
+      });
     }
 
     // Get translation for introduction title
     if (this.introductionMode) {
-      this.translate.get('Read.Introduction.Title').subscribe(
-        translation => {
+      this.translate.get('Read.Introduction.Title').subscribe({
+        next: translation => {
           if (translation) {
             this.introductionTitle = translation;
           } else {
             this.introductionTitle = '';
           }
-        }, error => { this.introductionTitle = ''; }
-      );
+        },
+        error: e => { this.introductionTitle = ''; }
+      });
     }
 
-  }
-
-  ionViewDidLoad() {
   }
 
   ionViewDidEnter() {
@@ -278,8 +261,8 @@ export class DownloadTextsModalPage {
     if (textType === 'intro') {
       this.loadingIntro = true;
       this.langService.getLanguage().subscribe((lang: any) => {
-        this.textService.getDownloadableIntroduction(this.textId, format, lang).subscribe(
-          (content: any) => {
+        this.textService.getDownloadableIntroduction(this.textId, format, lang).subscribe({
+          next: content => {
             const blob = new Blob([String(content)], {type: mimetype});
             const blobUrl = URL.createObjectURL(blob);
             this.objectURLs.push(blobUrl);
@@ -290,17 +273,17 @@ export class DownloadTextsModalPage {
             link.click();
             this.loadingIntro = false;
           },
-          (error: any) => {
+          error: e => {
             console.log('error getting introduction in ' + format + ' format');
             this.loadingIntro = false;
             this.showErrorMessage = true;
           }
-        );
+        });
       });
     } else if (textType === 'est') {
       this.loadingEst = true;
-      this.textService.getDownloadableEstablishedText(this.textId, format).subscribe(
-        (content: any) => {
+      this.textService.getDownloadableEstablishedText(this.textId, format).subscribe({
+        next: content => {
           const blob = new Blob([String(content)], {type: mimetype});
           const blobUrl = URL.createObjectURL(blob);
           this.objectURLs.push(blobUrl);
@@ -311,16 +294,16 @@ export class DownloadTextsModalPage {
           link.click();
           this.loadingEst = false;
         },
-        (error: any) => {
+        error: e => {
           console.log('error getting established text in ' + format + ' format');
           this.loadingEst = false;
           this.showErrorMessage = true;
         }
-      );
+      });
     } else if (textType === 'com') {
       this.loadingCom = true;
-      this.commentService.getDownloadableComments(this.textId, format).subscribe(
-        content => {
+      this.commentService.getDownloadableComments(this.textId, format).subscribe({
+        next: content => {
           const blob = new Blob([String(content)], {type: mimetype});
           const blobUrl = URL.createObjectURL(blob);
           this.objectURLs.push(blobUrl);
@@ -331,12 +314,12 @@ export class DownloadTextsModalPage {
           link.click();
           this.loadingCom = false;
         },
-        error =>  {
+        error: e =>  {
           console.log('error getting comments in ' + format + ' format');
           this.loadingCom = false;
           this.showErrorMessage = true;
         }
-      );
+      });
     }
     this.doAnalytics(textType + '_' + format);
   }
@@ -366,10 +349,9 @@ export class DownloadTextsModalPage {
 
   private openIntroductionForPrint() {
     this.langService.getLanguage().subscribe((lang: any) => {
-      this.textService.getIntroduction(this.textId, lang).subscribe(
-        (res: any) => {
+      this.textService.getIntroduction(this.textId, lang).subscribe({
+        next: res => {
           let content = res.content.replace(/images\//g, 'assets/images/').replace(/\.png/g, '.svg');
-
           content = this.constructHtmlForPrint(content, 'intro');
 
           try {
@@ -389,18 +371,18 @@ export class DownloadTextsModalPage {
             console.log('error opening introduction in print format in new window', e);
           }
         },
-        (error: any) => {
+        error: e => {
           console.log('error loading introduction');
           this.loadingIntro = false;
           this.showErrorMessage = true;
         }
-      );
+      });
     });
   }
 
   private openEstablishedForPrint() {
-    this.textService.getEstablishedText(this.textId).subscribe(
-      (content: any) => {
+    this.textService.getEstablishedText(this.textId).subscribe({
+      next: content => {
         if (content === '<html xmlns="http://www.w3.org/1999/xhtml"><head></head><body>File not found</body></html>') {
           content = '';
         } else {
@@ -430,19 +412,19 @@ export class DownloadTextsModalPage {
           console.log('error opening established text in print format in new window', e);
         }
       },
-      (error: any) => {
+      error: e => {
         console.log('error loading established text');
         this.loadingEst = false;
         this.showErrorMessage = true;
       }
-    );
+    });
   }
 
   private openCommentsForPrint() {
-    this.commentService.getComment(this.textId).subscribe(
-      content => {
-        this.commentService.getCorrespondanceMetadata(String(this.textId).split('_')[1].split(';')[0]).subscribe(
-          metadata => {
+    this.commentService.getComment(this.textId).subscribe({
+      next: content => {
+        this.commentService.getCorrespondanceMetadata(String(this.textId).split('_')[1].split(';')[0]).subscribe({
+          next: metadata => {
             if (content === null || content === undefined || content.length < 1) {
               content = '';
             } else {
@@ -567,19 +549,19 @@ export class DownloadTextsModalPage {
               }
             }
           },
-          metadataError => {
+          error: metadataError => {
             console.log('error loading correspondence metadata');
             this.loadingCom = false;
             this.showErrorMessage = true;
           }
-        );
+        });
       },
-      error => {
+      error: e => {
         console.log('error loading comments');
         this.loadingCom = false;
         this.showErrorMessage = true;
       }
-    );
+    });
   }
 
   private constructHtmlForPrint(text: string, textType: string) {

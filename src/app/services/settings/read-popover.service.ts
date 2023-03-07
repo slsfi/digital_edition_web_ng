@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { ConfigService } from '../config/core/config.service';
 
 export enum Fontsize {
     xsmall = 0,
@@ -31,7 +30,7 @@ export class ReadPopoverService {
   private fontsizeSubject: BehaviorSubject<Fontsize> = new BehaviorSubject<Fontsize>(this.fontsize);
   fontsize$: Observable<Fontsize> = this.fontsizeSubject.asObservable();
 
-  constructor(private config: ConfigService) {
+  constructor() {
   }
 
   sendFontsizeToSubscribers(fontsize: Fontsize) {

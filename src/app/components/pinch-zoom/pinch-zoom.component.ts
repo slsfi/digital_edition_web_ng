@@ -10,12 +10,8 @@ import {
     OnDestroy,
     SimpleChanges
   } from '@angular/core';
-  
   import { Properties } from './interfaces';
-  import {
-    defaultProperties,
-    backwardCompatibilityProperties
-  } from './properties';
+  import { defaultProperties, backwardCompatibilityProperties } from './properties';
   import { IvyPinch } from './ivypinch';
   
   @Component({

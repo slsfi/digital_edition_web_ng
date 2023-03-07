@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { ConfigService } from '../config/core/config.service';
+import { config } from "src/app/services/config/config";
 
 @Injectable()
 export class ReferenceDataService {
@@ -9,21 +9,19 @@ export class ReferenceDataService {
   private urnResolverUrl: string;
   textCache: any;
 
-  constructor(private config: ConfigService, private http: HttpClient) {
-    try {
-      this.urnResolverUrl = this.config.getSettings('urnResolverUrl') as string;
-    } catch (e) {
-      this.urnResolverUrl = 'https://urn.fi/';
-    }
+  constructor(
+    private http: HttpClient
+  ) {
+    this.urnResolverUrl = config.urnResolverUrl ?? 'https://urn.fi/';
   }
 
   getReferenceData(id: string): Observable<any> {
     id = encodeURI(encodeURIComponent(id));
     // We need to doulbe encode the URL for the API
     return this.http.get(
-      this.config.getSettings('app.apiEndpoint') +
+      config.app.apiEndpoint +
         '/' +
-        this.config.getSettings('app.machineName') +
+        config.app.machineName +
         this.referenceDataUrl +
         id +
         '/'

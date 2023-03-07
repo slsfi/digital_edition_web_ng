@@ -3,7 +3,6 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 import { NavController } from '@ionic/angular';
 import { Subscription } from 'rxjs';
-import { ConfigService } from 'src/app/services/config/core/config.service';
 import { EventsService } from 'src/app/services/events/events.service';
 import { LanguageService } from 'src/app/services/languages/language.service';
 import { MdContentService } from 'src/app/services/md/md-content.service';
@@ -12,6 +11,7 @@ import { UserSettingsService } from 'src/app/services/settings/user-settings.ser
 import { StorageService } from 'src/app/services/storage/storage.service';
 import { TextService } from 'src/app/services/texts/text.service';
 import { TableOfContentsService } from 'src/app/services/toc/table-of-contents.service';
+import { config } from "src/app/services/config/config";
 
 /**
  * Generated class for the CoverPage page.
@@ -35,7 +35,7 @@ export class CoverPage {
   errorMessage: any;
   image_alt = '';
   image_src = '';
-  hasMDCover = false;
+  hasMDCover = '';
   hasDigitalEditionListChildren = false;
   childrenPdfs = [];
   protected id = '';
@@ -53,17 +53,12 @@ export class CoverPage {
     private storage: StorageService,
     public userSettingsService: UserSettingsService,
     protected tableOfContentsService: TableOfContentsService,
-    public config: ConfigService,
     private mdContentService: MdContentService,
     private metadataService: MetadataService,
-    private route: ActivatedRoute,
+    private route: ActivatedRoute
   ) {
     this.coverSelected = true;
-    try {
-      this.hasMDCover = this.config.getSettings('ProjectStaticMarkdownCoversFolder');
-    } catch (e) {
-      this.hasMDCover = false;
-    }
+    this.hasMDCover = config.ProjectStaticMarkdownCoversFolder ?? '';
   }
 
   ionViewWillEnter() {
@@ -108,11 +103,7 @@ export class CoverPage {
   }
 
   checkIfCollectionHasChildrenPdfs() {
-    let configChildrenPdfs = [];
-
-    try {
-      configChildrenPdfs = this.config.getSettings(`collectionChildrenPdfs.${this.id}`);
-    } catch (e) {}
+    const configChildrenPdfs = config.collectionChildrenPdfs?.[this.id] ?? [];
 
     if (configChildrenPdfs.length) {
       this.childrenPdfs = configChildrenPdfs;

@@ -1,15 +1,13 @@
 import { Component } from '@angular/core';
+import { NavController } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
-import { ConfigService } from 'src/app/services/config/core/config.service';
-import { NavController } from '@ionic/angular';
 import { EventsService } from 'src/app/services/events/events.service';
 import { LanguageService } from 'src/app/services/languages/language.service';
 import { MdContentService } from 'src/app/services/md/md-content.service';
 import { UserSettingsService } from 'src/app/services/settings/user-settings.service';
 import { TextService } from 'src/app/services/texts/text.service';
-
-import {settings} from 'src/app/services/config/config';
+import { config } from "src/app/services/config/config";
 
 
 /**
@@ -38,11 +36,8 @@ export class HomePage {
   initLanguage?: string;
   languageSubscription: Subscription | null;
 
-  appMachineName = settings.app.machineName ?? "topelius";
-
   constructor(
     public navCtrl: NavController,
-    private config: ConfigService,
     public translate: TranslateService,
     public languageService: LanguageService,
     private events: EventsService,
@@ -55,73 +50,21 @@ export class HomePage {
     }
 
     // Get config for front page image and text content
-    try {
-      this.imageOrientationPortrait = this.config.getSettings(
-        'frontpageConfig.imageOrientationIsPortrait'
-      );
-    } catch (e) {
-      this.imageOrientationPortrait = false;
-    }
-    try {
-      this.imageOnRight = this.config.getSettings(
-        'frontpageConfig.imageOnRightIfPortrait'
-      );
-    } catch (e) {
-      this.imageOnRight = false;
-    }
-    try {
-      this.titleOnImage = this.config.getSettings(
-        'frontpageConfig.siteTitleOnTopOfImageInMobileModeIfPortrait'
-      );
-    } catch (e) {
-      this.titleOnImage = false;
-    }
-    try {
-      this.portraitImageAltText = this.config.getSettings(
-        'frontpageConfig.portraitImageAltText'
-      );
-    } catch (e) {
-      this.portraitImageAltText = 'front image';
-    }
-    try {
-      this.showSimpleSearch = this.config.getSettings(
-        'frontpageConfig.showSimpleSearch'
-      );
-    } catch (e) {
-      this.showSimpleSearch = false;
-    }
-    try {
-      this.showEditionList = this.config.getSettings(
-        'frontpageConfig.showEditionList'
-      );
-    } catch (e) {
-      this.showEditionList = false;
-    }
-    try {
-      this.showFooter = this.config.getSettings('frontpageConfig.showFooter');
-    } catch (e) {
-      this.showFooter = false;
-    }
-    try {
-      this.imageUrl = this.config.getSettings('frontpageConfig.imageUrl');
-    } catch (e) {
-      this.imageUrl = 'assets/images/frontpage-image-landscape.jpg';
-    }
+    this.imageOrientationPortrait = config.page?.home?.imageOrientationIsPortrait ?? false;
+    this.imageOnRight = config.page?.home?.imageOnRightIfPortrait ?? false;
+    this.titleOnImage = config.page?.home?.siteTitleOnTopOfImageInMobileModeIfPortrait ?? false;
+    this.portraitImageAltText = config.page?.home?.portraitImageAltText ?? 'front image';
+    this.showSimpleSearch = config.page?.home?.showSimpleSearch ?? false;
+    this.showEditionList = config.page?.home?.showEditionList ?? false;
+    this.showFooter = config.page?.home?.showFooter ?? false;
+    this.imageUrl = config.page?.home?.imageUrl ?? 'assets/images/frontpage-image-landscape.jpg';
 
     // Change front page image if not in desktop mode and the image orientation is set to portrait
     if (!this.userSettingsService.isDesktop() && this.imageOrientationPortrait) {
-      try {
-        const imageUrlMobile = this.config.getSettings(
-          'frontpageConfig.portraitImageUrlInMobileMode'
-        );
-        if (
-          imageUrlMobile !== '' &&
-          imageUrlMobile !== undefined &&
-          imageUrlMobile !== null
-        ) {
-          this.imageUrl = imageUrlMobile;
-        }
-      } catch (e) {}
+      const imageUrlMobile = config.page?.home?.portraitImageUrlInMobileMode ?? '';
+      if (imageUrlMobile) {
+        this.imageUrl = imageUrlMobile;
+      }
     }
 
     this.imageUrlStyle = `url(${this.imageUrl})`;

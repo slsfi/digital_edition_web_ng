@@ -1,16 +1,17 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-
 import { Observable } from 'rxjs';
-import { ConfigService } from '../config/core/config.service';
+import { config } from "src/app/services/config/config";
 
 @Injectable()
 export class OccurrenceService {
-  constructor(private config: ConfigService, private http: HttpClient) {}
+  constructor(
+    private http: HttpClient
+  ) {}
 
   getOccurences(object_type: string, id: string): Observable<any> {
     return this.http.get(
-      this.config.getSettings('app.apiEndpoint') +
+      config.app.apiEndpoint +
         '/occurrences/' +
         object_type +
         '/' +
@@ -20,9 +21,9 @@ export class OccurrenceService {
 
   getMediaData(object_type: string, id: string): Observable<any> {
     return this.http.get(
-      this.config.getSettings('app.apiEndpoint') +
+      config.app.apiEndpoint +
         '/' +
-        this.config.getSettings('app.machineName') +
+        config.app.machineName +
         '/media/data/' +
         object_type +
         '/' +
@@ -32,9 +33,9 @@ export class OccurrenceService {
 
   getGalleryOccurrences(type: any, id: any) {
     return this.http.get(
-      this.config.getSettings('app.apiEndpoint') +
+      config.app.apiEndpoint +
         '/' +
-        this.config.getSettings('app.machineName') +
+        config.app.machineName +
         '/gallery/' +
         type +
         '/connections/' +
@@ -45,9 +46,9 @@ export class OccurrenceService {
 
   getArticleData(object_type: string, id: string): Observable<any> {
     return this.http.get(
-      this.config.getSettings('app.apiEndpoint') +
+      config.app.apiEndpoint +
         '/' +
-        this.config.getSettings('app.machineName') +
+        config.app.machineName +
         '/media/articles/' +
         object_type +
         '/' +

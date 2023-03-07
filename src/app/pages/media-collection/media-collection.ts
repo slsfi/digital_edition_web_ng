@@ -6,13 +6,14 @@ import { FacsimileZoomModalPage } from 'src/app/modals/facsimile-zoom/facsimile-
 import { ReferenceDataModalPage } from 'src/app/modals/reference-data-modal/reference-data-modal';
 import { MdContent } from 'src/app/models/md-content.model';
 import { AnalyticsService } from 'src/app/services/analytics/analytics.service';
-import { ConfigService } from 'src/app/services/config/core/config.service';
 import { EventsService } from 'src/app/services/events/events.service';
 import { GalleryService } from 'src/app/services/gallery/gallery.service';
 import { LanguageService } from 'src/app/services/languages/language.service';
 import { MdContentService } from 'src/app/services/md/md-content.service';
 import { MetadataService } from 'src/app/services/metadata/metadata.service';
 import { UserSettingsService } from 'src/app/services/settings/user-settings.service';
+import { config } from "src/app/services/config/config";
+
 /**
  * Generated class for the FacsimileCollectionPage page.
  *
@@ -62,7 +63,6 @@ export class MediaCollectionPage {
     private galleryService: GalleryService,
     public userSettingsService: UserSettingsService,
     private modalController: ModalController,
-    private config: ConfigService,
     public translate: TranslateService,
     public languageService: LanguageService,
     private analyticsService: AnalyticsService,
@@ -78,14 +78,9 @@ export class MediaCollectionPage {
     // this.tagModel = this.navParams.get('tag');
     // this.subjectModel = this.navParams.get('subject');
     // this.locationModel = this.navParams.get('location');
-    this.apiEndPoint = this.config.getSettings('app.apiEndpoint');
-    this.projectMachineName = this.config.getSettings('app.machineName');
-
-    try {
-      this.showURNButton = this.config.getSettings('showURNButton.mediaCollection');
-    } catch (e) {
-      this.showURNButton = true;
-    }
+    this.apiEndPoint = config.app?.apiEndpoint ?? '';
+    this.projectMachineName = config.app?.machineName ?? '';
+    this.showURNButton = config.page?.mediaCollection?.showURNButton ?? true;
   }
 
   doAnalytics(category: any, label: any, action: any) {
@@ -176,7 +171,7 @@ export class MediaCollectionPage {
     let fileID = '11-' + this.mediaCollectionId;
     this.mdContent = new MdContent({id: fileID, title: '...', content: null, filename: null});
 
-    this.language = this.config.getSettings('i18n.locale');
+    this.language = config.i18n?.locale ?? 'sv';
     this.languageService.getLanguage().subscribe((lang: string) => {
       this.language = lang;
       this.initStuff();

@@ -1,14 +1,16 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { catchError, map, Observable } from 'rxjs';
-import { ConfigService } from '../config/core/config.service';
+import { config } from "src/app/services/config/config";
 
 @Injectable()
 export class SearchDataService {
   private searchDataUrl = '/search/';
   textCache: any;
 
-  constructor(private config: ConfigService, private http: HttpClient) {}
+  constructor(
+    private http: HttpClient
+  ) {}
 
   getFilterCollections(): Observable<any> {
     return this.http.get('assets/filterCollections.json');
@@ -20,9 +22,9 @@ export class SearchDataService {
 
   getFullText(search: string, fuzzyness?: string): Observable<any> {
     return this.http.get(
-      this.config.getSettings('app.apiEndpoint') +
+      config.app.apiEndpoint +
         '/' +
-        this.config.getSettings('app.machineName') +
+        config.app.machineName +
         this.searchDataUrl +
         'freetext/' +
         search +
@@ -37,12 +39,12 @@ export class SearchDataService {
     fuzzyness?: Number
   ): Observable<any> {
     return this.http.get(
-      this.config.getSettings('app.apiEndpoint') +
+      config.app.apiEndpoint +
         '/' +
-        this.config.getSettings('app.machineName') +
+        config.app.machineName +
         this.searchDataUrl +
         'user_defined/' +
-        this.config.getSettings('app.machineName') +
+        config.app.machineName +
         '/' +
         field +
         '/' +
@@ -55,9 +57,9 @@ export class SearchDataService {
 
   getLocations(search: string): Observable<any> {
     return this.http.get(
-      this.config.getSettings('app.apiEndpoint') +
+      config.app.apiEndpoint +
         '/' +
-        this.config.getSettings('app.machineName') +
+        config.app.machineName +
         this.searchDataUrl +
         'location/' +
         search +
@@ -67,9 +69,9 @@ export class SearchDataService {
 
   getTags(search: string): Observable<any> {
     return this.http.get(
-      this.config.getSettings('app.apiEndpoint') +
+      config.app.apiEndpoint +
         '/' +
-        this.config.getSettings('app.machineName') +
+        config.app.machineName +
         this.searchDataUrl +
         'tag/' +
         search +
@@ -79,9 +81,9 @@ export class SearchDataService {
 
   getSubjects(search: string): Observable<any> {
     return this.http.get(
-      this.config.getSettings('app.apiEndpoint') +
+      config.app.apiEndpoint +
         '/' +
-        this.config.getSettings('app.machineName') +
+        config.app.machineName +
         this.searchDataUrl +
         'subject/' +
         search +
@@ -91,9 +93,9 @@ export class SearchDataService {
 
   getAll(search: string): Observable<any> {
     return this.http.get(
-      this.config.getSettings('app.apiEndpoint') +
+      config.app.apiEndpoint +
         '/' +
-        this.config.getSettings('app.machineName') +
+        config.app.machineName +
         this.searchDataUrl +
         'all/' +
         search +
@@ -103,27 +105,27 @@ export class SearchDataService {
 
   getFacsimileLookupData(): Observable<any> {
     return this.http.get(
-      this.config.getSettings('app.apiEndpoint') +
+      config.app.apiEndpoint +
         '/' +
-        this.config.getSettings('app.machineName') +
+        config.app.machineName +
         '/publication-facsimile-relations/'
     );
   }
 
   getProjectCollections(): Observable<any> {
     return this.http.get(
-      this.config.getSettings('app.apiEndpoint') +
+      config.app.apiEndpoint +
         '/' +
-        this.config.getSettings('app.machineName') +
+        config.app.machineName +
         '/collections'
     );
   }
 
   getGalleryOccurrences(type: any, id: any): Observable<any> {
     return this.http.get(
-      this.config.getSettings('app.apiEndpoint') +
+      config.app.apiEndpoint +
         '/' +
-        this.config.getSettings('app.machineName') +
+        config.app.machineName +
         '/gallery/' +
         type +
         '/connections/' +
@@ -141,9 +143,9 @@ export class SearchDataService {
 
     return this.http
       .get(
-        this.config.getSettings('app.apiEndpoint') +
+        config.app.apiEndpoint +
           '/' +
-          this.config.getSettings('app.machineName') +
+          config.app.machineName +
           this.searchDataUrl +
           `suggestions/${search_str}/${search_limit}`
       )
@@ -188,7 +190,7 @@ export class SearchDataService {
 
   getPlace(id: string): Observable<any> {
     return this.http.get(
-      this.config.getSettings('app.apiEndpoint') + // We do no use project name for semantic data
+      config.app.apiEndpoint + // We do no use project name for semantic data
         this.searchDataUrl +
         'places/tooltip/' +
         id
@@ -197,7 +199,7 @@ export class SearchDataService {
 
   getPerson(id: string): Observable<any> {
     return this.http.get(
-      this.config.getSettings('app.apiEndpoint') + // We do no use project name for semantic data
+      config.app.apiEndpoint + // We do no use project name for semantic data
         this.searchDataUrl +
         'persons/tooltip/' +
         id
@@ -206,19 +208,19 @@ export class SearchDataService {
 
   getAllPerson(): Observable<any> {
     return this.http.get(
-      this.config.getSettings('app.apiEndpoint') + '/tooltips/subjects'
+      config.app.apiEndpoint + '/tooltips/subjects'
     );
   }
 
   getOccurrencesByType(object_type: string): Observable<any> {
     return this.http.get(
-      this.config.getSettings('app.apiEndpoint') + '/occurrences/' + object_type
+      config.app.apiEndpoint + '/occurrences/' + object_type
     );
   }
 
   getAllPlaces(): Observable<any> {
     return this.http.get(
-      this.config.getSettings('app.apiEndpoint') + '/tooltips/locations'
+      config.app.apiEndpoint + '/tooltips/locations'
     );
   }
 

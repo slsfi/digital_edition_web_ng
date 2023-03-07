@@ -1,7 +1,14 @@
-import { TranslateService } from '@ngx-translate/core';
 import { Component, Renderer2, ElementRef, SecurityContext, NgZone } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
+import { ActivatedRoute } from '@angular/router';
 import { ModalController, NavController, Platform, PopoverController } from '@ionic/angular';
+import { TranslateService } from '@ngx-translate/core';
+import { Subscription } from 'rxjs';
+import { DownloadTextsModalPage } from 'src/app/modals/download-texts-modal/download-texts-modal';
+import { ReferenceDataModalPage } from 'src/app/modals/reference-data-modal/reference-data-modal';
+import { IllustrationPage } from 'src/app/modals/illustration/illustration';
+import { OccurrencesPage } from 'src/app/modals/occurrences/occurrences';
+import { ReadPopoverPage } from 'src/app/modals/read-popover/read-popover';
 import { LanguageService } from 'src/app/services/languages/language.service';
 import { TextService } from 'src/app/services/texts/text.service';
 import { TooltipService } from 'src/app/services/tooltips/tooltip.service';
@@ -11,16 +18,8 @@ import { TableOfContentsService } from 'src/app/services/toc/table-of-contents.s
 import { SemanticDataService } from 'src/app/services/semantic-data/semantic-data.service';
 import { ReadPopoverService } from 'src/app/services/settings/read-popover.service';
 import { CommonFunctionsService } from 'src/app/services/common-functions/common-functions.service';
-import { ConfigService } from 'src/app/services/config/core/config.service';
-import { Subscription } from 'rxjs';
-import { DownloadTextsModalPage } from 'src/app/modals/download-texts-modal/download-texts-modal';
-import { ReferenceDataModalPage } from 'src/app/modals/reference-data-modal/reference-data-modal';
-import { SharePopoverPage } from 'src/app/modals/share-popover/share-popover';
-import { IllustrationPage } from 'src/app/modals/illustration/illustration';
 import { StorageService } from 'src/app/services/storage/storage.service';
-import { ActivatedRoute } from '@angular/router';
-import { OccurrencesPage } from 'src/app/modals/occurrences/occurrences';
-import { ReadPopoverPage } from 'src/app/modals/read-popover/read-popover';
+import { config } from "src/app/services/config/config";
 
 /**
  * Generated class for the IntroductionPage page.
@@ -51,7 +50,7 @@ export class IntroductionPage {
   public tocMenuOpen: boolean;
   public hasSeparateIntroToc: Boolean = false;
   public showURNButton: boolean;
-  showDisplayOptionsButton: Boolean = true;
+  showViewOptionsButton: Boolean = true;
   readPopoverTogglesIntro: any = {};
   toolTipsSettings: any = {};
   toolTipPosType: string;
@@ -106,7 +105,6 @@ export class IntroductionPage {
     public semanticDataService: SemanticDataService,
     public readPopoverService: ReadPopoverService,
     public commonFunctions: CommonFunctionsService,
-    private config: ConfigService,
     public translate: TranslateService,
     private modalController: ModalController,
     private route: ActivatedRoute,
@@ -132,19 +130,9 @@ export class IntroductionPage {
     this.intervalTimerId = 0;
     this.languageSubscription = null;
 
-    try {
-      this.toolTipsSettings = this.config.getSettings('settings.toolTips');
-    } catch (e) {
-      this.toolTipsSettings = undefined;
-      console.log('Can\'t get settings.toolTips from config. Tooltips not available.');
-    }
+    this.toolTipsSettings = config.settings?.toolTips ?? undefined;
+    this.readPopoverTogglesIntro = config.settings?.introToggles ?? undefined;
 
-    try {
-      this.readPopoverTogglesIntro = this.config.getSettings('settings.introToggles');
-    } catch (e) {
-      this.readPopoverTogglesIntro = undefined;
-      console.log('Can\'t get settings.readPopoverTogglesIntro from config. Using default values.');
-    }
     if (this.readPopoverTogglesIntro === undefined ||
      this.readPopoverTogglesIntro === null ||
      Object.keys(this.readPopoverTogglesIntro).length === 0) {
@@ -168,37 +156,23 @@ export class IntroductionPage {
       this.readPopoverTogglesIntro.pageBreakOriginal = false;
     }
 
-    try {
-      this.showURNButton = this.config.getSettings('showURNButton.pageIntroduction');
-    } catch (e) {
-      this.showURNButton = true;
-    }
-
-    try {
-      this.showDisplayOptionsButton = this.config.getSettings('showDisplayOptionsButton.pageIntroduction');
-    } catch (e) {
-      this.showDisplayOptionsButton = true;
-    }
-
-    try {
-      this.hasSeparateIntroToc = this.config.getSettings('separeateIntroductionToc');
-    } catch (e) {
-      this.hasSeparateIntroToc = false;
-    }
+    this.showURNButton = config.page?.introduction?.showURNButton ?? true;
+    this.showViewOptionsButton = config.page?.introduction?.showViewOptionsButton ?? true;
+    this.hasSeparateIntroToc = config.page?.introduction?.hasSeparateTOC ?? false;
 
     this.translate.get('Read.Introduction.Contents').subscribe({
-      next: translation => {
+      next: (translation) => {
         if (translation && translation !== 'Read.Introduction.Contents') {
           this.hasTOCLabelTranslation = true;
         } else {
           this.hasTOCLabelTranslation = false;
         }
       },
-      error: e => { this.hasTOCLabelTranslation = false; }
+      error: (e) => { this.hasTOCLabelTranslation = false; }
     });
 
     try {
-      const textDownloadOptions = this.config.getSettings('textDownloadOptions');
+      const textDownloadOptions = config.textDownloadOptions ?? undefined;
       if (textDownloadOptions.enabledIntroductionFormats !== undefined &&
         textDownloadOptions.enabledIntroductionFormats !== null &&
         Object.keys(textDownloadOptions.enabledIntroductionFormats).length !== 0) {
@@ -655,9 +629,10 @@ export class IntroductionPage {
       error: e => {
         let noInfoFound = 'Could not get place information';
         this.translate.get('Occurrences.NoInfoFound').subscribe({
-          next: translation => {
+          next: (translation) => {
             noInfoFound = translation;
-          }, error: errorT => { }
+          },
+          error: (errorT) => { }
         });
         this.setToolTipPosition(targetElem, noInfoFound);
         this.setToolTipText(noInfoFound);
@@ -673,16 +648,12 @@ export class IntroductionPage {
     }
 
     if (this.simpleWorkMetadata === undefined) {
-      try {
-        this.simpleWorkMetadata = this.config.getSettings('useSimpleWorkMetadata');
-      } catch (e) {
-        this.simpleWorkMetadata = false;
-      }
+      this.simpleWorkMetadata = config.useSimpleWorkMetadata ?? false;
     }
 
-    if (this.simpleWorkMetadata === false || this.simpleWorkMetadata === undefined) {
+    if (this.simpleWorkMetadata === false) {
       this.semanticDataService.getSingleObjectElastic('work', id).subscribe({
-        next: tooltip => {
+        next: (tooltip) => {
           if ( tooltip.hits.hits[0] === undefined || tooltip.hits.hits[0]['_source'] === undefined ) {
             let noInfoFound = 'Could not get work information';
             this.translate.get('Occurrences.NoInfoFound').subscribe({
@@ -700,7 +671,7 @@ export class IntroductionPage {
           this.setToolTipText(description);
           this.tooltips.works[id] = description;
         },
-        error: e => {
+        error: (e) => {
           let noInfoFound = 'Could not get work information';
           this.translate.get('Occurrences.NoInfoFound').subscribe({
             next: translation => {
@@ -1020,14 +991,6 @@ export class IntroductionPage {
       component: ReadPopoverPage,
       componentProps: { toggles },
       cssClass: 'share-popover_settings'
-    });
-    modal.present(myEvent);
-  }
-
-  async showSharePopover(myEvent: any) {
-    const modal = await this.popoverCtrl.create({
-      component: SharePopoverPage,
-      cssClass: 'share-popover'
     });
     modal.present(myEvent);
   }

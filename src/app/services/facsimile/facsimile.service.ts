@@ -1,8 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-
-import { ConfigService } from '../config/core/config.service';
+import { config } from "src/app/services/config/config";
 
 @Injectable()
 export class FacsimileService {
@@ -10,13 +9,15 @@ export class FacsimileService {
   private facsimileImageUrl = '/facsimiles/';
   textCache: any;
 
-  constructor(private config: ConfigService, private http: HttpClient) {}
+  constructor(
+    private http: HttpClient
+  ) {}
 
   getFacsimileImage(facs_id: any, image_nr: any, zoom: any) {
     return (
-      this.config.getSettings('app.apiEndpoint') +
+      config.app.apiEndpoint +
       '/' +
-      this.config.getSettings('app.machineName') +
+      config.app.machineName +
       this.facsimileImageUrl +
       facs_id +
       '/' +
@@ -32,9 +33,9 @@ export class FacsimileService {
       chapter = String(parts[2]).split(';')[0];
     }
     return this.http.get(
-      this.config.getSettings('app.apiEndpoint') +
+      config.app.apiEndpoint +
         '/' +
-        this.config.getSettings('app.machineName') +
+        config.app.machineName +
         this.facsimilesUrl +
         publication_id +
         (chapter ? '/' + chapter + '' : '')
@@ -43,9 +44,9 @@ export class FacsimileService {
 
   getFacsimilePage(legacy_id: any): Observable<any> {
     return this.http.get(
-      this.config.getSettings('app.apiEndpoint') +
+      config.app.apiEndpoint +
         '/' +
-        this.config.getSettings('app.machineName') +
+        config.app.machineName +
         `/facsimiles/${legacy_id}`
     );
   }
@@ -53,9 +54,9 @@ export class FacsimileService {
   getFeaturedFacsimiles(): Observable<any> {
     const ids = '1,2,3,4,6,8,9,10';
     return this.http.get(
-      this.config.getSettings('app.apiEndpoint') +
+      config.app.apiEndpoint +
         '/' +
-        this.config.getSettings('app.machineName') +
+        config.app.machineName +
         this.facsimilesUrl +
         'collections/' +
         ids
@@ -73,8 +74,8 @@ export class FacsimileService {
       parts[1] = '';
     }
 
-    return this.http.get(  this.config.getSettings('app.apiEndpoint') + '/' +
-        this.config.getSettings('app.machineName') + this.readTextUrl + parts[0] + (parts[1] ? '/' + parts[1] : '')
+    return this.http.get(  config.app.apiEndpoint + '/' +
+        config.app.machineName + this.readTextUrl + parts[0] + (parts[1] ? '/' + parts[1] : '')
     )
     .map(res => {
       const body = res.json();

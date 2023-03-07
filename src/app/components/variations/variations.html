@@ -5,7 +5,7 @@
   <div class="flex-buttons">
     <ion-button (click)="selectVariation($event)">{{'Read.Variations.ChangeVariation' | translate}}</ion-button>
     <ion-button fill="outline" (click)="selectVariationForNewView()">{{'Read.Variations.OpenNewVariation' | translate}}</ion-button>
-    <ion-button *ngIf="showOpenLegendButton" fill="outline" class="circular-icon-button align-right" (click)="openNewLegend($event)" [title]="legendTitle">
+    <ion-button *ngIf="showOpenLegendButton" fill="outline" class="circular-icon-button align-right" (click)="openNewLegend($event)" title="{{ 'Read.Legend.Title' | translate }}">
       <ion-icon name="help"></ion-icon>
     </ion-button>
   </div>

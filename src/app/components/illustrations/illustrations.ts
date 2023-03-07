@@ -1,13 +1,14 @@
-import { Component, Input, OnDestroy } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
 import { FacsimileZoomModalPage } from 'src/app/modals/facsimile-zoom/facsimile-zoom';
 import { AnalyticsService } from 'src/app/services/analytics/analytics.service';
 import { CommonFunctionsService } from 'src/app/services/common-functions/common-functions.service';
-import { ConfigService } from 'src/app/services/config/core/config.service';
 import { EventsService } from 'src/app/services/events/events.service';
 import { ReadPopoverService } from 'src/app/services/settings/read-popover.service';
 import { TextService } from 'src/app/services/texts/text.service';
+import { config } from "src/app/services/config/config";
+
 /**
  * Generated class for the IllustrationsComponent component.
  *
@@ -31,15 +32,11 @@ export class IllustrationsComponent {
   viewAll = true;
   showOne = false;
   textLoading: Boolean = true;
-  apiEndPoint?: string;
-  appMachineName?: string;
-  projectMachineName?: string;
 
   constructor(
     protected readPopoverService: ReadPopoverService,
     private textService: TextService,
     private modalCtrl: ModalController,
-    private config: ConfigService,
     private events: EventsService,
     public translate: TranslateService,
     private analyticsService: AnalyticsService,
@@ -48,9 +45,6 @@ export class IllustrationsComponent {
     this.registerEventListeners();
   }
   ngOnInit() {
-    this.appMachineName = this.config.getSettings('app.machineName');
-    this.apiEndPoint = this.config.getSettings('app.apiEndpoint');
-    this.projectMachineName = this.config.getSettings('app.machineName');
     this.getIllustrationImages();
     this.doAnalytics();
   }

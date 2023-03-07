@@ -1,14 +1,13 @@
 import { Component, Input, EventEmitter, Output } from '@angular/core';
-import { UserSettingsService } from 'src/app/services/settings/user-settings.service';
-import { LanguageService } from 'src/app/services/languages/language.service';
-import { EventsService } from 'src/app/services/events/events.service';
 import { ModalController, PopoverController } from '@ionic/angular';
-import { ConfigService } from 'src/app/services/config/core/config.service';
+import { Subscription } from 'rxjs';
 import { ReferenceDataModalPage } from 'src/app/modals/reference-data-modal/reference-data-modal';
 import { SearchAppPage } from 'src/app/modals/search-app/search-app';
 import { UserSettingsPopoverPage } from 'src/app/modals/user-settings-popover/user-settings-popover';
-import { Subscription } from 'rxjs';
-import {settings} from "../../services/config/config";
+import { UserSettingsService } from 'src/app/services/settings/user-settings.service';
+import { LanguageService } from 'src/app/services/languages/language.service';
+import { EventsService } from 'src/app/services/events/events.service';
+import { config } from "src/app/services/config/config";
 
 /**
  * Generated class for the TopMenu component.
@@ -42,75 +41,23 @@ export class TopMenuComponent {
   constructor(
     private events: EventsService,
     private popoverCtrl: PopoverController,
-    private config: ConfigService,
     public userSettingsService: UserSettingsService,
     public languageService: LanguageService,
     private modalController: ModalController
   ) {
-    this.showHelpButton = settings.app.showHelpButton ?? true;
+    this.showHelpButton = config.component?.topMenu?.showHelpButton ?? true;
+    this.showViewToggle = config.component?.topMenu?.showLanguageButton ?? true;
+    this.showTopURNButton = config.component?.topMenu?.showURNButton ?? true;
+    this.showTopElasticButton = config.component?.topMenu?.showElasticSearchButton ?? true;
+    this.showTopSimpleSearchButton = config.component?.topMenu?.showSimpleSearchButton ?? true;
+    this.showTopContentButton = config.component?.topMenu?.showContentButton ?? true;
+    this.showTopAboutButton = config.component?.topMenu?.showAboutButton ?? true;
+    this.showTopMusicButton = config.component?.topMenu?.showMusicButton ?? true;
+    this.language = config.i18n?.locale ?? 'sv';
 
-    try {
-      this.showViewToggle = this.config.getSettings('app.showViewToggle') as any;
-    } catch ( e ) {
-      this.showViewToggle = true;
-    }
-    try {
-      this.showTopURNButton = this.config.getSettings('showURNButton.topMenu') as any;
-    } catch ( e ) {
-      try {
-        this.showTopURNButton = this.config.getSettings('app.showTopURNButton') as any;
-      } catch ( e ) {
-        this.showTopURNButton = true;
-      }
-    }
-
-    try {
-      this.showTopElasticButton = this.config.getSettings('app.showTopElasticButton') as any;
-    } catch ( e ) {
-      this.showTopElasticButton = true;
-    }
-
-    try {
-      this.showTopSimpleSearchButton = this.config.getSettings('app.showTopSimpleSearchButton') as any;
-    } catch ( e ) {
-      this.showTopSimpleSearchButton = true;
-    }
-
-    try {
-      this.showTopContentButton = this.config.getSettings('app.showTopContentButton') as any;
-    } catch ( e ) {
-      this.showTopContentButton = true;
-    }
-
-    try {
-      this.showTopAboutButton = this.config.getSettings('app.showTopAboutButton') as any;
-    } catch ( e ) {
-      this.showTopAboutButton = true;
-    }
-
-    try {
-      this.showTopMusicButton = this.config.getSettings('app.showTopMusicButton') as any;
-    } catch ( e ) {
-      this.showTopMusicButton = true;
-    }
-
-    let aboutPagesFolderNumber = '03';
-    try {
-      aboutPagesFolderNumber = this.config.getSettings('page.about.markdownFolderNumber') as any;
-    } catch (e) {}
-
-    let initialAboutPageNode = '01';
-    try {
-      initialAboutPageNode = this.config.getSettings('page.about.initialPageNode') as any;
-    } catch (e) {}
-
+    const aboutPagesFolderNumber = config.page?.about?.markdownFolderNumber ?? '03';
+    const initialAboutPageNode = config.page?.about?.initialPageNode ?? '01';
     this.firstAboutPageId = aboutPagesFolderNumber + "-" + initialAboutPageNode;
-
-    try {
-      this.language = this.config.getSettings('i18n.locale');
-    } catch (e) {
-      this.language = 'sv';
-    }
 
     this.languageSubscription = null;
   }

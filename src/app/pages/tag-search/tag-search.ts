@@ -8,7 +8,6 @@ import { OccurrencesPage } from 'src/app/modals/occurrences/occurrences';
 import { OccurrenceResult } from 'src/app/models/occurrence.model';
 import { AnalyticsService } from 'src/app/services/analytics/analytics.service';
 import { CommonFunctionsService } from 'src/app/services/common-functions/common-functions.service';
-import { ConfigService } from 'src/app/services/config/core/config.service';
 import { EventsService } from 'src/app/services/events/events.service';
 import { LanguageService } from 'src/app/services/languages/language.service';
 import { MdContentService } from 'src/app/services/md/md-content.service';
@@ -17,6 +16,7 @@ import { OccurrenceService } from 'src/app/services/occurrence/occurence.service
 import { SemanticDataService } from 'src/app/services/semantic-data/semantic-data.service';
 import { UserSettingsService } from 'src/app/services/settings/user-settings.service';
 import { StorageService } from 'src/app/services/storage/storage.service';
+import { config } from "src/app/services/config/config";
 
 /**
  * A page for searching tag occurrences.
@@ -57,7 +57,6 @@ export class TagSearchPage {
               public semanticDataService: SemanticDataService,
               protected langService: LanguageService,
               private mdContentService: MdContentService,
-              protected config: ConfigService,
               private platform: Platform,
               public occurrenceService: OccurrenceService,
               protected storage: StorageService,
@@ -69,18 +68,10 @@ export class TagSearchPage {
               public commonFunctions: CommonFunctionsService,
               private router: Router,
   ) {
-    try {
-      this.showFilter = this.config.getSettings('TagSearch.ShowFilter');
-    } catch (e) {
-      this.showFilter = true;
-    }
-    try {
-      this.max_fetch_size = this.config.getSettings('TagSearch.InitialLoadNumber');
-      if (this.max_fetch_size > 10000) {
-        this.max_fetch_size = 10000;
-      }
-    } catch (e) {
-      this.max_fetch_size = 500;
+    this.showFilter = config.TagSearch.ShowFilter ?? true;
+    this.max_fetch_size = config.TagSearch.InitialLoadNumber ?? 500;
+    if (this.max_fetch_size > 10000) {
+      this.max_fetch_size = 10000;
     }
   }
 
@@ -219,15 +210,7 @@ export class TagSearchPage {
   }
 
   appHasMusicAccordionConfig() {
-    let appHasMusicAccordion = false;
-
-    try {
-      appHasMusicAccordion = this.config.getSettings('AccordionMusic');
-    } catch ( e ) {
-      appHasMusicAccordion = false;
-    }
-
-    return appHasMusicAccordion;
+    return config.AccordionMusic ?? false;
   }
 
   selectMusicAccordionItem() {
@@ -241,18 +224,8 @@ export class TagSearchPage {
   }
 
   async openTag(occurrenceResult: OccurrenceResult) {
-    let showOccurrencesModalOnRead = false;
-    if (this.config.getSettings('showOccurencesModalOnReadPageAfterSearch.tagSearch')) {
-      showOccurrencesModalOnRead = true;
-    }
-
-    let openOccurrencesAndInfoOnNewPage = false;
-
-    try {
-      openOccurrencesAndInfoOnNewPage = this.config.getSettings('OpenOccurrencesAndInfoOnNewPage');
-    } catch (e) {
-      openOccurrencesAndInfoOnNewPage = false;
-    }
+    const showOccurrencesModalOnRead = config.showOccurencesModalOnReadPageAfterSearch?.tagSearch ?? true;
+    const openOccurrencesAndInfoOnNewPage = config.OpenOccurrencesAndInfoOnNewPage ?? false;
 
     if (openOccurrencesAndInfoOnNewPage) {
       this.router.navigate([`/result/${this.objectType}/${occurrenceResult.id}`])

@@ -1,4 +1,5 @@
 import { Component, Input, ViewChild, HostListener, ElementRef, ChangeDetectorRef } from '@angular/core';
+import { Router } from '@angular/router';
 import { TableOfContentsCategory } from 'src/app/models/table-of-contents.model';
 import { IonSearchbar, NavParams, Platform } from '@ionic/angular';
 import { SearchDataService } from 'src/app/services/search/search-data.service';
@@ -7,10 +8,11 @@ import { UserSettingsService } from 'src/app/services/settings/user-settings.ser
 import { SemanticDataService } from 'src/app/services/semantic-data/semantic-data.service';
 import { TooltipService } from 'src/app/services/tooltips/tooltip.service';
 import { AnalyticsService } from 'src/app/services/analytics/analytics.service';
-import { Router } from '@angular/router';
-import { Facet } from 'src/app/models/facet.model';
-import { ConfigService } from 'src/app/services/config/core/config.service';
 import { StorageService } from 'src/app/services/storage/storage.service';
+import { config } from "src/app/services/config/config";
+import { Facet } from 'src/app/models/facet.model';
+
+
 /**
  * Generated class for the SimpleSearchComponent component.
  *
@@ -76,7 +78,6 @@ export class SimpleSearchComponent {
     private router: Router,
     public search: SearchDataService,
     private platform: Platform,
-    private config: ConfigService,
     protected events: EventsService,
     public navParams: NavParams,
     private _eref: ElementRef,
@@ -86,39 +87,15 @@ export class SimpleSearchComponent {
     private storage: StorageService,
     private cf: ChangeDetectorRef,
     private analyticsService: AnalyticsService) {
-    this.apiEndPoint = this.config.getSettings('app.apiEndpoint') as any;
-    this.projectMachineName = this.config.getSettings('app.machineName') as any;
-    this.showPageNumbers = this.config.getSettings('simpleSearch.showPageNumbers') as any;
-    try {
-      this.occurrencesOnNewPage = this.config.getSettings('OpenOccurrencesAndInfoOnNewPage') as any;
-    } catch ( e ) {
-      this.occurrencesOnNewPage = false;
-    }
-
-    try {
-      this.userDefinedSearchFields = this.config.getSettings('simpleSearch.user_defined_search_fields') as any;
-    } catch (e) {
-      try {
-        this.userDefinedSearchFields = this.config.getSettings('simpleSearch.userDefinedSearchField') as any;
-      } catch (e) {
-        this.userDefinedSearchFields = ['textData'];
-      }
-    }
-
-    try {
-      this.fromResultToOccurrence = this.config.getSettings('simpleSearch.from_result_to_occurrence') as any;
-    } catch (e) {
-      this.fromResultToOccurrence = false;
-    }
-
-    try {
-      /* Setting for showing occupation of persons in search results */
-      this.hideTypeAndDescription = this.config.getSettings('Occurrences.HideTypeAndDescription') as any;
-    } catch (e) {
-      this.hideTypeAndDescription = false;
-    }
-
-    this.configOccurrencePdf();
+    this.apiEndPoint = config.app?.apiEndpoint ?? '';
+    this.projectMachineName = config.app?.machineName ?? '';
+    this.showPageNumbers = config.simpleSearch?.showPageNumbers ?? true;
+    this.occurrencesOnNewPage = config.OpenOccurrencesAndInfoOnNewPage ?? false;
+    this.userDefinedSearchFields = config.simpleSearch?.user_defined_search_fields ?? ['textData'];
+    this.fromResultToOccurrence = config.simpleSearch?.from_result_to_occurrence ?? false;
+    /* Setting for showing occupation of persons in search results */
+    this.hideTypeAndDescription = config.Occurrences?.HideTypeAndDescription ?? false;
+    this.downloadOccurrencePdf = config.simpleSearch?.downloadOccurrencePdf ?? false;
 
     this.searchResult = [];
     this.displayResult = [];
@@ -284,12 +261,6 @@ export class SimpleSearchComponent {
         data['publication_name'] = item['text'];
       }
     });
-  }
-
-  configOccurrencePdf() {
-    try {
-      this.downloadOccurrencePdf = this.config.getSettings('simpleSearch.downloadOccurrencePdf') as any;
-    } catch (e) { }
   }
 
   setFocus() {

@@ -1,10 +1,9 @@
 import { Component } from '@angular/core';
-
 import { PopoverController } from '@ionic/angular';
 import { EventsService } from 'src/app/services/events/events.service';
-import { ConfigService } from 'src/app/services/config/core/config.service';
 import { UserSettingsService } from 'src/app/services/settings/user-settings.service';
 import { LanguageService } from 'src/app/services/languages/language.service';
+import { config } from "src/app/services/config/config";
 
 /**
  * Popover with list of available user settings.
@@ -26,12 +25,11 @@ export class UserSettingsPopoverPage {
 
   constructor(
     public viewCtrl: PopoverController,
-    private config: ConfigService,
     public userSettingsService: UserSettingsService,
     public languageService: LanguageService,
     private events: EventsService
   ) {
-    this.enableLanguageChanges = this.config.getSettings('i18n.enableLanguageChanges') as boolean;
+    this.enableLanguageChanges = config.i18n?.enableLanguageChanges ?? true;
   }
 
   ionViewWillLeave() {

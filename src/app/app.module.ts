@@ -39,10 +39,8 @@ import { MathJaxModule } from './components/math-jax/math-jax.module';
 import { CommentModalPage } from './modals/comment-modal/comment-modal';
 import { ReferenceDataModalPage } from './modals/reference-data-modal/reference-data-modal';
 import { DownloadTextsModalPage } from './modals/download-texts-modal/download-texts-modal';
-import { SharePopoverPageModule } from './modals/share-popover/share-popover.module';
 import { FacsimileZoomPageModule } from './modals/facsimile-zoom/facsimile-zoom.module';
 import { FacsimileZoomModalPage } from './modals/facsimile-zoom/facsimile-zoom';
-import { SharePopoverPage } from './modals/share-popover/share-popover';
 import { IllustrationPageModule } from './modals/illustration/illustration.module';
 import { IllustrationPage } from './modals/illustration/illustration';
 import { PersonSearchPageModule } from './pages/person-search/person-search.module';
@@ -82,7 +80,6 @@ export function createTranslateLoader(http: HttpClient): TranslateLoader {
       }
     }),
     IonicStorageModule.forRoot(),
-    SharePopoverPageModule,
     SearchAppPageModule,
     CommonModule,
     UserSettingsPopoverPageModule,
@@ -133,7 +130,6 @@ export function createTranslateLoader(http: HttpClient): TranslateLoader {
     DownloadTextsModalPage,
     IllustrationPage,
     SearchAppPage,
-    SharePopoverPage,
   ]
 })
 export class AppModule {}

@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
-
-import { LanguageService } from '../languages/language.service';
-import { Observable } from 'rxjs';
-import { ConfigService } from '../config/core/config.service';
 import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { LanguageService } from '../languages/language.service';
+import { config } from "src/app/services/config/config";
 
 @Injectable()
 export class GalleryService {
@@ -11,10 +10,9 @@ export class GalleryService {
 
   constructor(
     public languageService: LanguageService,
-    private config: ConfigService,
     private http: HttpClient
   ) {
-    this.language = this.config.getSettings('i18n.locale') as string;
+    this.language = config.i18n?.locale ?? 'sv';
     this.languageService.getLanguage().subscribe((lang: string) => {
       this.language = lang;
       this.getGalleries(this.language);
@@ -24,9 +22,9 @@ export class GalleryService {
   async getGalleries(language: string): Promise<any> {
     try {
       const response = await fetch(
-        this.config.getSettings('app.apiEndpoint') +
+        config.app.apiEndpoint +
           '/' +
-          this.config.getSettings('app.machineName') +
+          config.app.machineName +
           '/gallery/data/' +
           language
       );
@@ -41,9 +39,9 @@ export class GalleryService {
         incId = '/' + id;
       }
       const response = await fetch(
-        this.config.getSettings('app.apiEndpoint') +
+        config.app.apiEndpoint +
           '/' +
-          this.config.getSettings('app.machineName') +
+          config.app.machineName +
           '/gallery/connections/tag' +
           incId
       );
@@ -58,9 +56,9 @@ export class GalleryService {
         incId = '/' + id;
       }
       const response = await fetch(
-        this.config.getSettings('app.apiEndpoint') +
+        config.app.apiEndpoint +
           '/' +
-          this.config.getSettings('app.machineName') +
+          config.app.machineName +
           '/gallery/connections/location' +
           incId
       );
@@ -75,9 +73,9 @@ export class GalleryService {
         incId = '/' + id;
       }
       const response = await fetch(
-        this.config.getSettings('app.apiEndpoint') +
+        config.app.apiEndpoint +
           '/' +
-          this.config.getSettings('app.machineName') +
+          config.app.machineName +
           '/gallery/connections/subject' +
           incId
       );
@@ -87,9 +85,9 @@ export class GalleryService {
 
   getGallery(id: string, lang: string): Observable<any> {
     return this.http.get(
-      this.config.getSettings('app.apiEndpoint') +
+      config.app.apiEndpoint +
         '/' +
-        this.config.getSettings('app.machineName') +
+        config.app.machineName +
         '/gallery/data/' +
         id +
         '/' +
@@ -99,9 +97,9 @@ export class GalleryService {
 
   getMediaMetadata(id: string, lang: String): Observable<any> {
     return this.http.get(
-      this.config.getSettings('app.apiEndpoint') +
+      config.app.apiEndpoint +
         '/' +
-        this.config.getSettings('app.machineName') +
+        config.app.machineName +
         '/media/image/metadata/' +
         id +
         '/' +
@@ -111,9 +109,9 @@ export class GalleryService {
 
   getGalleryOccurrences(type: any, id: any): Observable<any> {
     return this.http.get(
-      this.config.getSettings('app.apiEndpoint') +
+      config.app.apiEndpoint +
         '/' +
-        this.config.getSettings('app.machineName') +
+        config.app.machineName +
         '/gallery/' +
         type +
         '/connections/' +

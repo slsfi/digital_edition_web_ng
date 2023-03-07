@@ -1,14 +1,14 @@
-import { TranslateService } from '@ngx-translate/core';
 import { Component, Input, ElementRef, EventEmitter, Output, NgZone } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
-import { ConfigService } from 'src/app/services/config/core/config.service';
+import { AlertButton, AlertController, AlertInput, ToastController } from '@ionic/angular';
+import { TranslateService } from '@ngx-translate/core';
 import { ReadPopoverService } from 'src/app/services/settings/read-popover.service';
 import { TextService } from 'src/app/services/texts/text.service';
 import { StorageService } from 'src/app/services/storage/storage.service';
-import { AlertButton, AlertController, AlertInput, ToastController } from '@ionic/angular';
 import { EventsService } from 'src/app/services/events/events.service';
 import { AnalyticsService } from 'src/app/services/analytics/analytics.service';
 import { CommonFunctionsService } from 'src/app/services/common-functions/common-functions.service';
+import { config } from "src/app/services/config/config";
 
 /**
  * Generated class for the ManuscriptsComponent component.
@@ -37,12 +37,10 @@ export class ManuscriptsComponent {
   errorMessage?: string;
   msID?: string;
   chapter?: string | null;
-  legendTitle?: string;
   textLoading: Boolean = true;
   showOpenLegendButton: Boolean = false;
 
   constructor(
-    private config: ConfigService,
     protected sanitizer: DomSanitizer,
     protected readPopoverService: ReadPopoverService,
     protected textService: TextService,
@@ -59,21 +57,7 @@ export class ManuscriptsComponent {
     this.text = '';
     this.selectedManuscriptName = '';
     this.manuscripts = [];
-
-    try {
-      this.showOpenLegendButton = this.config.getSettings('showOpenLegendButton.manuscripts');
-    } catch (e) {
-      this.showOpenLegendButton = false;
-    }
-
-    this.translate.get('Read.Legend.Title').subscribe(
-      translation => {
-        this.legendTitle = translation;
-      },
-      translationError => {
-        this.legendTitle = '';
-      }
-    );
+    this.showOpenLegendButton = config.showOpenLegendButton?.manuscripts ?? false;
   }
 
   ngOnInit() {
@@ -128,8 +112,8 @@ export class ManuscriptsComponent {
   }
 
   getManuscript(id: string) {
-    this.textService.getManuscripts(id, this.chapter ? this.chapter : undefined).subscribe(
-      res => {
+    this.textService.getManuscripts(id, this.chapter ? this.chapter : undefined).subscribe({
+      next: res => {
         this.textLoading = false;
         // in order to get id attributes for tooltips
         this.manuscripts = res.manuscripts;
@@ -148,12 +132,12 @@ export class ManuscriptsComponent {
           );
         }
       },
-      err => {
+      error: err => {
         this.errorMessage = <any>err;
         console.error(err);
         this.textLoading = false;
       }
-    );
+    });
   }
 
   setManuscript() {

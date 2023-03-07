@@ -6,7 +6,6 @@ import { FilterPage } from 'src/app/modals/filter/filter';
 import { OccurrencesPage } from 'src/app/modals/occurrences/occurrences';
 import { OccurrenceResult } from 'src/app/models/occurrence.model';
 import { AnalyticsService } from 'src/app/services/analytics/analytics.service';
-import { ConfigService } from 'src/app/services/config/core/config.service';
 import { EventsService } from 'src/app/services/events/events.service';
 import { LanguageService } from 'src/app/services/languages/language.service';
 import { MdContentService } from 'src/app/services/md/md-content.service';
@@ -16,6 +15,7 @@ import { SemanticDataService } from 'src/app/services/semantic-data/semantic-dat
 import { UserSettingsService } from 'src/app/services/settings/user-settings.service';
 import { StorageService } from 'src/app/services/storage/storage.service';
 import { TextService } from 'src/app/services/texts/text.service';
+import { config } from "src/app/services/config/config";
 
 /**
  * Generated class for the worksearchPage page.
@@ -71,7 +71,6 @@ export class WorkSearchPage {
               public semanticDataService: SemanticDataService,
               protected langService: LanguageService,
               private mdContentService: MdContentService,
-              protected config: ConfigService,
               private platform: Platform,
               protected textService: TextService,
               public occurrenceService: OccurrenceService,
@@ -85,16 +84,8 @@ export class WorkSearchPage {
               private metadataService: MetadataService,
               private router: Router,
   ) {
-    try {
-      this.showFilter = this.config.getSettings('WorkSearch.ShowFilter');
-    } catch (e) {
-      this.showFilter = false;
-    }
-    try {
-      this.infiniteScrollNumber = this.config.getSettings('WorkSearch.InitialLoadNumber');
-    } catch (e) {
-      this.infiniteScrollNumber = 200;
-    }
+    this.showFilter = config.WorkSearch.ShowFilter ?? false;
+    this.infiniteScrollNumber = config.WorkSearch.InitialLoadNumber ?? 200;
   }
 
   ionViewWillEnter() {
@@ -296,18 +287,8 @@ export class WorkSearchPage {
   }
 
   async openWork(occurrenceResult: OccurrenceResult) {
-    let showOccurrencesModalOnRead = false;
-    if (this.config.getSettings('showOccurencesModalOnReadPageAfterSearch.tagSearch')) {
-      showOccurrencesModalOnRead = true;
-    }
-
-    let openOccurrencesAndInfoOnNewPage = false;
-
-    try {
-      openOccurrencesAndInfoOnNewPage = this.config.getSettings('OpenOccurrencesAndInfoOnNewPage');
-    } catch (e) {
-      openOccurrencesAndInfoOnNewPage = false;
-    }
+    const showOccurrencesModalOnRead = config.showOccurencesModalOnReadPageAfterSearch?.workSearch ?? true;
+    const openOccurrencesAndInfoOnNewPage = config.OpenOccurrencesAndInfoOnNewPage ?? false;
 
     if (openOccurrencesAndInfoOnNewPage) {
       // const nav = this.app.getActiveNavs();

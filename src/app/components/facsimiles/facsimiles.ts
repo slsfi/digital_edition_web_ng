@@ -6,11 +6,11 @@ import { TranslateService } from '@ngx-translate/core';
 import { FacsimileZoomModalPage } from 'src/app/modals/facsimile-zoom/facsimile-zoom';
 import { Facsimile } from 'src/app/models/facsimile.model';
 import { AnalyticsService } from 'src/app/services/analytics/analytics.service';
-import { ConfigService } from 'src/app/services/config/core/config.service';
 import { EventsService } from 'src/app/services/events/events.service';
 import { FacsimileService } from 'src/app/services/facsimile/facsimile.service';
 import { ReadPopoverService } from 'src/app/services/settings/read-popover.service';
 import { SongService } from 'src/app/services/song/song.service';
+import { config } from "src/app/services/config/config";
 
 /**
  * Generated class for the FacsimilesComponent component.
@@ -73,7 +73,6 @@ export class FacsimilesComponent {
     protected modalController: ModalController,
     protected facsimileService: FacsimileService,
     public translate: TranslateService,
-    protected config: ConfigService,
     protected events: EventsService,
     private alertCtrl: AlertController,
     public songService: SongService,
@@ -87,28 +86,10 @@ export class FacsimilesComponent {
     this.facsimiles = [];
     this.selectedFacsimileName = '';
 
-    try {
-      this.facsimilePagesInfinite = this.config.getSettings('settings.getFacsimilePagesInfinite');
-    } catch (e) {
-      this.facsimilePagesInfinite = false;
-    }
-
-    try {
-      this.facsimileDefaultZoomLevel = this.config.getSettings('settings.facsimileDefaultZoomLevel');
-    } catch (e) {
-      this.facsimileDefaultZoomLevel = 1;
-    }
-
-    try {
-      this.facsimileZoomPageLevel = this.config.getSettings('settings.facsimileZoomPageLevel');
-    } catch (e) {
-      this.facsimileZoomPageLevel = 1;
-    }
-
-    try {
-      this.facsBase = this.config.getSettings('app.facsimileBase');
-    } catch (e) {
-    }
+    this.facsimilePagesInfinite = config.settings?.getFacsimilePagesInfinite ?? false;
+    this.facsimileDefaultZoomLevel = config.settings?.facsimileDefaultZoomLevel ?? 1;
+    this.facsimileZoomPageLevel = config.settings.facsimileZoomPageLevel ?? 1;
+    this.facsBase = config.app?.facsimileBase ?? null;
   }
 
   openNewFacs(event: Event, id: any) {
@@ -153,14 +134,14 @@ export class FacsimilesComponent {
         /* In the if-branches below the displayed facsimile image is set based on input, i.e. the facsimile component
            has been opened through an emitted event. The default behaviour of the component is in the else-branch. */
         if (this.facsID && this.facsNr && this.songID) {
-          this.facsUrl = this.config.getSettings('app.apiEndpoint') + '/' +
-            this.config.getSettings('app.machineName') +
+          this.facsUrl = config.app.apiEndpoint + '/' +
+            config.app.machineName +
             `/song-example/page/image/${this.facsID}/`;
           this.facsNumber = this.facsNr;
           this.facsSize = null;
         } else if (this.facsID && this.facsNr) {
-          this.facsUrl = this.config.getSettings('app.apiEndpoint') + '/' +
-            this.config.getSettings('app.machineName') +
+          this.facsUrl = config.app.apiEndpoint + '/' +
+            config.app.machineName +
             `/facsimile/page/image/${this.facsID}/`;
           this.facsNumber = this.facsNr;
           this.facsSize = null;
@@ -258,8 +239,8 @@ export class FacsimilesComponent {
             || this.facsPage['external_url'] === '') {
             this.externalFacsimilesExist = false;
             this.selectedFacsimileIsExternal = false;
-            this.facsUrl = this.config.getSettings('app.apiEndpoint') + '/' +
-              this.config.getSettings('app.machineName') +
+            this.facsUrl = config.app.apiEndpoint + '/' +
+              config.app.machineName +
               `/facsimiles/${this.facsPage['publication_facsimile_collection_id']}/`;
           }
 
@@ -383,8 +364,8 @@ export class FacsimilesComponent {
       this.facsPage = facs.page;
       this.manualPageNumber = facs.page;
       this.numberOfPages = facs.number_of_pages;
-      this.facsUrl = this.config.getSettings('app.apiEndpoint') + '/' +
-            this.config.getSettings('app.machineName') +
+      this.facsUrl = config.app.apiEndpoint + '/' +
+            config.app.machineName +
             `/facsimiles/${facs.publication_facsimile_collection_id}/`;
     }
     this.text = this.sanitizer.bypassSecurityTrustHtml(

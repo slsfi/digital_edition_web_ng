@@ -1,23 +1,17 @@
-type Settings = { [key: string]: any }
+type Config = { [key: string]: any }
 
-export const settings: Settings = {
+export const config: Config = {
   app: {
     machineName: "topelius",
     projectId: 10,
     apiEndpoint: "https://api.sls.fi/digitaledition",
+    simpleApi: '',
     name: {
       sv: "Zacharias Topelius Skrifter",
       fi: "Zacharias Topelius Skrifter",
       en: "Zacharias Topelius Skrifter"
     },
-    showTopMusicButton: false,
-    showHelpButton: false,
-    showViewToggle: true,
-    showTopURNButton: false,
-    showTopElasticButton: true,
-    showTopSimpleSearchButton: false,
-    showTopContentButton: true,
-    showTopAboutButton: true,
+    siteLogoURL: "https://www.sls.fi/",
     CollectionSortOrder: {
       216: 1, 219: 2, 220: 3, 218: 4, 210: 5, 208: 6, 207: 7, 214: 8,
       203: 9, 213: 10, 202: 11, 199: 12, 221: 13,
@@ -29,34 +23,57 @@ export const settings: Settings = {
     about: {
       markdownFolderNumber: "03",
       initialPageNode: "01-01"
+    },
+    home: {
+      imageOrientationIsPortrait: true,
+      imageOnRightIfPortrait: false,
+      siteTitleOnTopOfImageInMobileModeIfPortrait: false,
+      imageUrl: "assets/images/frontpage-image-portrait.jpg",
+      portraitImageUrlInMobileMode: "assets/images/frontpage-image-square.jpg",
+      portraitImageAltText: "Zacharias Topelius",
+      showSimpleSearch: false,
+      showEditionList: false,
+      showFooter: true
+    },
+    epub: {
+      showURNButton: true,
+      showViewOptionsButton: true
+    },
+    foreword: {
+      showURNButton: true,
+      showViewOptionsButton: true
+    },
+    introduction: {
+      hasSeparateTOC: true,
+      showURNButton: true,
+      showViewOptionsButton: true
+    },
+    mediaCollection: {
+      showURNButton: true
+    },
+    music: {
+      collectionsToShow: []
+    },
+    read: {
+      showURNButton: true,
+      showViewOptionsButton: true
+    },
+    title: {
+      showURNButton: true,
+      showViewOptionsButton: true
     }
   },
-  "AvailableEpubs": {
-    "Dagböcker": {
-      "filename": "soderholm_dagbocker.epub",
-      "download": "https://www.sls.fi/sv/utgivning/kerstin-soderholms-dagbocker",
-      "cover": "/assets/images/parmbilder/Kerstin-Soderholms-dagbocker-cover-web.jpg"
+  component: {
+    topMenu: {
+      showAboutButton: true,
+      showContentButton: true,
+      showElasticSearchButton: true,
+      showSimpleSearchButton: false,
+      showURNButton: false,
+      showLanguageButton: true,
+      showMusicButton: false,
+      showHelpButton: false
     }
-  },
-  frontpageConfig: {
-    imageOrientationIsPortrait: true,
-    imageOnRightIfPortrait: false,
-    siteTitleOnTopOfImageInMobileModeIfPortrait: false,
-    imageUrl: "assets/images/frontpage-image-portrait.jpg",
-    portraitImageUrlInMobileMode: "assets/images/frontpage-image-square.jpg",
-    portraitImageAltText: "Zacharias Topelius",
-    showSimpleSearch: false,
-    showEditionList: false,
-    showFooter: true
-  },
-  showURNButton: {
-    topMenu: false,
-    pageTitle: true,
-    pageForeword: true,
-    pageIntroduction: true,
-    pageRead: true,
-    pageEpub: false,
-    mediaCollection: false
   },
   urnResolverUrl: "https://urn.fi/",
   useSimpleWorkMetadata: true,
@@ -212,7 +229,7 @@ export const settings: Settings = {
     getFacsimilePagesInfinite: true,
     facsimileDefaultZoomLevel: 4,
     facsimileZoomPageLevel: 1,
-    galleryCollectionMapping: {214: 44, 206: 19},
+    galleryCollectionMapping: { 214: 44, 206: 19 },
     showReadTextIllustrations: ["20212", "20213", "206"],
     sortableLetters: ["220", "219", "215", "211"]
   },
@@ -228,18 +245,18 @@ export const settings: Settings = {
   },
   textDownloadOptions: {
     enabledIntroductionFormats: {
-      xml: true,
-      print: true
+        xml: true,
+        print: true
     },
     enabledEstablishedFormats: {
-      xml: true,
-      txt: false,
-      print: true
+        xml: true,
+        txt: false,
+        print: true
     },
     enabledCommentsFormats: {
-      xml: true,
-      txt: false,
-      print: true
+        xml: true,
+        txt: false,
+        print: true
     },
     usePrintNotDownloadIcon: false
   },
@@ -366,7 +383,6 @@ export const settings: Settings = {
   HasTitle: true,
   HasForeword: true,
   HasIntro: true,
-  separeateIntroductionToc: true,
   OpenOccurrencesAndInfoOnNewPage: false,
   SingleOccurrenceType: null,
   MusicPage: {
@@ -469,6 +485,18 @@ export const settings: Settings = {
       "@type": "Organization",
       url: "https://topelius.sls.fi",
       logo: "https://topelius.sls.fi/assets/images/logo.svg"
+    }
+  },
+  AvailableEpubs: {
+    "Dummy epub": {
+      filename: "2685.epub",
+      download: "https://www.sls.fi/",
+      cover: ""
+    },
+    "Another dummy epub": {
+      filename: "2685.epub",
+      download: "https://www.sls.fi/",
+      cover: ""
     }
   }
 }

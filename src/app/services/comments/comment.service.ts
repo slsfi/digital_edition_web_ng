@@ -1,10 +1,9 @@
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { catchError, map, Observable } from 'rxjs';
-import { ajax } from 'rxjs/ajax';
 import { CommentCacheService } from './comment-cache.service';
 import { CommonFunctionsService } from '../common-functions/common-functions.service';
-import { HttpClient } from '@angular/common/http';
-import { ConfigService } from '../config/core/config.service';
+import { config } from "src/app/services/config/config";
 
 @Injectable()
 export class CommentService {
@@ -15,7 +14,6 @@ export class CommentService {
 
   constructor(
     private http: HttpClient,
-    private config: ConfigService,
     private cache: CommentCacheService,
     public commonFunctions: CommonFunctionsService
   ) {
@@ -66,7 +64,7 @@ export class CommentService {
       url = introURL;
     }
 
-    url = this.config.getSettings('app.apiEndpoint') + '/' + this.config.getSettings('app.machineName') + url;
+    url = config.app.apiEndpoint + '/' + config.app.machineName + url;
 
     if (this.cache.hasHtml(commentId)) {
       return this.cache.getHtmlAsObservable(id2);
@@ -117,12 +115,11 @@ export class CommentService {
 
   getCorrespondanceMetadata(pub_id: any): Observable<any> {
     return this.http.get(
-      this.config.getSettings('app.apiEndpoint') +
+      config.app.apiEndpoint +
         '/' +
-        this.config.getSettings('app.machineName') +
+        config.app.machineName +
         '/correspondence/publication/metadata/' +
-        pub_id +
-        ''
+        pub_id + ''
     );
   }
 
@@ -158,9 +155,9 @@ export class CommentService {
     }
 
     return this.http.get(
-      this.config.getSettings('app.apiEndpoint') +
+      config.app.apiEndpoint +
         '/' +
-        this.config.getSettings('app.machineName') +
+        config.app.machineName +
         url
     );
   }

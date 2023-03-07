@@ -2,11 +2,11 @@ import { Component } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { AnalyticsService } from 'src/app/services/analytics/analytics.service';
-import { ConfigService } from 'src/app/services/config/core/config.service';
 import { EventsService } from 'src/app/services/events/events.service';
 import { LanguageService } from 'src/app/services/languages/language.service';
 import { MdContentService } from 'src/app/services/md/md-content.service';
 import { UserSettingsService } from 'src/app/services/settings/user-settings.service';
+import { config } from "src/app/services/config/config";
 
 /**
  * Generated class for the MusicPage page.
@@ -35,7 +35,6 @@ export class MusicPage {
   collectionsToShow = [];
 
   constructor(
-    private config: ConfigService,
     public translate: TranslateService,
     public languageService: LanguageService,
     private events: EventsService,
@@ -43,14 +42,9 @@ export class MusicPage {
     private userSettingsService: UserSettingsService,
     private analyticsService: AnalyticsService
   ) {
-    this.appMachineName = this.config.getSettings('app.machineName');
+    this.appMachineName = config.app?.machineName ?? '';
     this.userSettingsService.temporarilyHideSplitPane();
-
-    try {
-      this.collectionsToShow = this.config.getSettings('MusicPage.collectionsToShow');
-    } catch (e) {
-      this.collectionsToShow = [];
-    }
+    this.collectionsToShow = config.page?.music?.collectionsToShow ?? [];
   }
 
   ionViewWillEnter() {

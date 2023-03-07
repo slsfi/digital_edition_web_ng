@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
-
-import { ConfigService } from '../config/core/config.service';
+import { config } from "src/app/services/config/config";
 
 @Injectable()
 export class PdfService {
@@ -10,19 +9,11 @@ export class PdfService {
   private collectionPdfs: Array<any>;
   private childrenPdfs: Array<any>;
 
-  constructor(private config: ConfigService) {
-    this.apiEndPoint = this.config.getSettings('app.apiEndpoint');
-    this.projectMachineName = this.config.getSettings('app.machineName');
-    try {
-      this.collectionPdfs = this.config.getSettings('collectionPdfs');
-    } catch (e) {
-      this.collectionPdfs = [];
-    };
-    try {
-      this.childrenPdfs = this.config.getSettings('collectionChildrenPdfs');
-    } catch (e) {
-      this.childrenPdfs = [];
-    };
+  constructor() {
+    this.apiEndPoint = config.app?.apiEndpoint ?? '';
+    this.projectMachineName = config.app?.machineName ?? '';
+    this.collectionPdfs = config.collectionPdfs ?? [];
+    this.childrenPdfs = config.collectionChildrenPdfs ?? [];
   }
 
   getCollectionChildrenPdfs(collectionID: any) {

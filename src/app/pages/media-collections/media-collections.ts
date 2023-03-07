@@ -3,13 +3,13 @@ import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { MdContent } from 'src/app/models/md-content.model';
 import { AnalyticsService } from 'src/app/services/analytics/analytics.service';
-import { ConfigService } from 'src/app/services/config/core/config.service';
 import { EventsService } from 'src/app/services/events/events.service';
 import { GalleryService } from 'src/app/services/gallery/gallery.service';
 import { LanguageService } from 'src/app/services/languages/language.service';
 import { MdContentService } from 'src/app/services/md/md-content.service';
 import { MetadataService } from 'src/app/services/metadata/metadata.service';
 import { UserSettingsService } from 'src/app/services/settings/user-settings.service';
+import { config } from "src/app/services/config/config";
 
 // @IonicPage({
 //   name: 'media-collections',
@@ -40,11 +40,11 @@ export class MediaCollectionsPage {
   public projectMachineName: string;
   mdContent: MdContent;
   language = 'sv';
+
   constructor(
     private events: EventsService,
     private galleryService: GalleryService,
     public userSettingsService: UserSettingsService,
-    private config: ConfigService,
     public languageService: LanguageService,
     public translate: TranslateService,
     public cdRef: ChangeDetectorRef,
@@ -53,13 +53,13 @@ export class MediaCollectionsPage {
     private mdContentService: MdContentService,
     private router: Router,
   ) {
-    this.apiEndPoint = this.config.getSettings('app.apiEndpoint');
-    this.projectMachineName = this.config.getSettings('app.machineName');
+    this.apiEndPoint = config.app?.apiEndpoint ?? '';
+    this.projectMachineName = config.app?.machineName ?? '';
 
     let fileID = '11-all';
     this.mdContent = new MdContent({id: fileID, title: '...', content: null, filename: null});
 
-    this.language = this.config.getSettings('i18n.locale');
+    this.language = config.i18n?.locale ?? 'sv';
     this.languageService.getLanguage().subscribe((lang: string) => {
       this.language = lang;
       if ( !String(fileID).includes(lang) ) {

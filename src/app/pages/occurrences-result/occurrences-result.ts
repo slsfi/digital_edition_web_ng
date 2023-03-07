@@ -1,16 +1,16 @@
 import { Component, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { LoadingController, ModalController, Platform } from '@ionic/angular';
+import { router } from 'sw-toolbox';
 import { SearchAppPage } from 'src/app/modals/search-app/search-app';
 import { Occurrence, OccurrenceResult } from 'src/app/models/occurrence.model';
 import { SingleOccurrence } from 'src/app/models/single-occurrence.model';
 import { AnalyticsService } from 'src/app/services/analytics/analytics.service';
-import { ConfigService } from 'src/app/services/config/core/config.service';
 import { EventsService } from 'src/app/services/events/events.service';
 import { OccurrenceService } from 'src/app/services/occurrence/occurence.service';
 import { SemanticDataService } from 'src/app/services/semantic-data/semantic-data.service';
 import { UserSettingsService } from 'src/app/services/settings/user-settings.service';
-import { router } from 'sw-toolbox';
+import { config } from "src/app/services/config/config";
 
 /**
  * Generated class for the OccurrencesResultPage page.
@@ -82,7 +82,6 @@ export class OccurrencesResultPage {
     public loadingCtrl: LoadingController,
     public userSettingsService: UserSettingsService,
     public modalCtrl: ModalController,
-    private config: ConfigService,
     private events: EventsService,
     private cf: ChangeDetectorRef,
     private analyticsService: AnalyticsService,
@@ -90,12 +89,7 @@ export class OccurrencesResultPage {
     private router: Router
   ) {
     this.segments = 'info';
-    
-    try {
-      this.singleOccurrenceType = this.config.getSettings('SingleOccurrenceType');
-    } catch (e) {
-      this.singleOccurrenceType = null;
-    }
+    this.singleOccurrenceType = config.SingleOccurrenceType ?? null;
   }
 
   ngOnInit() {

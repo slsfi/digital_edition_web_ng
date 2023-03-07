@@ -1,12 +1,14 @@
 import { Component } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
-import debounce from 'lodash/debounce';
-import { EventsService } from 'src/app/services/events/events.service';
-import { LoadingController, ModalController, NavController, NavParams, Platform } from '@ionic/angular';
-import { Subscription } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
+import { LoadingController, ModalController, NavController, NavParams, Platform } from '@ionic/angular';
+import { TranslateService } from '@ngx-translate/core';
+import { Subscription } from 'rxjs';
+import debounce from 'lodash/debounce';
+import { OccurrencesPage } from 'src/app/modals/occurrences/occurrences';
+import { FilterPage } from 'src/app/modals/filter/filter';
+import { OccurrenceResult } from 'src/app/models/occurrence.model';
+import { EventsService } from 'src/app/services/events/events.service';
 import { OccurrenceService } from 'src/app/services/occurrence/occurence.service';
-import { ConfigService } from 'src/app/services/config/core/config.service';
 import { StorageService } from 'src/app/services/storage/storage.service';
 import { SemanticDataService } from 'src/app/services/semantic-data/semantic-data.service';
 import { LanguageService } from 'src/app/services/languages/language.service';
@@ -16,9 +18,7 @@ import { AnalyticsService } from 'src/app/services/analytics/analytics.service';
 import { MetadataService } from 'src/app/services/metadata/metadata.service';
 import { TooltipService } from 'src/app/services/tooltips/tooltip.service';
 import { CommonFunctionsService } from 'src/app/services/common-functions/common-functions.service';
-import { OccurrenceResult } from 'src/app/models/occurrence.model';
-import { OccurrencesPage } from 'src/app/modals/occurrences/occurrences';
-import { FilterPage } from 'src/app/modals/filter/filter';
+import { config } from "src/app/services/config/config";
 
 /**
  * A page for searching person occurrences.
@@ -63,7 +63,6 @@ export class PersonSearchPage {
               public semanticDataService: SemanticDataService,
               protected langService: LanguageService,
               private mdContentService: MdContentService,
-              protected config: ConfigService,
               public modalCtrl: ModalController,
               private platform: Platform,
               public loadingCtrl: LoadingController,
@@ -79,27 +78,13 @@ export class PersonSearchPage {
               private router: Router,
               private route: ActivatedRoute
   ) {
-    try {
-      this.showFilter = this.config.getSettings('PersonSearch.ShowFilter') as any;
-    } catch (e) {
-      this.showFilter = true;
-    }
+    this.showFilter = config.PersonSearch?.ShowFilter ?? true;
+    this.personSearchTypes = config.PersonSearchTypes ?? [];
+    this.max_fetch_size = config.PersonSearch?.InitialLoadNumber ?? 500;
 
-    try {
-      this.personSearchTypes = this.config.getSettings('PersonSearchTypes');
-    } catch (e) {
-      this.personSearchTypes = [];
+    if (this.max_fetch_size > 10000) {
+      this.max_fetch_size = 10000;
     }
-
-    try {
-      this.max_fetch_size = this.config.getSettings('PersonSearch.InitialLoadNumber') as any;
-      if (this.max_fetch_size > 10000) {
-        this.max_fetch_size = 10000;
-      }
-    } catch (e) {
-      this.max_fetch_size = 500;
-    }
-
   }
 
   ionViewWillEnter() {
@@ -174,15 +159,7 @@ export class PersonSearchPage {
   }
 
   appHasMusicAccordionConfig() {
-    let appHasMusicAccordion = false;
-
-    try {
-      appHasMusicAccordion = this.config.getSettings('AccordionMusic') as any;
-    } catch ( e ) {
-      appHasMusicAccordion = false;
-    }
-
-    return appHasMusicAccordion;
+    return config.AccordionMusic ?? false;
   }
 
   selectMusicAccordionItem() {
@@ -360,18 +337,8 @@ export class PersonSearchPage {
   }
 
   async openPerson(occurrenceResult: OccurrenceResult) {
-    let showOccurrencesModalOnRead = false;
-    if (this.config.getSettings('showOccurencesModalOnReadPageAfterSearch.personSearch')) {
-      showOccurrencesModalOnRead = true;
-    }
-
-    let openOccurrencesAndInfoOnNewPage = false;
-
-    try {
-      openOccurrencesAndInfoOnNewPage = this.config.getSettings('OpenOccurrencesAndInfoOnNewPage') as any;
-    } catch (e) {
-      openOccurrencesAndInfoOnNewPage = false;
-    }
+    const showOccurrencesModalOnRead = config.showOccurencesModalOnReadPageAfterSearch?.personSearch ?? true;
+    const openOccurrencesAndInfoOnNewPage = config.OpenOccurrencesAndInfoOnNewPage ?? false;
 
     if (openOccurrencesAndInfoOnNewPage) {
       this.router.navigate([`/result/${this.objectType}/${occurrenceResult.id}`])
@@ -391,11 +358,10 @@ export class PersonSearchPage {
   }
 
   getMdContent(fileID: string) {
-    this.mdContentService.getMdContent(fileID)
-      .subscribe(
-        text => { this.mdContent = text.content; },
-        error => { this.mdContent = ''; }
-      );
+    this.mdContentService.getMdContent(fileID).subscribe({
+      next: (text) => { this.mdContent = text.content; },
+      error: (e) => { this.mdContent = ''; }
+    });
   }
 
   scrollToTop() {

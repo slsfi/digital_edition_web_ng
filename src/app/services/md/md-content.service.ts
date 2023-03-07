@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { ConfigService } from '../config/core/config.service';
+import { config } from "src/app/services/config/config";
 
 @Injectable()
 export class MdContentService {
@@ -9,10 +9,12 @@ export class MdContentService {
   private staticPagesURL = '/static-pages-toc/';
   private apiEndpoint: string;
 
-  constructor(private config: ConfigService, private http: HttpClient) {
-    this.apiEndpoint = this.config.getSettings('app.apiEndpoint') as string;
+  constructor(
+    private http: HttpClient
+  ) {
+    this.apiEndpoint = config.app?.apiEndpoint ?? '';
     try {
-      const simpleApi = this.config.getSettings('app.simpleApi');
+      const simpleApi = config.app?.simpleApi;
       if (simpleApi) {
         this.apiEndpoint = simpleApi as string;
       }
@@ -33,7 +35,7 @@ export class MdContentService {
     const url =
       this.apiEndpoint +
       '/' +
-      this.config.getSettings('app.machineName') +
+      config.app.machineName +
       this.mdUrl +
       fileID;
     return this.http.get(url);
@@ -43,7 +45,7 @@ export class MdContentService {
     const url =
       this.apiEndpoint +
       '/' +
-      this.config.getSettings('app.machineName') +
+      config.app.machineName +
       this.staticPagesURL +
       language;
     return this.http.get(url);
@@ -54,7 +56,7 @@ export class MdContentService {
       const url =
         this.apiEndpoint +
         '/' +
-        this.config.getSettings('app.machineName') +
+        config.app.machineName +
         this.staticPagesURL +
         language;
       const response = await fetch(url);

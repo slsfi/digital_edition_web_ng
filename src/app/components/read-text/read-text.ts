@@ -6,12 +6,13 @@ import { TranslateService } from '@ngx-translate/core';
 import { IllustrationPage } from 'src/app/modals/illustration/illustration';
 import { AnalyticsService } from 'src/app/services/analytics/analytics.service';
 import { CommonFunctionsService } from 'src/app/services/common-functions/common-functions.service';
-import { ConfigService } from 'src/app/services/config/core/config.service';
 import { EventsService } from 'src/app/services/events/events.service';
 import { ReadPopoverService } from 'src/app/services/settings/read-popover.service';
 import { UserSettingsService } from 'src/app/services/settings/user-settings.service';
 import { StorageService } from 'src/app/services/storage/storage.service';
 import { TextService } from 'src/app/services/texts/text.service';
+import { config } from "src/app/services/config/config";
+
 /**
  * Generated class for the ReadTextComponent component.
  *
@@ -53,27 +54,18 @@ export class ReadTextComponent {
     private renderer2: Renderer2,
     private ngZone: NgZone,
     private elementRef: ElementRef,
-    private config: ConfigService,
     public userSettingsService: UserSettingsService,
     public translate: TranslateService,
     protected modalController: ModalController,
     private analyticsService: AnalyticsService,
     public commonFunctions: CommonFunctionsService
   ) {
-    this.appMachineName = this.config.getSettings('app.machineName');
-    this.apiEndPoint = this.config.getSettings('app.apiEndpoint');
-    this.defaultView = this.config.getSettings('defaults.ReadModeView');
+    this.appMachineName = config.app?.machineName ?? '';
+    this.apiEndPoint = config.app?.apiEndpoint ?? '';
+    this.defaultView = config.defaults?.ReadModeView ?? undefined;
     this.intervalTimerId = 0;
     this.estID = '';
-
-    try {
-      const displayTypes = this.config.getSettings('settings.displayTypesToggles');
-      if (displayTypes.illustrations === true) {
-        this.illustrationsViewAvailable = true;
-      }
-    } catch (e) {
-      this.illustrationsViewAvailable = false;
-    }
+    this.illustrationsViewAvailable = config.settings?.displayTypesToggles?.illustrations ?? false;
   }
 
   ngOnInit() {
@@ -234,19 +226,20 @@ export class ReadTextComponent {
     if (!this.link) {
       return;
     }
-    this.textService.getEstablishedText(this.link).subscribe(
-      content => {
+    this.textService.getEstablishedText(this.link).subscribe({
+      next: content => {
         this.textLoading = false;
         if (content === '' || content === '<html xmlns="http://www.w3.org/1999/xhtml"><head></head><body>File not found</body></html>') {
           console.log('no reading text');
-          this.translate.get('Read.Established.NoEstablished').subscribe(
-            translation => {
+          this.translate.get('Read.Established.NoEstablished').subscribe({
+            next: translation => {
               this.text = translation;
-            }, error => {
-              console.error(error);
+            },
+            error: eTransl => {
+              console.error(eTransl);
               this.text = 'Ingen lästext';
             }
-          );
+          });
         } else {
           const c_id = String(this.link).split('_')[0];
           let processedText = this.textService.postprocessEstablishedText(content, c_id);
@@ -256,14 +249,16 @@ export class ReadTextComponent {
             this.storage.set(this.estID, processedText);
           }
 
-          if (this.matches) {
-            processedText = this.commonFunctions.insertSearchMatchTags(processedText, this.matches);
-            this.text = this.sanitizer.bypassSecurityTrustHtml(processedText);
-          }
+          processedText = this.commonFunctions.insertSearchMatchTags(processedText, this.matches);
+          this.text = this.sanitizer.bypassSecurityTrustHtml(processedText);
         }
       },
-      error => { this.errorMessage = <any>error; this.textLoading = false; this.text = 'Lästexten kunde inte hämtas.'; }
-    );
+      error: e => {
+        this.errorMessage = <any>e;
+        this.textLoading = false;
+        this.text = 'Lästexten kunde inte hämtas.';
+      }
+    });
   }
 
   /**
@@ -272,14 +267,9 @@ export class ReadTextComponent {
    * Sets this.illustrationsVisibleInReadtext either true or false.
    */
   private setIllustrationsInReadtextStatus() {
-    let showIllustrations = [];
-    try {
-      showIllustrations = this.config.getSettings('settings.showReadTextIllustrations');
-    } catch (e) {
-      showIllustrations = [];
-    }
+    const showIllustrations = config.settings?.showReadTextIllustrations ?? [];
     if (showIllustrations.includes(this.link?.split('_')[0]) || showIllustrations.includes(this.link?.split('_')[1])) {
-        this.illustrationsVisibleInReadtext = true;
+      this.illustrationsVisibleInReadtext = true;
     } else {
       this.illustrationsVisibleInReadtext = false;
     }

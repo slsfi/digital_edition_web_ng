@@ -1,10 +1,9 @@
 import { Injectable } from '@angular/core';
-import { LangChangeEvent, TranslateService/*, TranslatePipe*/ } from '@ngx-translate/core';
+import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { EventsService } from '../events/events.service';
-import { ConfigService } from '../config/core/config.service';
 import { StorageService } from '../storage/storage.service';
-
+import { config } from "src/app/services/config/config";
 
 @Injectable()
 export class LanguageService {
@@ -18,12 +17,11 @@ export class LanguageService {
   constructor(
     public translate: TranslateService,
     public storage: StorageService,
-    private config: ConfigService,
     private events: EventsService
   ) {
-    this._langChangeEnabled = this.config.getSettings('i18n.enableLanguageChanges') as boolean;
-    this._defaultLanguage = this.config.getSettings('i18n.locale') as string;
-    this._availableLanguages = this.config.getSettings('i18n.languages') as Array<string>;
+    this._langChangeEnabled = config.i18n?.enableLanguageChanges ?? true;
+    this._defaultLanguage = config.i18n?.locale ?? 'sv';
+    this._availableLanguages = config.i18n?.languages ?? [];
     this.translate.addLangs(this._availableLanguages);
     this.translate.setDefaultLang(this._defaultLanguage);
 

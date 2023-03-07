@@ -1,9 +1,8 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { catchError, map, Observable } from 'rxjs';
-import { ConfigService } from '../config/core/config.service';
-
 import { TextCacheService } from './text-cache.service';
+import { config } from "src/app/services/config/config";
 
 @Injectable()
 export class TextService {
@@ -31,15 +30,14 @@ export class TextService {
   activeTocOrder: string;
 
   constructor(
-    private config: ConfigService,
     private cache: TextCacheService,
     private http: HttpClient
   ) {
-    this.appMachineName = this.config.getSettings('app.machineName') as string;
-    this.apiEndPoint = this.config.getSettings('app.apiEndpoint') as string;
+    this.appMachineName = config.app?.machineName ?? '';
+    this.apiEndPoint = config.app?.apiEndpoint ?? '';
 
     try {
-      const simpleApi = this.config.getSettings('app.simpleApi') as string;
+      const simpleApi = config.app?.simpleApi ?? '';
       if (simpleApi) {
         this.useSimpleApi = true;
         this.simpleApi = simpleApi;
@@ -82,20 +80,11 @@ export class TextService {
         body = body.content as string;
 
         try {
-          let showReadTextIllustrations = [];
-          try {
-            showReadTextIllustrations = this.config.getSettings(
-              'settings.showReadTextIllustrations'
-            ) as Array<any>;
-          } catch (e) {
-            showReadTextIllustrations = [];
-          }
+          const showReadTextIllustrations = config.settings?.showReadTextIllustrations ?? [];
           if (showReadTextIllustrations.length > 0) {
             let galleryId = 44;
             try {
-              const galleries = this.config.getSettings(
-                'settings.galleryCollectionMapping'
-              ) as Array<any>;
+              const galleries = config.settings?.galleryCollectionMapping ?? [];
               galleryId = galleries[c_id];
             } catch (err) {}
 
@@ -162,18 +151,18 @@ export class TextService {
       .replace('{lang}', lang);
 
     return this.http.get(
-      this.config.getSettings('app.apiEndpoint') +
+      config.app.apiEndpoint +
         '/' +
-        this.config.getSettings('app.machineName') +
+        config.app.machineName +
         path
     );
   }
 
   getCollectionAndPublicationByLegacyId(legacyId: string): Observable<any> {
     return this.http.get(
-      this.config.getSettings('app.apiEndpoint') +
+      config.app.apiEndpoint +
         '/' +
-        this.config.getSettings('app.machineName') +
+        config.app.machineName +
         '/legacy/' +
         legacyId
     );
@@ -185,9 +174,9 @@ export class TextService {
     const pub_id = data.length > 1 ? data[1] : 1;
 
     return this.http.get(
-      this.config.getSettings('app.apiEndpoint') +
+      config.app.apiEndpoint +
         '/' +
-        this.config.getSettings('app.machineName') +
+        config.app.machineName +
         '/text/' +
         c_id +
         '/' +
@@ -202,9 +191,9 @@ export class TextService {
     const c_id = data[0];
 
     return this.http.get(
-      this.config.getSettings('app.apiEndpoint') +
+      config.app.apiEndpoint +
         '/' +
-        this.config.getSettings('app.machineName') +
+        config.app.machineName +
         '/text/' +
         c_id +
         '/fore/' +
@@ -221,9 +210,9 @@ export class TextService {
      * ! The API endpoint below has not been implemented.
      */
     return this.http.get(
-      this.config.getSettings('app.apiEndpoint') +
+      config.app.apiEndpoint +
         '/' +
-        this.config.getSettings('app.machineName') +
+        config.app.machineName +
         '/text/' +
         c_id +
         '/' +
@@ -241,9 +230,9 @@ export class TextService {
       chapter = chapter.split(';')[0];
     }
     const url =
-      this.config.getSettings('app.apiEndpoint') +
+      config.app.apiEndpoint +
       '/' +
-      this.config.getSettings('app.machineName') +
+      config.app.machineName +
       '/text/' +
       c_id +
       '/' +
@@ -269,7 +258,7 @@ export class TextService {
     return this.http.get(
       api +
         '/' +
-        this.config.getSettings('app.machineName') +
+        config.app.machineName +
         '/text/' +
         c_id +
         '/' +
@@ -281,9 +270,9 @@ export class TextService {
 
   getTextByType(type: string, id: string): Observable<any> {
     return this.http.get(
-      this.config.getSettings('app.apiEndpoint') +
+      config.app.apiEndpoint +
         '/' +
-        this.config.getSettings('app.machineName') +
+        config.app.machineName +
         '/text/' +
         type +
         '/' +
@@ -293,9 +282,9 @@ export class TextService {
 
   getCollection(id: string): Observable<any> {
     return this.http.get(
-      this.config.getSettings('app.apiEndpoint') +
+      config.app.apiEndpoint +
         '/' +
-        this.config.getSettings('app.machineName') +
+        config.app.machineName +
         '/collection/' +
         id
     );
@@ -303,9 +292,9 @@ export class TextService {
 
   getCollectionPublications(collection_id: string): Observable<any> {
     return this.http.get(
-      this.config.getSettings('app.apiEndpoint') +
+      config.app.apiEndpoint +
         '/' +
-        this.config.getSettings('app.machineName') +
+        config.app.machineName +
         '/collection/' +
         collection_id +
         '/publications'
@@ -314,9 +303,9 @@ export class TextService {
 
   getPublication(id: string): Observable<any> {
     return this.http.get(
-      this.config.getSettings('app.apiEndpoint') +
+      config.app.apiEndpoint +
         '/' +
-        this.config.getSettings('app.machineName') +
+        config.app.machineName +
         '/publication/' +
         id
     );
@@ -324,9 +313,9 @@ export class TextService {
 
   getLegacyIdByPublicationId(id: string): Observable<any> {
     return this.http.get(
-      this.config.getSettings('app.apiEndpoint') +
+      config.app.apiEndpoint +
         '/' +
-        this.config.getSettings('app.machineName') +
+        config.app.machineName +
         '/legacy/publication/' +
         id
     );
@@ -334,9 +323,9 @@ export class TextService {
 
   getLegacyIdByCollectionId(id: string): Observable<any> {
     return this.http.get(
-      this.config.getSettings('app.apiEndpoint') +
+      config.app.apiEndpoint +
         '/' +
-        this.config.getSettings('app.machineName') +
+        config.app.machineName +
         '/legacy/collection/' +
         id
     );
@@ -353,9 +342,9 @@ export class TextService {
       .replace('{lang}', lang);
 
     return this.http.get(
-      this.config.getSettings('app.apiEndpoint') +
+      config.app.apiEndpoint +
         '/' +
-        this.config.getSettings('app.machineName') +
+        config.app.machineName +
         path
     );
   }
@@ -399,9 +388,7 @@ export class TextService {
   mapIllustrationImagePaths(text: string, collectionId: string) {
     let galleryId = 44;
     try {
-      const galleries = this.config.getSettings(
-        'settings.galleryCollectionMapping'
-      ) as any;
+      const galleries = config.settings?.galleryCollectionMapping ?? [];
       galleryId = galleries[collectionId];
     } catch (err) {}
 

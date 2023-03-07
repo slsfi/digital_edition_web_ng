@@ -1,11 +1,11 @@
 import { Component, Renderer2, ElementRef } from '@angular/core';
+import { Router } from '@angular/router';
 import { ModalController, NavController, NavParams } from '@ionic/angular';
 import { EventsService } from 'src/app/services/events/events.service';
-import { Router } from '@angular/router';
-import { ConfigService } from 'src/app/services/config/core/config.service';
 import { GalleryService } from 'src/app/services/gallery/gallery.service';
 import { UserSettingsService } from 'src/app/services/settings/user-settings.service';
 import { LanguageService } from 'src/app/services/languages/language.service';
+import { config } from "src/app/services/config/config";
 
 /**
  * Generated class for the IllustrationPage page.
@@ -41,11 +41,10 @@ export class IllustrationPage {
     private elementRef: ElementRef,
     private galleryService: GalleryService,
     protected modalController: ModalController,
-    private config: ConfigService,
     public userSettingsService: UserSettingsService,
     private events: EventsService,
     public languageService: LanguageService,
-    public router: Router,
+    public router: Router
   ) {
     if (this.navParams.get('showDescription') !== undefined) {
       this.showDescription = this.navParams.get('showDescription');
@@ -53,9 +52,9 @@ export class IllustrationPage {
     if (this.navParams.get('zoomImage') !== undefined) {
       this.zoomImage = this.navParams.get('zoomImage');
     }
-    this.language = this.config.getSettings('i18n.locale') as any;
+    this.language = config.i18n?.locale ?? 'sv';
     this.imgMetadata = [];
-    this.languageService.getLanguage().subscribe((lang: string) => {
+    this.languageService.getLanguage().subscribe((lang: string) => {
       this.language = lang;
       this.getImageMetadata();
     });
@@ -79,9 +78,10 @@ export class IllustrationPage {
     this.galleryService.getMediaMetadata(this.navParams.get('imageNumber'), this.language)
       .subscribe(data => {
         this.imgMetadata = data;
-        this.imgPath = this.config.getSettings('app.apiEndpoint') + '/' +
-        this.config.getSettings('app.machineName') + '/gallery/get/' + this.imgMetadata['media_collection_id' as keyof typeof this.imgMetadata] + '/' + this.imgMetadata['image_filename_front' as keyof typeof this.imgMetadata];
-    });
+        this.imgPath = config.app.apiEndpoint + '/' +
+        config.app.machineName + '/gallery/get/' + this.imgMetadata['media_collection_id' as keyof typeof this.imgMetadata] + '/' + this.imgMetadata['image_filename_front' as keyof typeof this.imgMetadata];
+      }
+    );
   }
 
   async zoomImg() {
@@ -112,10 +112,6 @@ export class IllustrationPage {
   }
   ionViewWillEnter() {
     this.events.publishIonViewWillEnter(this.constructor.name);
-  }
-
-  ionViewWillLoad() {
-
   }
 
   goToMediaCollection() {

@@ -5,6 +5,7 @@ import { CommonFunctionsService } from 'src/app/services/common-functions/common
 import { LanguageService } from 'src/app/services/languages/language.service';
 import { MdContentService } from 'src/app/services/md/md-content.service';
 import { ReadPopoverService } from 'src/app/services/settings/read-popover.service';
+
 /**
  * Class for the LegendComponent component.
  *
@@ -65,13 +66,13 @@ export class LegendComponent {
   }
 
   getMdContent(fileID: string) {
-    this.mdContentService.getMdContent(fileID).subscribe(
-      text => {
+    this.mdContentService.getMdContent(fileID).subscribe({
+      next: text => {
         this.text = text.content;
         this.textLoading = false;
         this.scrollToInitialTextPosition();
       },
-      error => {
+      error: e => {
         if (fileID.split('-').length > 3) {
           this.getMdContent(this.language + '-' + this.staticMdLegendFolderNumber + '-' + this.collectionId);
         } else if (fileID.split('-')[2] !== '00') {
@@ -87,7 +88,7 @@ export class LegendComponent {
           });
         }
       }
-    );
+    });
   }
 
   private setUpTextListeners() {
@@ -148,39 +149,6 @@ export class LegendComponent {
         }.bind(this), 500);
       });
     }
-  }
-
-  /**
-   * This function can be used to scroll a container so that the element which it
-   * contains is placed either at the top edge of the container or in the center
-   * of the container. This function can be called multiple times simultaneously
-   * on elements in different containers, unlike the native scrollIntoView function
-   * which cannot be called multiple times simultaneously in Chrome due to a bug.
-   * Valid values for yPosition are 'top' and 'center'.
-   */
-   private scrollElementIntoView(element: HTMLElement, yPosition = 'center', offset = 0) {
-    if (element === undefined || element === null || (yPosition !== 'center' && yPosition !== 'top')) {
-      return;
-    }
-    // Find the scrollable container of the element which is to be scrolled into view
-    let container = element.parentElement;
-    while (container !== null && container.parentElement !== null &&
-     !container.classList.contains('scroll-content')) {
-      container = container.parentElement;
-    }
-    if (container === null || container.parentElement === null) {
-      return;
-    }
-
-    const y = Math.floor(element.getBoundingClientRect().top + container.scrollTop - container.getBoundingClientRect().top);
-    let baseOffset = 10;
-    if (yPosition === 'center') {
-      baseOffset = Math.floor(container.offsetHeight / 2);
-      if (baseOffset > 45) {
-        baseOffset = baseOffset - 45;
-      }
-    }
-    container.scrollTo({top: y - baseOffset - offset, behavior: 'smooth'});
   }
 
 }

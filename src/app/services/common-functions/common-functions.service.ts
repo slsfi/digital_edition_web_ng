@@ -165,12 +165,18 @@ export class CommonFunctionsService {
           const viewElements = document.querySelector('page-read:not([ion-page-hidden])')?.getElementsByClassName('read-column');
           if (viewElements && viewElements[0] !== undefined) {
             const lastViewElement = viewElements[viewElements.length - 1] as HTMLElement;
-            const scrollingContainer = document.querySelector('page-read:not([ion-page-hidden]) ion-content.publication-ion-content::part(scroll)');
-            if (scrollingContainer !== null) {
-              const x = lastViewElement.getBoundingClientRect().right + scrollingContainer.scrollLeft -
-              scrollingContainer.getBoundingClientRect().left;
-              scrollingContainer.scrollTo({top: 0, left: x, behavior: 'smooth'});
-              clearInterval(that.intervalTimerId);
+            let scrollingContainer = document.querySelector('page-read:not([ion-page-hidden]) ion-content.publication-ion-content');
+            if (scrollingContainer) {
+              const shadowContainer = scrollingContainer.shadowRoot;
+              if (shadowContainer) {
+                scrollingContainer = shadowContainer.querySelector('[part="scroll"]');
+                if (scrollingContainer) {
+                  const x = lastViewElement.getBoundingClientRect().right + scrollingContainer.scrollLeft -
+                  scrollingContainer.getBoundingClientRect().left;
+                  scrollingContainer.scrollTo({top: 0, left: x, behavior: 'smooth'});
+                  clearInterval(that.intervalTimerId);
+                }
+              }
             }
           }
         }
@@ -213,7 +219,7 @@ export class CommonFunctionsService {
    * found on the elastic-search page.
    * However, the regex does take care of self-closing tags in the match string, for instance <img/>.
    */
-  insertSearchMatchTags(text: string, matches: string[]) {
+  insertSearchMatchTags(text: string, matches: string[] | undefined) {
     if (matches instanceof Array && matches.length > 0) {
       matches.forEach((val) => {
         if (val) {

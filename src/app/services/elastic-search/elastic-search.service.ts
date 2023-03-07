@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { ConfigService } from '../config/core/config.service';
+import { config } from "src/app/services/config/config";
 
 @Injectable()
 export class ElasticSearchService {
@@ -16,13 +16,15 @@ export class ElasticSearchService {
   private fixedFilters?: object[];
   private textTypes = [];
 
-  constructor(private config: ConfigService, private http: HttpClient) {
+  constructor(
+    private http: HttpClient
+  ) {
     // Should fail if config is missing.
     try {
-      this.apiEndpoint = this.config.getSettings('app.apiEndpoint');
-      this.machineName = this.config.getSettings('app.machineName');
-      this.indices = this.config.getSettings('ElasticSearch.indices');
-      this.aggregations = this.config.getSettings('ElasticSearch.aggregations');
+      this.apiEndpoint = config.app?.apiEndpoint ?? '';
+      this.machineName = config.app?.machineName ?? '';
+      this.indices = config.ElasticSearch?.indices ?? undefined;
+      this.aggregations = config.ElasticSearch?.aggregations ?? undefined;
     } catch (e: any) {
       console.error(
         'Failed to load Elastic Search Service. Configuration error.',
@@ -46,9 +48,7 @@ export class ElasticSearchService {
 
     // Add additional fields that should be returned in hits from config file
     try {
-      const configSourceFields = this.config.getSettings(
-        'ElasticSearch.source'
-      );
+      const configSourceFields = config.ElasticSearch?.source ?? undefined;
       if (configSourceFields !== undefined && configSourceFields.length > 0) {
         // Append additional fields to this.source if not already present
         for (let i = 0; i < configSourceFields.length; i++) {
@@ -61,9 +61,9 @@ export class ElasticSearchService {
 
     // Should not fail if config is missing.
     try {
-      this.fixedFilters = this.config.getSettings('ElasticSearch.fixedFilters');
-      this.textTypes = this.config.getSettings('ElasticSearch.types');
-      this.suggestions = this.config.getSettings('ElasticSearch.suggestions');
+      this.fixedFilters = config.ElasticSearch?.fixedFilters ?? undefined;
+      this.textTypes = config.ElasticSearch?.types ?? undefined;
+      this.suggestions = config.ElasticSearch?.suggestions ?? undefined;
     } catch (e: any) {
       console.error(
         'Failed to load Elastic Search Service. Configuration error.',

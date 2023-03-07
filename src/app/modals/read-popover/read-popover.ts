@@ -1,11 +1,10 @@
 import { Component } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
-
 import { ModalController, NavParams } from '@ionic/angular';
+import { TranslateService } from '@ngx-translate/core';
 import { EventsService } from 'src/app/services/events/events.service';
-import { ConfigService } from 'src/app/services/config/core/config.service';
 import { Fontsize, ReadPopoverService } from 'src/app/services/settings/read-popover.service';
 import { AnalyticsService } from 'src/app/services/analytics/analytics.service';
+import { config } from "src/app/services/config/config";
 
 /**
  * This is a popover accessed in ReadPage.
@@ -52,7 +51,6 @@ export class ReadPopoverPage {
 
   constructor(
     public viewCtrl: ModalController,
-    private config: ConfigService,
     public readPopoverService: ReadPopoverService,
     public translate: TranslateService,
     private events: EventsService,
@@ -60,7 +58,7 @@ export class ReadPopoverPage {
     private analyticsService: AnalyticsService
   ) {
     const toggles = this.params.get('toggles');
-    this.readToggles = this.config.getSettings('settings.readToggles') as any;
+    this.readToggles = config.settings?.readToggles ?? undefined;
 
     if ( toggles !== undefined && toggles !== null && Object.keys(toggles).length !== 0 ) {
       this.readToggles = toggles;

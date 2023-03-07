@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
-import { ConfigService } from 'src/app/services/config/core/config.service';
 import { EventsService } from 'src/app/services/events/events.service';
 import { UserSettingsService } from 'src/app/services/settings/user-settings.service';
+import { config } from "src/app/services/config/config";
 
 @Component({
   selector: 'title-logo',
@@ -15,14 +15,9 @@ export class TitleLogoComponent {
 
   constructor(
     private events: EventsService,
-    public userSettingsService: UserSettingsService,
-    private config: ConfigService
+    public userSettingsService: UserSettingsService
   ) {
-    try {
-      this.siteLogoURL = this.config.getSettings('app.siteLogoURL') as any;
-    } catch ( e ) {
-      this.siteLogoURL = 'https://www.sls.fi/';
-    }
+    this.siteLogoURL = config.app?.siteLogoURL ?? 'https://www.sls.fi/';
   }
 
   ionViewWillLeave() {

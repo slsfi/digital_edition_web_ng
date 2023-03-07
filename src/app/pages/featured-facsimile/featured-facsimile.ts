@@ -47,8 +47,8 @@ export class FeaturedFacsimilePage {
   }
 
   getFacsimiles() {
-    this.facsimileService.getFeaturedFacsimiles().subscribe(
-      facsimileCollections => {
+    this.facsimileService.getFeaturedFacsimiles().subscribe({
+      next: (facsimileCollections) => {
         const f_collections = facsimileCollections as any;
         const facsimiles = [];
         for (const f of f_collections) {
@@ -61,9 +61,8 @@ export class FeaturedFacsimilePage {
         this.facsimileCollections = f_collections;
         console.log(this.facsimileCollections);
       },
-      err => console.error(err),
-      () => console.log('get facsimiles')
-    );
+      error: (err) => { console.error(err); }
+    });
   }
 
   async openFacsimileCollection(facsimileCollection: any) {

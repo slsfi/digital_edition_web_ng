@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { LanguageService } from '../languages/language.service';
-import { Observable, Subscription } from 'rxjs';
-import { ConfigService } from '../config/core/config.service';
 import { HttpClient } from '@angular/common/http';
+import { Observable, Subscription } from 'rxjs';
+import { LanguageService } from '../languages/language.service';
+import { config } from "src/app/services/config/config";
 
 @Injectable()
 export class TableOfContentsService {
@@ -13,22 +13,19 @@ export class TableOfContentsService {
   apiEndpoint: string;
 
   constructor(
-    private config: ConfigService,
     private languageService: LanguageService,
     private http: HttpClient
   ) {
-    this.apiEndpoint = this.config.getSettings('app.apiEndpoint') as string;
+    this.apiEndpoint = config.app?.apiEndpoint ?? '';
     try {
-      const simpleApi = this.config.getSettings('app.simpleApi');
+      const simpleApi = config.app?.simpleApi ?? '';
       if (simpleApi) {
         this.apiEndpoint = simpleApi as string;
       }
     } catch (e) {}
 
     try {
-      const multilingualTOC = this.config.getSettings(
-        'i18n.multilingualTOC'
-      ) as boolean;
+      const multilingualTOC = config.i18n?.multilingualTOC ?? false;
       if (multilingualTOC) {
         this.multilingualTOC = multilingualTOC;
 
@@ -58,7 +55,7 @@ export class TableOfContentsService {
     let url =
       this.apiEndpoint +
       '/' +
-      this.config.getSettings('app.machineName') +
+      config.app.machineName +
       this.tableOfContentsUrl +
       id;
 
@@ -76,9 +73,9 @@ export class TableOfContentsService {
   getTableOfContentsGroup(id: string, group_id: string): Observable<any> {
     // @TODO add multilingual support to this as well...
     return this.http.get(
-      this.config.getSettings('app.apiEndpoint') +
+      config.app.apiEndpoint +
         '/' +
-        this.config.getSettings('app.machineName') +
+        config.app.machineName +
         this.tableOfContentsUrl +
         id +
         '/group/' +
@@ -92,9 +89,9 @@ export class TableOfContentsService {
     const ed_id = arr[0];
     const item_id = arr[1];
     return this.http.get(
-      this.config.getSettings('app.apiEndpoint') +
+      config.app.apiEndpoint +
         '/' +
-        this.config.getSettings('app.machineName') +
+        config.app.machineName +
         this.tableOfContentsUrl +
         ed_id +
         '/prevnext/' +
@@ -105,9 +102,9 @@ export class TableOfContentsService {
   getFirst(collectionID: string): Observable<any> {
     // @TODO add multilingual support to this as well...
     return this.http.get(
-      this.config.getSettings('app.apiEndpoint') +
+      config.app.apiEndpoint +
         '/' +
-        this.config.getSettings('app.machineName') +
+        config.app.machineName +
         this.tableOfContentsUrl +
         collectionID +
         '/first'

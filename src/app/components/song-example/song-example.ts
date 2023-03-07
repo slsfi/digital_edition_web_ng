@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
-import { Song } from 'src/app/models/song.model';
-import { ConfigService } from 'src/app/services/config/core/config.service';
 import { SongService } from 'src/app/services/song/song.service';
+import { config } from "src/app/services/config/config";
+import { Song } from 'src/app/models/song.model';
 
 declare var MIDIjs: any;
 
@@ -27,14 +27,13 @@ export class SongExampleComponent {
   playing = false;
 
   constructor(
-    public songService: SongService,
-    protected config: ConfigService
+    public songService: SongService
   ) {
     this.setAudio();
     this.playing = false;
-    this.musicXmlPath = this.config.getSettings('app.apiEndpoint') + '/' +
-                        this.config.getSettings('app.machineName') +
-                        '/song-files/musicxml/'
+    this.musicXmlPath = config.app.apiEndpoint + '/' +
+                        config.app.machineName +
+                        '/song-files/musicxml/';
   }
 
   ngOnInit() {
@@ -65,37 +64,30 @@ export class SongExampleComponent {
   }
 
   getSong(id: any) {
-    this.songService.getSong(id).subscribe(
-      song => {
+    this.songService.getSong(id).subscribe({
+      next: song => {
         this.song = new Song(song);
       },
-      err => console.error(err),
-      () => console.log('get song')
-    );
+      error: err => { console.error(err) }
+    });
   }
 
   getSongDatafile(id: any) {
-    this.songService.getSong(id).subscribe(
-      song => {
+    this.songService.getSong(id).subscribe({
+      next: song => {
         this.song = new Song(song);
       },
-      err => console.error(err),
-      () => console.log('get song')
-    );
+      error: err => { console.error(err) }
+    });
   }
 
   getSongByItemId () {
-    this.songService.getSongById(this.legacyId).subscribe(
-      song => {
+    this.songService.getSongById(this.legacyId).subscribe({
+      next: song => {
         this.getSong(song.id);
       },
-      err => console.error(err),
-      () => console.log('get song by itemid')
-    );
-  }
-
-  ionViewDidLoad() {
-    // console.log('ionViewDidLoad SongPage');
+      error: err => { console.error(err) }
+    });
   }
 
   ionViewWillLeave() {

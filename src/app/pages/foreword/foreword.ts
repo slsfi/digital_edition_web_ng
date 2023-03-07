@@ -6,13 +6,13 @@ import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { ReadPopoverPage } from 'src/app/modals/read-popover/read-popover';
 import { ReferenceDataModalPage } from 'src/app/modals/reference-data-modal/reference-data-modal';
-import { ConfigService } from 'src/app/services/config/core/config.service';
 import { EventsService } from 'src/app/services/events/events.service';
 import { LanguageService } from 'src/app/services/languages/language.service';
 import { ReadPopoverService } from 'src/app/services/settings/read-popover.service';
 import { UserSettingsService } from 'src/app/services/settings/user-settings.service';
 import { TextService } from 'src/app/services/texts/text.service';
 import { TableOfContentsService } from 'src/app/services/toc/table-of-contents.service';
+import { config } from "src/app/services/config/config";
 
 /**
  * Generated class for the ForewordPage page.
@@ -39,7 +39,7 @@ export class ForewordPage {
   protected collection: any;
   forewordSelected?: boolean;
   showURNButton: boolean;
-  showDisplayOptionsButton: Boolean = true;
+  showViewOptionsButton: Boolean = true;
   textLoading: Boolean = true;
   languageSubscription: Subscription | null;
 
@@ -51,25 +51,14 @@ export class ForewordPage {
     protected events: EventsService,
     public userSettingsService: UserSettingsService,
     protected tableOfContentsService: TableOfContentsService,
-    public config: ConfigService,
     protected popoverCtrl: PopoverController,
     public readPopoverService: ReadPopoverService,
     private modalController: ModalController,
     public translateService: TranslateService,
     private route: ActivatedRoute,
   ) {
-    try {
-      this.showURNButton = this.config.getSettings('showURNButton.pageForeword');
-    } catch (e) {
-      this.showURNButton = false;
-    }
-
-    try {
-      this.showDisplayOptionsButton = this.config.getSettings('showDisplayOptionsButton.pageForeword');
-    } catch (e) {
-      this.showDisplayOptionsButton = true;
-    }
-
+    this.showURNButton = config.page?.foreword?.showURNButton ?? false;
+    this.showViewOptionsButton = config.page?.foreword?.showViewOptionsButton ?? true;
     this.languageSubscription = null;
   }
 
@@ -125,7 +114,7 @@ export class ForewordPage {
     this.textLoading = true;
     //this.getTocRoot(id);
     this.textService.getForewordPage(id, lang).subscribe({
-      next: res => {
+      next: (res) => {
         if (res.content && res.content !== 'File not found') {
           this.text = this.sanitizer.bypassSecurityTrustHtml(
             res.content.replace(/images\//g, 'assets/images/')
@@ -136,7 +125,7 @@ export class ForewordPage {
         }
         this.textLoading = false;
       },
-      error: e => {
+      error: (e) => {
         this.errorMessage = <any>e;
         this.textLoading = false;
         this.setNoForewordText();
@@ -147,10 +136,10 @@ export class ForewordPage {
 
   setNoForewordText() {
     this.translateService.get('Read.ForewordPage.NoForeword').subscribe({
-      next: translation => {
+      next: (translation) => {
         this.text = translation;
       },
-      error: translationError => { this.text = ''; }
+      error: (translationError) => { this.text = ''; }
     });
   }
 
@@ -164,7 +153,7 @@ export class ForewordPage {
           tocItems.forewordSelected = this.forewordSelected;
           this.events.publishTableOfContentsLoaded({tocItems: tocItems, searchTocItem: true, collectionID: tocItems.collectionId, 'caller':  'foreword'});
         },
-        error: e => { 
+        error: (e) => { 
           this.errorMessage = <any>e;
          }
       });

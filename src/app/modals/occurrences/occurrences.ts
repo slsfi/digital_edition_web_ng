@@ -1,19 +1,19 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
+import { ModalController, NavController, NavParams, Platform } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
 import leaflet from 'leaflet';
+import { Occurrence, OccurrenceResult } from 'src/app/models/occurrence.model';
+import { SingleOccurrence } from 'src/app/models/single-occurrence.model';
 import { SemanticDataService } from 'src/app/services/semantic-data/semantic-data.service';
 import { LanguageService } from 'src/app/services/languages/language.service';
-import { ModalController, NavController, NavParams, Platform } from '@ionic/angular';
 import { TextService } from 'src/app/services/texts/text.service';
 import { TooltipService } from 'src/app/services/tooltips/tooltip.service';
 import { OccurrenceService } from 'src/app/services/occurrence/occurence.service';
 import { EventsService } from 'src/app/services/events/events.service';
 import { AnalyticsService } from 'src/app/services/analytics/analytics.service';
 import { CommonFunctionsService } from 'src/app/services/common-functions/common-functions.service';
-import { Router } from '@angular/router';
-import { ConfigService } from 'src/app/services/config/core/config.service';
-import { Occurrence, OccurrenceResult } from 'src/app/models/occurrence.model';
-import { SingleOccurrence } from 'src/app/models/single-occurrence.model';
+import { config } from "src/app/services/config/config";
 
 /**
  * Generated class for the OccurrencesPage page.
@@ -76,7 +76,6 @@ export class OccurrencesPage {
               public navParams: NavParams,
               public semanticDataService: SemanticDataService,
               protected langService: LanguageService,
-              protected config: ConfigService,
               public modalCtrl: ModalController,
               private platform: Platform,
               protected textService: TextService,
@@ -89,11 +88,7 @@ export class OccurrencesPage {
               public commonFunctions: CommonFunctionsService,
               public router: Router,
   ) {
-    try {
-      this.simpleWorkMetadata = this.config.getSettings('useSimpleWorkMetadata') as any;
-    } catch (e) {
-      this.simpleWorkMetadata = false;
-    }
+    this.simpleWorkMetadata = config.useSimpleWorkMetadata ?? false;
 
     this.occurrenceResult = this.navParams.get('occurrenceResult');
     if ( this.occurrenceResult !== undefined ) {
@@ -134,29 +129,10 @@ export class OccurrencesPage {
     this.year_born_deceased_string = this.tooltipService.constructYearBornDeceasedString(this.occurrenceResult.date_born,
       this.occurrenceResult.date_deceased);
 
-    try {
-      this.singleOccurrenceType = this.config.getSettings('SingleOccurrenceType') as any;
-    } catch (e) {
-      this.singleOccurrenceType = null;
-    }
-
-    try {
-      this.hideTypeAndDescription = this.config.getSettings('Occurrences.HideTypeAndDescription') as any;
-    } catch (e) {
-      this.hideTypeAndDescription = false;
-    }
-
-    try {
-      this.hideCityRegionCountry = this.config.getSettings('Occurrences.hideCityRegionCountry') as any;
-    } catch (e) {
-      this.hideCityRegionCountry = false;
-    }
-
-    try {
-      this.showPublishedStatus = this.config.getSettings('Occurrences.ShowPublishedStatus') as any;
-    } catch (e) {
-      this.showPublishedStatus = 2;
-    }
+    this.singleOccurrenceType = config.SingleOccurrenceType ?? null;
+    this.hideTypeAndDescription = config.Occurrences?.HideTypeAndDescription ?? false;
+    this.hideCityRegionCountry = config.Occurrences?.hideCityRegionCountry ?? false;
+    this.showPublishedStatus = config.Occurrences?.ShowPublishedStatus ?? 2;
 
     this.setObjectType();
     this.getOccurrenceTexts(this.occurrenceResult);

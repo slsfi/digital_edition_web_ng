@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
+import { Subscription } from 'rxjs';
 import { EventsService } from 'src/app/services/events/events.service';
 import { LanguageService } from 'src/app/services/languages/language.service';
 import { MdContentService } from 'src/app/services/md/md-content.service';
 import { UserSettingsService } from 'src/app/services/settings/user-settings.service';
-import { Subscription } from 'rxjs';
 
 /**
  * List of collections.

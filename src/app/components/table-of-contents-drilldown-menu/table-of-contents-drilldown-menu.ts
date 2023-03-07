@@ -1,12 +1,12 @@
 import { Component, Input } from '@angular/core';
+import { Router } from '@angular/router';
+import { Platform } from '@ionic/angular';
 import { TranslateModule, TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { GeneralTocItem, TableOfContentsCategory } from 'src/app/models/table-of-contents.model';
 import { EventsService } from 'src/app/services/events/events.service';
 import { TableOfContentsService } from 'src/app/services/toc/table-of-contents.service';
-import { Platform } from '@ionic/angular';
-import { Router } from '@angular/router';
-import { ConfigService } from 'src/app/services/config/core/config.service';
 import { StorageService } from 'src/app/services/storage/storage.service';
+import { config } from "src/app/services/config/config";
+import { GeneralTocItem, TableOfContentsCategory } from 'src/app/models/table-of-contents.model';
 
 /**
  * Class for the TableOfContentsDrilldownMenuComponent component.
@@ -54,8 +54,7 @@ export class TableOfContentsDrilldownMenuComponent {
     public platform: Platform,
     protected storage: StorageService,
     public translate: TranslateService,
-    private config: ConfigService,
-    private router: Router,
+    private router: Router
   ) {
     // this.open = this.action === 'open' ? true : false;
     this.registerEventListeners();
@@ -151,19 +150,11 @@ export class TableOfContentsDrilldownMenuComponent {
       this.menuStack.push(data.tocItems);
     }
 
-    try {
-      this.sortableLetters = this.config.getSettings('settings.sortableLetters');
-    } catch (e) {
-      this.sortableLetters = null;
-      console.log(e);
-    }
-
+    this.sortableLetters = config.settings?.sortableLetters ?? null;
     this.collectionId = data.tocItems.collectionId;
     this.collectionName = data.tocItems.text;
-
     this.titleStack = [];
     this.titleStack.push(data.tocItems.text || '');
-
     this.titleText = '';
     this.introText = '';
 

@@ -2,14 +2,7 @@ import { Component, Input, Output, EventEmitter, ChangeDetectorRef, ChangeDetect
 import { Router } from '@angular/router';
 import { LoadingController, Platform } from '@ionic/angular';
 import { TranslateModule, TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { InnerMenuOptionModel } from 'src/app/models/inner-menu-option.model';
-import { MenuOptionModel } from 'src/app/models/menu-option.model';
-import { SideMenuSettings } from 'src/app/models/side-menu-settings';
-import { SideMenuRedirectEvent, SideMenuRedirectEventData } from 'src/app/models/sidemenu-redirect-events';
-import { GeneralTocItem } from 'src/app/models/table-of-contents.model';
-import { TocAccordionMenuOptionModel } from 'src/app/models/toc-accordion-menu-option.model';
 import { CommonFunctionsService } from 'src/app/services/common-functions/common-functions.service';
-import { ConfigService } from 'src/app/services/config/core/config.service';
 import { EventsService } from 'src/app/services/events/events.service';
 import { LanguageService } from 'src/app/services/languages/language.service';
 import { MetadataService } from 'src/app/services/metadata/metadata.service';
@@ -17,6 +10,13 @@ import { UserSettingsService } from 'src/app/services/settings/user-settings.ser
 import { StorageService } from 'src/app/services/storage/storage.service';
 import { TextService } from 'src/app/services/texts/text.service';
 import { TableOfContentsService } from 'src/app/services/toc/table-of-contents.service';
+import { InnerMenuOptionModel } from 'src/app/models/inner-menu-option.model';
+import { MenuOptionModel } from 'src/app/models/menu-option.model';
+import { SideMenuSettings } from 'src/app/models/side-menu-settings';
+import { SideMenuRedirectEvent, SideMenuRedirectEventData } from 'src/app/models/sidemenu-redirect-events';
+import { GeneralTocItem } from 'src/app/models/table-of-contents.model';
+import { TocAccordionMenuOptionModel } from 'src/app/models/toc-accordion-menu-option.model';
+import { config } from "src/app/services/config/config";
 
 @Component({
   selector: 'table-of-contents-accordion',
@@ -187,7 +187,6 @@ export class TableOfContentsAccordionComponent {
     public cdRef: ChangeDetectorRef,
     protected storage: StorageService,
     public loadingCtrl: LoadingController,
-    public config: ConfigService,
     public languageService: LanguageService,
     public userSettingsService: UserSettingsService,
     public translate: TranslateService,
@@ -196,7 +195,7 @@ export class TableOfContentsAccordionComponent {
     public tocService: TableOfContentsService,
     public commonFunctions: CommonFunctionsService,
     private ngZone: NgZone,
-    private router: Router,
+    private router: Router
   ) {
   }
 
@@ -528,47 +527,13 @@ export class TableOfContentsAccordionComponent {
   }
 
   setConfigs() {
-    try {
-      this.searchTocItemInAccordionByTitle = this.config.getSettings('SearchTocItemInAccordionByTitle') as any;
-    } catch (e) {
-      this.searchTocItemInAccordionByTitle = false;
-    }
-
-    try {
-      this.playmanTraditionPageInMusicAccordion = this.config.getSettings('MusicAccordionShow.PlaymanTraditionPage') as any;
-    } catch (e) {
-      this.playmanTraditionPageInMusicAccordion = false;
-    }
-
-    try {
-      this.sortableLetters = this.config.getSettings('settings.sortableLetters');
-    } catch (e) {
-      this.sortableLetters = [];
-    }
-
-    try {
-      this.hasCover = this.config.getSettings('HasCover') as any;
-    } catch (e) {
-      this.hasCover = false;
-    }
-
-    try {
-      this.hasTitle = this.config.getSettings('HasTitle') as any;
-    } catch (e) {
-      this.hasTitle = false;
-    }
-
-    try {
-      this.hasForeword = this.config.getSettings('HasForeword') as any;
-    } catch (e) {
-      this.hasForeword = false;
-    }
-
-    try {
-      this.hasIntro = this.config.getSettings('HasIntro') as any;
-    } catch (e) {
-      this.hasIntro = false;
-    }
+    this.searchTocItemInAccordionByTitle = config.SearchTocItemInAccordionByTitle ?? false;
+    this.playmanTraditionPageInMusicAccordion = config.MusicAccordionShow?.PlaymanTraditionPage ?? false;
+    this.sortableLetters = config.settings?.sortableLetters ?? [];
+    this.hasCover = config.HasCover ?? false;
+    this.hasTitle = config.HasTitle ?? false;
+    this.hasForeword = config.HasForeword ?? false;
+    this.hasIntro = config.HasIntro ?? false;
   }
 
   registerEventListeners() {
@@ -683,7 +648,7 @@ export class TableOfContentsAccordionComponent {
           this.events.publishTypesAccordionChange({expand: true});
         }
 
-        let language = this.config.getSettings('i18n.locale');
+        let language = config.i18n?.locale ?? 'sv';
         this.languageService.getLanguage().subscribe((lang: string) => {
           language = lang;
         });

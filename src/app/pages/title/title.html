@@ -12,7 +12,7 @@
         <span *ngIf="!(userSettingsService.isMobile())" class="side-title">{{'Reference.share' | translate }}</span>
       </ion-button>
       -->
-      <ion-button *ngIf="showDisplayOptionsButton" #settingsIconElement (click)="showReadSettingsPopover($event)" id="settings-icon">
+      <ion-button *ngIf="showViewOptionsButton" #settingsIconElement (click)="showReadSettingsPopover($event)" id="settings-icon">
         <ion-icon slot="start" class="settings-icon" name="settings-sharp"></ion-icon>
         <span *ngIf="!(userSettingsService.isMobile())" class="side-title">{{'Read.Popover.Options' | translate }}</span>
       </ion-button>

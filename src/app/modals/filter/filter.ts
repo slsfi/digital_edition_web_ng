@@ -88,8 +88,8 @@ export class FilterPage {
 
   getFilterPersonTypes() {
     this.showLoading = true;
-    this.semanticDataService.getFilterPersonTypes().subscribe(
-      filterPersonTypes => {
+    this.semanticDataService.getFilterPersonTypes().subscribe({
+      next: filterPersonTypes => {
         this.filterPersonTypes = filterPersonTypes['aggregations']['types']['buckets'];
         this.filterPersonTypes?.forEach( cat => {
           cat.name = cat.key;
@@ -108,14 +108,14 @@ export class FilterPage {
         });
         this.showLoading = false;
       },
-      error =>  {this.errorMessage = <any>error}
-    );
+      error: e =>  { this.errorMessage = <any>e; }
+    });
   }
 
   getFilterCategoryTypes() {
     this.showLoading = true;
-    this.semanticDataService.getFilterCategoryTypes().subscribe(
-      filterCategoryTypes => {
+    this.semanticDataService.getFilterCategoryTypes().subscribe({
+      next: filterCategoryTypes => {
         this.filterCategoryTypes = filterCategoryTypes['aggregations']['types']['buckets'];
         this.filterCategoryTypes?.forEach( cat => {
           cat.name = cat.key;
@@ -134,14 +134,14 @@ export class FilterPage {
         });
         this.showLoading = false;
       },
-      error =>  {this.errorMessage = <any>error}
-    );
+      error: e => { this.errorMessage = <any>e; }
+    });
   }
 
   getFilterPlaceCountries() {
     this.showLoading = true;
-    this.semanticDataService.getFilterPlaceCountries().subscribe(
-      filterPlaceCountries => {
+    this.semanticDataService.getFilterPlaceCountries().subscribe({
+      next: filterPlaceCountries => {
         this.filterPlaceCountries = filterPlaceCountries['aggregations']['countries']['buckets'];
         this.filterPlaceCountries?.forEach( cat => {
           cat.name = cat.key;
@@ -160,8 +160,8 @@ export class FilterPage {
         });
         this.showLoading = false;
       },
-      error =>  {this.errorMessage = <any>error}
-    );
+      error: e => { this.errorMessage = <any>e; }
+    });
   }
 
   apply() {

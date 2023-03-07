@@ -1,14 +1,14 @@
 import { Component, Input, NgZone, Renderer2 } from '@angular/core';
-import {} from 'fs';
-import { Subscription } from 'rxjs';
 import { ModalController, PopoverController } from '@ionic/angular';
+import { Subscription } from 'rxjs';
+import {} from 'fs';
 import { Fontsize, ReadPopoverService } from 'src/app/services/settings/read-popover.service';
 import { UserSettingsService } from 'src/app/services/settings/user-settings.service';
 import { MdContentService } from 'src/app/services/md/md-content.service';
-import { ConfigService } from 'src/app/services/config/core/config.service';
 import { CommonFunctionsService } from 'src/app/services/common-functions/common-functions.service';
 import { ReferenceDataModalPage } from 'src/app/modals/reference-data-modal/reference-data-modal';
 import { ReadPopoverPage } from 'src/app/modals/read-popover/read-popover';
+import { config } from "src/app/services/config/config";
 
 declare var ePub: any;
 
@@ -60,7 +60,7 @@ export class EpubComponent {
   public downloadURL: any;
 
   public showURNButton: boolean;
-  showDisplayOptionsButton: Boolean = true;
+  showViewOptionsButton: Boolean = true;
 
   private unlistenKeyDownEvents?: () => void;
 
@@ -71,7 +71,6 @@ export class EpubComponent {
     public readPopoverService: ReadPopoverService,
     private renderer2: Renderer2,
     private ngZone: NgZone,
-    private config: ConfigService,
     public commonFunctions: CommonFunctionsService
   ) {
     this.tocMenuOpen = false;
@@ -96,18 +95,9 @@ export class EpubComponent {
     this.windowResizeTimeoutId = null;
     this.handleWindowResize = null;
     this.epubFileExists = true;
-
-    try {
-      this.showURNButton = this.config.getSettings('showURNButton.pageEpub') as any;
-    } catch (e) {
-      this.showURNButton = false;
-    }
-
-    try {
-      this.showDisplayOptionsButton = this.config.getSettings('showDisplayOptionsButton.pageEpub') as any;
-    } catch (e) {
-      this.showDisplayOptionsButton = true;
-    }
+    this.showURNButton = config.page?.epub?.showURNButton ?? false;
+    this.showViewOptionsButton = config.page?.epub?.showViewOptionsButton ?? true;
+    this.availableEpubs = config.AvailableEpubs ?? [];
   }
 
   ngOnInit() {
@@ -115,16 +105,16 @@ export class EpubComponent {
   }
 
   ngOnDestroy() {
-    if (this.splitPaneObserver !== null && this.splitPaneObserver !== undefined) {
+    if (this.splitPaneObserver) {
       this.splitPaneObserver.disconnect();
     }
-    if (this.fontsizeSubscription !== null && this.fontsizeSubscription !== undefined) {
+    if (this.fontsizeSubscription) {
       this.fontsizeSubscription.unsubscribe();
     }
     if (this.unlistenKeyDownEvents !== undefined) {
       this.unlistenKeyDownEvents();
     }
-    if (this.handleWindowResize !== null && this.handleWindowResize !== undefined) {
+    if (this.handleWindowResize) {
       window.removeEventListener('resize', this.handleWindowResize);
     }
     if (this.book !== undefined) {
@@ -314,15 +304,10 @@ export class EpubComponent {
 
     }); // End of runOutsideAngular
 
-    try {
-      this.availableEpubs = this.config.getSettings('AvailableEpubs') as any;
-      for ( const epub in this.availableEpubs ) {
-        if ( this.availableEpubs[epub]['filename'] === this.epubFileName ) {
-          this.downloadURL = this.availableEpubs[epub]['download'];
-        }
+    for ( const epub in this.availableEpubs ) {
+      if ( this.availableEpubs[epub]['filename'] === this.epubFileName ) {
+        this.downloadURL = this.availableEpubs[epub]['download'];
       }
-    } catch (e) {
-      this.availableEpubs = [];
     }
   }
 

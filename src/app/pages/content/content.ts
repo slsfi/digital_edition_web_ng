@@ -4,11 +4,11 @@ import { NavController } from '@ionic/angular';
 import { Subscription } from 'rxjs';
 import { MdContent } from 'src/app/models/md-content.model';
 import { AnalyticsService } from 'src/app/services/analytics/analytics.service';
-import { ConfigService } from 'src/app/services/config/core/config.service';
 import { EventsService } from 'src/app/services/events/events.service';
 import { LanguageService } from 'src/app/services/languages/language.service';
 import { MdContentService } from 'src/app/services/md/md-content.service';
 import { SongService } from 'src/app/services/song/song.service';
+import { config } from "src/app/services/config/config";
 
 /**
  * A page used for displaying markdown content.
@@ -23,7 +23,7 @@ import { SongService } from 'src/app/services/song/song.service';
   templateUrl: 'content.html',
   styleUrls: ['content.scss']
 })
-export class ContentPage /*implements OnDestroy*/ {
+export class ContentPage {
 
   errorMessage?: string;
   appName?: string;
@@ -38,7 +38,6 @@ export class ContentPage /*implements OnDestroy*/ {
   constructor(
     public navCtrl: NavController,
     private mdContentService: MdContentService,
-    private config: ConfigService,
     protected langService: LanguageService,
     public events: EventsService,
     public songService: SongService,
@@ -46,7 +45,7 @@ export class ContentPage /*implements OnDestroy*/ {
     private route: ActivatedRoute,
   ) {
     this.languageSubscription = null;
-    this.lang = this.config.getSettings('i18n.locale');
+    this.lang = config.i18n?.locale ?? 'sv';
 
     this.langService.getLanguage().subscribe((lang) => {
       this.lang = lang;
@@ -120,26 +119,16 @@ export class ContentPage /*implements OnDestroy*/ {
   }
 
   songCategoriesConfig() {
-    try {
-      this.songCategories = this.config.getSettings(`SongCategories.${this.lang}`);
-    } catch (e) {
-      this.songCategories = [];
-    }
+    this.songCategories = config.SongCategories?.[this.lang] ?? [];
   }
 
   searchTocItem() {
-    let playManTraditionPageInMusicAccordion = false;
-
-    try {
-      playManTraditionPageInMusicAccordion = this.config.getSettings('MusicAccordionShow.PlaymanTraditionPage');
-    } catch (e) {
-      playManTraditionPageInMusicAccordion = false;
-    }
+    const playManTraditionPageInMusicAccordion = config.MusicAccordionShow?.PlaymanTraditionPage ?? false;
 
     // If playman tradition exists in musicaccordion
     // we don't have to search for it in table-of-contents-accordion component.
     // Instead we search for it in MusicAccordion
-    let language = this.config.getSettings('i18n.locale');
+    let language = config.i18n?.locale ?? 'sv';
     this.langService.getLanguage().subscribe((lang: string) => {
       language = lang;
     });
@@ -174,7 +163,7 @@ export class ContentPage /*implements OnDestroy*/ {
           this.doAnalytics(this.mdContent.id);
         }
       },
-      error: e =>  { this.errorMessage = <any>e; }
+      error: e => { this.errorMessage = <any>e; }
     });
   }
 

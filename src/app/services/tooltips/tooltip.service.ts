@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
-import { CommentService } from '../comments/comment.service';
-import { LanguageService } from '../languages/language.service';
+import { HttpClient } from '@angular/common/http';
 import { TranslateService } from '@ngx-translate/core';
 import { map, Observable, Subscription } from 'rxjs';
-import { ConfigService } from '../config/core/config.service';
-import { HttpClient } from '@angular/common/http';
+import { CommentService } from '../comments/comment.service';
+import { LanguageService } from '../languages/language.service';
+import { config } from "src/app/services/config/config";
 
 @Injectable()
 export class TooltipService {
@@ -17,14 +17,13 @@ export class TooltipService {
   BCTranslation = 'BC';
 
   constructor(
-    private config: ConfigService,
     private commentService: CommentService,
     private langService: LanguageService,
     public translate: TranslateService,
     private http: HttpClient
   ) {
-    this.apiEndPoint = this.config.getSettings('app.apiEndpoint') as string;
-    this.projectMachineName = this.config.getSettings('app.machineName') as string;
+    this.apiEndPoint = config.app?.apiEndpoint ?? '';
+    this.projectMachineName = config.app?.machineName ?? '';
 
     this.updateTranslations();
 

@@ -2,10 +2,9 @@ import { Component } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 import { ModalController, PopoverController } from '@ionic/angular';
-import {catchError, map, of, Subscription, switchMap, tap, throwError} from 'rxjs';
+import { catchError, map, Observable, of, Subscription, switchMap, tap, throwError } from 'rxjs';
 import { ReadPopoverPage } from 'src/app/modals/read-popover/read-popover';
 import { ReferenceDataModalPage } from 'src/app/modals/reference-data-modal/reference-data-modal';
-import { ConfigService } from 'src/app/services/config/core/config.service';
 import { EventsService } from 'src/app/services/events/events.service';
 import { LanguageService } from 'src/app/services/languages/language.service';
 import { MdContentService } from 'src/app/services/md/md-content.service';
@@ -14,9 +13,7 @@ import { UserSettingsService } from 'src/app/services/settings/user-settings.ser
 import { StorageService } from 'src/app/services/storage/storage.service';
 import { TextService } from 'src/app/services/texts/text.service';
 import { TableOfContentsService } from 'src/app/services/toc/table-of-contents.service';
-
-import { Observable } from 'rxjs';
-import {settings} from "../../services/config/config";
+import { config } from "src/app/services/config/config";
 
 /**
  * Generated class for the TitlePage page.
@@ -52,7 +49,7 @@ export class TitlePage {
   protected collection: any;
   titleSelected: boolean;
   showURNButton: boolean;
-  showDisplayOptionsButton: Boolean = true;
+  showViewOptionsButton: Boolean = true;
   textLoading: Boolean = false;
   languageSubscription: Subscription | null;
 
@@ -64,7 +61,6 @@ export class TitlePage {
     private storage: StorageService,
     public userSettingsService: UserSettingsService,
     protected tableOfContentsService: TableOfContentsService,
-    public config: ConfigService,
     public mdContentService: MdContentService,
     protected popoverCtrl: PopoverController,
     public readPopoverService: ReadPopoverService,
@@ -73,21 +69,9 @@ export class TitlePage {
   ) {
     this.titleSelected = true;
     this.mdContent = '';
-
-    this.hasMDTitle = settings.ProjectStaticMarkdownTitleFolder ?? '';
-
-    try {
-      this.showURNButton = this.config.getSettings('showURNButton.pageTitle');
-    } catch (e) {
-      this.showURNButton = false;
-    }
-
-    try {
-      this.showDisplayOptionsButton = this.config.getSettings('showDisplayOptionsButton.pageTitle');
-    } catch (e) {
-      this.showDisplayOptionsButton = true;
-    }
-
+    this.hasMDTitle = config.ProjectStaticMarkdownTitleFolder ?? '';
+    this.showURNButton = config.showURNButton?.pageTitle ?? false;
+    this.showViewOptionsButton = config.page?.title?.showViewOptionsButton ?? true;
     this.languageSubscription = null;
   }
 
@@ -108,6 +92,7 @@ export class TitlePage {
 
     } ) );
 
+    /* OLD VERSION OF LOADING PAGE CONTENT
     this.route.params.subscribe(params => {
       this.id = params['collectionID'];
       this.checkIfCollectionHasChildrenPdfs();
@@ -125,6 +110,7 @@ export class TitlePage {
         });
       }
     });
+    */
 
     /*
     this.route.queryParams.subscribe(params => {
@@ -148,11 +134,7 @@ export class TitlePage {
   }
 
   checkIfCollectionHasChildrenPdfs() {
-    let configChildrenPdfs = [];
-
-    try {
-      configChildrenPdfs = this.config.getSettings(`collectionChildrenPdfs.${this.id}`);
-    } catch (e) {}
+    let configChildrenPdfs = config.collectionChildrenPdfs?.[this.id] ?? [];
 
     if (configChildrenPdfs.length) {
       this.childrenPdfs = configChildrenPdfs;
