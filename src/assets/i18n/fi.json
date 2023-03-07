@@ -1,4 +1,8 @@
 {
+    "Site": {
+        "Title": "Zacharias Topelius Skrifter",
+        "Subtitle": ""
+    },
     "BrowserWarning": "Selainta ei tueta",
     "BrowserWarningInfo": "Tämä sivusto ei tue Internet Exploreria. Käytä Edgeä, Firefoxia, Chromea tai mitä tahansa muu selain.",
     "BrowserWarningClose": "Sulje",

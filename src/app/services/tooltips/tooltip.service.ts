@@ -24,19 +24,15 @@ export class TooltipService {
     private http: HttpClient
   ) {
     this.apiEndPoint = this.config.getSettings('app.apiEndpoint') as string;
-    this.projectMachineName = this.config.getSettings(
-      'app.machineName'
-    ) as string;
+    this.projectMachineName = this.config.getSettings('app.machineName') as string;
 
     this.updateTranslations();
 
-    this.languageSubscription = this.langService
-      .languageSubjectChange()
-      .subscribe((lang) => {
-        if (lang) {
-          this.updateTranslations();
-        }
-      });
+    this.languageSubscription = this.langService.languageSubjectChange().subscribe((lang) => {
+      if (lang) {
+        this.updateTranslations();
+      }
+    });
   }
 
   ngOnDestroy() {
@@ -46,65 +42,55 @@ export class TooltipService {
   }
 
   updateTranslations() {
-    this.translate.get('uncertainPersonCorresp').subscribe(
-      (translation) => {
+    this.translate.get('uncertainPersonCorresp').subscribe({
+      next: translation => {
         this.uncertainPersonCorrespTranslation = translation;
       },
-      (error) => {
+      error: e => {
         this.uncertainPersonCorrespTranslation = '';
       }
-    );
+    });
 
-    this.translate.get('fictionalPersonCorresp').subscribe(
-      (translation) => {
+    this.translate.get('fictionalPersonCorresp').subscribe({
+      next: translation => {
         this.fictionalPersonCorrespTranslation = translation;
       },
-      (error) => {
+      error: e => {
         this.fictionalPersonCorrespTranslation = '';
       }
-    );
+    });
 
-    this.translate.get('BC').subscribe(
-      (translation) => {
+    this.translate.get('BC').subscribe({
+      next: translation => {
         this.BCTranslation = translation;
       },
-      (error) => {
+      error: e => {
         this.BCTranslation = 'BC';
       }
-    );
+    });
   }
 
   getPersonTooltip(id: string): Observable<any> {
     let url = '';
-    const legacyPrefix = this.config.getSettings('app.legacyIdPrefix');
-
-    url = `${this.apiEndPoint}/${this.projectMachineName}/subject/${legacyPrefix}${id}`;
-
+    url = `${this.apiEndPoint}/${this.projectMachineName}/subject/${id}`;
     return this.http.get(url);
   }
 
   getPlaceTooltip(id: string): Observable<any> {
     let url = '';
-    const legacyPrefix = this.config.getSettings('app.legacyIdPrefix');
-
-    url = `${this.apiEndPoint}/${this.projectMachineName}/location/${legacyPrefix}${id}`;
-
+    url = `${this.apiEndPoint}/${this.projectMachineName}/location/${id}`;
     return this.http.get(url);
   }
 
   getTagTooltip(id: string): Observable<any> {
     let url = '';
-    const legacyPrefix = this.config.getSettings('app.legacyIdPrefix');
-
-    url = `${this.apiEndPoint}/${this.projectMachineName}/tag/${legacyPrefix}${id}`;
-
+    url = `${this.apiEndPoint}/${this.projectMachineName}/tag/${id}`;
     return this.http.get(url);
   }
 
   getWorkTooltip(id: string): Observable<any> {
     let url = '';
     url = `${this.apiEndPoint}/${this.projectMachineName}/work/${id}`;
-
     return this.http.get(url);
   }
 
@@ -251,17 +237,12 @@ export class TooltipService {
    * either 'page-read' or 'page-introduction'.
    * @returns Object with the following keys: maxWidth, scaleValue, top and left.
    */
-  getTooltipProperties(
-    targetElem: HTMLElement,
-    ttText: string,
-    pageOrigin = 'page-read'
-  ) {
+  getTooltipProperties(targetElem: HTMLElement, ttText: string, pageOrigin = 'page-read') {
     let toolTipMaxWidth = '';
     let toolTipScaleValue = 1;
 
-    // Set vertical offset and toolbar height.
+    // Set vertical offset. This is an adjustment in relation to the trigger element.
     const yOffset = 5;
-    const secToolbarHeight = 50;
 
     // Set how close to the edges of the "window" the tooltip can be placed. Currently this only applies if the
     // tooltip is set above or below the trigger.
@@ -293,18 +274,17 @@ export class TooltipService {
     let scrollLeft = 0;
     let horizontalScrollbarOffsetHeight = 0;
     let sidePaneOffsetWidth = 0; // A default value, true value calculated with getBoundingClientRect() below
-    let primaryToolbarHeight = 70; // A default value, true value calculated with getBoundingClientRect() below
+    let toolbarsHeight = 120; // A default value, true value calculated with getBoundingClientRect() below
     const contentElem = document.querySelector(
-      pageOrigin + ':not([hidden]) > ion-content > .scroll-content'
-    ) as HTMLElement;
+      pageOrigin + ':not([ion-page-hidden]) > ion-content.publication-ion-content'
+    ) as HTMLElement; // TODO: This selector works for page-introduction but not page-read
     if (contentElem !== null) {
       scrollLeft = contentElem.scrollLeft;
       sidePaneOffsetWidth = contentElem.getBoundingClientRect().left;
-      primaryToolbarHeight = contentElem.getBoundingClientRect().top;
+      toolbarsHeight = contentElem.getBoundingClientRect().top;
 
       if (contentElem.clientHeight < contentElem.offsetHeight) {
-        horizontalScrollbarOffsetHeight =
-          contentElem.offsetHeight - contentElem.clientHeight;
+        horizontalScrollbarOffsetHeight = contentElem.offsetHeight - contentElem.clientHeight;
       }
     }
 
@@ -327,8 +307,7 @@ export class TooltipService {
       if (
         elemRects[0].top -
           triggerPaddingY -
-          primaryToolbarHeight -
-          secToolbarHeight -
+          toolbarsHeight -
           edgePadding >
         vh -
           elemRects[elemRects.length - 1].bottom -
@@ -344,19 +323,14 @@ export class TooltipService {
 
     // Find the tooltip element.
     const tooltipElement: HTMLElement | null = document.querySelector(
-      pageOrigin + ':not([hidden]) div.toolTip'
+      pageOrigin + ':not([ion-page-hidden]) div.toolTip'
     );
     if (tooltipElement === null) {
       return null;
     }
 
     // Get tooltip element's default dimensions and computed max-width (latter set by css).
-    const initialTTDimensions = this.getToolTipDimensions(
-      tooltipElement,
-      ttText,
-      0,
-      true
-    );
+    const initialTTDimensions = this.getToolTipDimensions(tooltipElement, ttText, 0, true);
     let ttHeight = initialTTDimensions?.height || 0;
     let ttWidth = initialTTDimensions?.width || 0;
     if (initialTTDimensions?.compMaxWidth) {
@@ -367,7 +341,7 @@ export class TooltipService {
 
     // Calculate default position, this is relative to the viewport's top-left corner.
     let x = elemRect.right + triggerPaddingX;
-    let y = elemRect.top - primaryToolbarHeight - yOffset;
+    let y = elemRect.top - yOffset - toolbarsHeight;
 
     // Check if tooltip would be drawn outside the viewport.
     let oversetX = x + ttWidth - vw;
@@ -379,7 +353,7 @@ export class TooltipService {
           // side of the trigger and upwards without modifying its dimensions.
           if (
             elemRect.left - sidePaneOffsetWidth > ttWidth + triggerPaddingX &&
-            y - secToolbarHeight > oversetY
+            y > oversetY
           ) {
             // Move tooltip to the left side of the trigger and upwards
             x = elemRect.left - ttWidth - triggerPaddingX;
@@ -388,15 +362,10 @@ export class TooltipService {
             // Calc how much space there is on either side and attempt to place the tooltip
             // on the side with more space.
             const spaceRight = vw - x;
-            const spaceLeft =
-              elemRect.left - sidePaneOffsetWidth - triggerPaddingX;
+            const spaceLeft = elemRect.left - sidePaneOffsetWidth - triggerPaddingX;
             const maxSpace = Math.floor(Math.max(spaceRight, spaceLeft));
 
-            const ttDimensions = this.getToolTipDimensions(
-              tooltipElement,
-              ttText,
-              maxSpace
-            );
+            const ttDimensions = this.getToolTipDimensions(tooltipElement, ttText, maxSpace);
             ttHeight = ttDimensions?.height || 0;
             ttWidth = ttDimensions?.width || 0;
 
@@ -411,7 +380,7 @@ export class TooltipService {
               // Check vertical space.
               oversetY = elemRect.top + ttHeight - vh;
               if (oversetY > 0) {
-                if (oversetY < y - secToolbarHeight) {
+                if (oversetY < y) {
                   // Move the y position upwards by oversetY.
                   y = y - oversetY;
                 } else {
@@ -431,15 +400,10 @@ export class TooltipService {
             // There is not enough room on the left. Try to squeeze in the tooltip on whichever side
             // has more room. Calc how much space there is on either side.
             const spaceRight = vw - x;
-            const spaceLeft =
-              elemRect.left - sidePaneOffsetWidth - triggerPaddingX;
+            const spaceLeft = elemRect.left - sidePaneOffsetWidth - triggerPaddingX;
             const maxSpace = Math.floor(Math.max(spaceRight, spaceLeft));
 
-            const ttDimensions = this.getToolTipDimensions(
-              tooltipElement,
-              ttText,
-              maxSpace
-            );
+            const ttDimensions = this.getToolTipDimensions(tooltipElement, ttText, maxSpace);
             ttHeight = ttDimensions?.height || 0;
             ttWidth = ttDimensions?.width || 0;
 
@@ -454,7 +418,7 @@ export class TooltipService {
               // Check vertical space.
               oversetY = elemRect.top + ttHeight - vh;
               if (oversetY > 0) {
-                if (oversetY < y - secToolbarHeight) {
+                if (oversetY < y) {
                   // Move the y position upwards by oversetY.
                   y = y - oversetY;
                 } else {
@@ -468,29 +432,24 @@ export class TooltipService {
         }
       } else if (oversetY > 0) {
         // Overset only vertically. Check if there is room to move the tooltip upwards.
-        if (oversetY < y - secToolbarHeight) {
+        if (oversetY < y) {
           // Move the y position upwards by oversetY.
           y = y - oversetY;
         } else {
           // There is not room to move the tooltip just upwards. Check if there is more room on the
           // left side of the trigger so the width of the tooltip could be increased there.
           const spaceRight = vw - x;
-          const spaceLeft =
-            elemRect.left - sidePaneOffsetWidth - triggerPaddingX;
+          const spaceLeft = elemRect.left - sidePaneOffsetWidth - triggerPaddingX;
 
           if (spaceLeft > spaceRight) {
-            const ttDimensions = this.getToolTipDimensions(
-              tooltipElement,
-              ttText,
-              spaceLeft
-            );
+            const ttDimensions = this.getToolTipDimensions(tooltipElement, ttText, spaceLeft);
             ttHeight = ttDimensions?.height || 0;
             ttWidth = ttDimensions?.width || 0;
 
             if (
               ttWidth <= spaceLeft &&
               ttWidth > resizedToolTipMinWidth &&
-              ttHeight < vh - yOffset - primaryToolbarHeight - secToolbarHeight
+              ttHeight < vh - yOffset - toolbarsHeight
             ) {
               // There is enough space on the left side of the trigger. Calc new positions.
               toolTipMaxWidth = ttWidth + 'px';
@@ -512,25 +471,12 @@ export class TooltipService {
       // Check if there is more space above or below the tooltip trigger.
       let availableHeight = 0;
       if (elemRects.length > 1 && positionAbove) {
-        availableHeight =
-          elemRect.top -
-          primaryToolbarHeight -
-          secToolbarHeight -
-          triggerPaddingY -
-          edgePadding;
+        availableHeight = elemRect.top - toolbarsHeight - triggerPaddingY - edgePadding;
       } else if (elemRects.length > 1) {
         availableHeight = vh - elemRect.bottom - triggerPaddingY - edgePadding;
-      } else if (
-        elemRect.top - primaryToolbarHeight - secToolbarHeight >
-        vh - elemRect.bottom
-      ) {
+      } else if (elemRect.top - toolbarsHeight > vh - elemRect.bottom) {
         positionAbove = true;
-        availableHeight =
-          elemRect.top -
-          primaryToolbarHeight -
-          secToolbarHeight -
-          triggerPaddingY -
-          edgePadding;
+        availableHeight = elemRect.top - toolbarsHeight - triggerPaddingY - edgePadding;
       } else {
         positionAbove = false;
         availableHeight = vh - elemRect.bottom - triggerPaddingY - edgePadding;
@@ -539,20 +485,15 @@ export class TooltipService {
       const availableWidth = vw - sidePaneOffsetWidth - 2 * edgePadding;
 
       if (
-        initialTTDimensions?.height ||
-        (0 <= availableHeight && initialTTDimensions?.width) ||
-        0 <= availableWidth
+        (initialTTDimensions?.height || 0) <= availableHeight &&
+        (initialTTDimensions?.width || 0) <= availableWidth
       ) {
         // The tooltip fits without resizing. Calculate position, check for possible overset and adjust.
         x = elemRect.left;
         if (positionAbove) {
-          y =
-            elemRect.top -
-            (initialTTDimensions?.height || 0) -
-            primaryToolbarHeight -
-            triggerPaddingY;
+          y = elemRect.top - (initialTTDimensions?.height || 0) - toolbarsHeight - triggerPaddingY;
         } else {
-          y = elemRect.bottom + triggerPaddingY - primaryToolbarHeight;
+          y = elemRect.bottom + triggerPaddingY - toolbarsHeight;
         }
 
         // Check if tooltip would be drawn outside the viewport horisontally.
@@ -567,11 +508,7 @@ export class TooltipService {
           newTTMaxWidth = resizedToolTipMaxWidth;
         }
         // Calculate tooltip dimensions with new max-width
-        const ttNewDimensions = this.getToolTipDimensions(
-          tooltipElement,
-          ttText,
-          newTTMaxWidth
-        );
+        const ttNewDimensions = this.getToolTipDimensions(tooltipElement, ttText, newTTMaxWidth);
 
         if (
           (ttNewDimensions?.height || 0) <= availableHeight &&
@@ -581,13 +518,9 @@ export class TooltipService {
           toolTipMaxWidth = (ttNewDimensions?.width || 0) + 'px';
           x = elemRect.left;
           if (positionAbove) {
-            y =
-              elemRect.top -
-              (ttNewDimensions?.height || 0) -
-              primaryToolbarHeight -
-              triggerPaddingY;
+            y = elemRect.top - (ttNewDimensions?.height || 0) - toolbarsHeight - triggerPaddingY;
           } else {
-            y = elemRect.bottom + triggerPaddingY - primaryToolbarHeight;
+            y = elemRect.bottom + triggerPaddingY - toolbarsHeight;
           }
           // Check if tooltip would be drawn outside the viewport horisontally.
           oversetX = x + (ttNewDimensions?.width || 0) - vw;
@@ -606,13 +539,9 @@ export class TooltipService {
           toolTipScaleValue = scaleRatio;
           x = elemRect.left;
           if (positionAbove) {
-            y =
-              elemRect.top -
-              availableHeight -
-              triggerPaddingY -
-              primaryToolbarHeight;
+            y = elemRect.top - availableHeight - triggerPaddingY - toolbarsHeight;
           } else {
-            y = elemRect.bottom + triggerPaddingY - primaryToolbarHeight;
+            y = elemRect.bottom + triggerPaddingY - toolbarsHeight;
           }
           oversetX = x + (ttNewDimensions?.width || 0) - vw;
           if (oversetX > 0) {

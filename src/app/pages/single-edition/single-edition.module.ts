@@ -6,7 +6,6 @@ import { SingleEditionPage } from './single-edition';
 import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { TableOfContentsModule } from 'src/app/components/table-of-contents/table-of-contents.module';
 import { ComponentsModule } from 'src/app/components/components.module';
 import { MarkdownModule } from 'ngx-markdown';
 import { TableOfContentsService } from 'src/app/services/toc/table-of-contents.service';
@@ -29,7 +28,6 @@ export function createTranslateLoader(http: HttpClient) {
     imports: [
       CommonModule,
       FormsModule,
-      TableOfContentsModule,
       PipesModule,
       TranslateModule.forChild({
         loader: {

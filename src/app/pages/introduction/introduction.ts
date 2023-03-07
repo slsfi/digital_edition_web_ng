@@ -43,7 +43,7 @@ import { ReadPopoverPage } from 'src/app/modals/read-popover/read-popover';
 export class IntroductionPage {
 
   errorMessage: any;
-  protected id?: string;
+  protected id = '';
   protected text: any;
   protected textMenu: any;
   protected collection?: any;
@@ -87,7 +87,6 @@ export class IntroductionPage {
   private unlistenMouseoverEvents?: () => void;
   private unlistenMouseoutEvents?: () => void;
   private unlistenFirstTouchStartEvent?: () => void;
-  lang: any
 
   constructor(
     public navCtrl: NavController,
@@ -187,15 +186,16 @@ export class IntroductionPage {
       this.hasSeparateIntroToc = false;
     }
 
-    this.translate.get('Read.Introduction.Contents').subscribe(
-      translation => {
+    this.translate.get('Read.Introduction.Contents').subscribe({
+      next: translation => {
         if (translation && translation !== 'Read.Introduction.Contents') {
           this.hasTOCLabelTranslation = true;
         } else {
           this.hasTOCLabelTranslation = false;
         }
-      }, error => { this.hasTOCLabelTranslation = false; }
-    );
+      },
+      error: e => { this.hasTOCLabelTranslation = false; }
+    });
 
     try {
       const textDownloadOptions = this.config.getSettings('textDownloadOptions');
@@ -233,40 +233,39 @@ export class IntroductionPage {
   }
 
   ngOnInit() {
-    this.languageSubscription = this.langService.languageSubjectChange().subscribe(lang => {
-      this.lang = lang;
-      if (this.lang && this.id) {
-        this.loadIntroduction(lang, this.id);
-      }
-    });
-
     this.route.params.subscribe(params => {
       this.id = params['collectionID'];
 
       if (this.id) {
+        this.languageSubscription = this.langService.languageSubjectChange().subscribe(lang => {
+          if (lang) {
+            this.loadIntroduction(lang, this.id);
+          }
+        });
+
+        /* This is only for highlighting the current page in the old menu
         this.events.publishSelectedItemInMenu({
           menuID: this.id,
           component: 'introduction'
         });
+        */
 
         this.setCollectionLegacyId(this.id);
         this.setUpTextListeners(this.id);
       }
-
-      if (this.lang && this.id) {
-        this.loadIntroduction(this.lang, this.id);
-      }
-    })
+    });
   }
 
   loadIntroduction(lang: string, id: string) {
     this.text = '';
     this.textLoading = true;
-    this.textService.getIntroduction(id, lang).subscribe(
-      res => {
+    this.textService.getIntroduction(id, lang).subscribe({
+      next: res => {
+        /*
         if ( this.id !== undefined ) {
           this.getTocRoot(this.id);
         }
+        */
 
         this.textLoading = false;
         // in order to get id attributes for tooltips
@@ -295,16 +294,18 @@ export class IntroductionPage {
         // Try to scroll to an element in the text, checks if "pos" given
         this.scrollToPos();
       },
-      error =>  {
-        this.errorMessage = <any>error;
+      error: e =>  {
+        this.errorMessage = <any>e;
         this.textLoading = false;
         this.text = 'Could not load introduction.';
         this.hasSeparateIntroToc = false;
       }
-    );
+    });
+    /*
     const selectedStatic = [] as any;
     selectedStatic['isIntroduction'] = true;
     this.events.publishSetSelectedStaticTrue(selectedStatic);
+    */
   }
 
   ionViewWillLeave() {
@@ -334,7 +335,7 @@ export class IntroductionPage {
         } else {
           iterationsLeft -= 1;
           if (that.pos !== null && that.pos !== undefined) {
-            let posElem: HTMLElement | null = document.querySelector('page-introduction:not([hidden]) [name="' + that.pos + '"]');
+            let posElem: HTMLElement | null = document.querySelector('page-introduction:not([ion-page-hidden]) [name="' + that.pos + '"]');
             if (posElem !== null && posElem !== undefined) {
               const parentElem = posElem.parentElement;
               if (parentElem) {
@@ -343,7 +344,7 @@ export class IntroductionPage {
                     // Anchor is in footnote --> look for next occurence since the first footnote element
                     // is not displayed (footnote elements are copied to a list at the end of the introduction and that's
                     // the position we need to find).
-                    posElem = document.querySelectorAll('page-introduction:not([hidden]) [name="' + that.pos + '"]')[1] as HTMLElement;
+                    posElem = document.querySelectorAll('page-introduction:not([ion-page-hidden]) [name="' + that.pos + '"]')[1] as HTMLElement;
                 }
               }
               if (posElem !== null && posElem !== undefined && posElem.classList !== null
@@ -361,18 +362,18 @@ export class IntroductionPage {
   }
 
   setCollectionLegacyId(id: string) {
-    this.textService.getLegacyIdByCollectionId(id).subscribe(
-      collection => {
+    this.textService.getLegacyIdByCollectionId(id).subscribe({
+      next: collection => {
         this.collectionLegacyId = '';
         if (collection[0].legacy_id) {
           this.collectionLegacyId = collection[0].legacy_id;
         }
       },
-      error => {
+      error: e => {
         this.collectionLegacyId = '';
         console.log('could not get collection data trying to resolve collection legacy id');
       }
-    );
+    });
   }
 
   private setUpTextListeners(id: string) {
@@ -505,7 +506,7 @@ export class IntroductionPage {
                 positionId = positionId.replace('#', '');
 
                 // Find the element in the correct parent element.
-                const matchingElements = document.querySelectorAll('page-introduction:not([hidden]) [name="' + positionId + '"]');
+                const matchingElements = document.querySelectorAll('page-introduction:not([ion-page-hidden]) [name="' + positionId + '"]');
                 let targetElement = null;
                 for (let i = 0; i < matchingElements.length; i++) {
                   targetElement = matchingElements[i] as HTMLElement;
@@ -553,7 +554,7 @@ export class IntroductionPage {
               targetId = anchorElem.parentElement.getAttribute('href');
             }
             const dataIdSelector = '[data-id="' + String(targetId).replace('#', '') + '"]';
-            let target = anchorElem.ownerDocument.querySelector('page-introduction:not([hidden])') as HTMLElement;
+            let target = anchorElem.ownerDocument.querySelector('page-introduction:not([ion-page-hidden])') as HTMLElement;
             target = target.querySelector(dataIdSelector) as HTMLElement;
             if (target !== null) {
               if (anchorElem.classList.contains('footnoteReference')) {
@@ -614,24 +615,24 @@ export class IntroductionPage {
       return;
     }
 
-    this.tooltipService.getPersonTooltip(id).subscribe(
-      tooltip => {
+    this.tooltipService.getPersonTooltip(id).subscribe({
+      next: tooltip => {
         const text = this.tooltipService.constructPersonTooltipText(tooltip, targetElem);
         this.setToolTipPosition(targetElem, text);
         this.setToolTipText(text);
         this.tooltips.persons[id] = text;
       },
-      error => {
+      error: e => {
         let noInfoFound = 'Could not get person information';
-        this.translate.get('Occurrences.NoInfoFound').subscribe(
-          translation => {
+        this.translate.get('Occurrences.NoInfoFound').subscribe({
+          next: translation => {
             noInfoFound = translation;
-          }, errorT => { }
-        );
+          }, error: errorT => { }
+        });
         this.setToolTipPosition(targetElem, noInfoFound);
         this.setToolTipText(noInfoFound);
       }
-    );
+    });
   }
 
   showPlaceTooltip(id: string, targetElem: HTMLElement, origin: any) {
@@ -641,8 +642,8 @@ export class IntroductionPage {
       return;
     }
 
-    this.tooltipService.getPlaceTooltip(id).subscribe(
-      tooltip => {
+    this.tooltipService.getPlaceTooltip(id).subscribe({
+      next: tooltip => {
         let text = '<b>' + tooltip.name.trim() + '</b>';
         if (tooltip.description) {
           text = text + ', ' + tooltip.description.trim();
@@ -651,17 +652,17 @@ export class IntroductionPage {
         this.setToolTipText(text);
         this.tooltips.places[id] = text;
       },
-      error => {
+      error: e => {
         let noInfoFound = 'Could not get place information';
-        this.translate.get('Occurrences.NoInfoFound').subscribe(
-          translation => {
+        this.translate.get('Occurrences.NoInfoFound').subscribe({
+          next: translation => {
             noInfoFound = translation;
-          }, errorT => { }
-        );
+          }, error: errorT => { }
+        });
         this.setToolTipPosition(targetElem, noInfoFound);
         this.setToolTipText(noInfoFound);
       }
-    );
+    });
   }
 
   showWorkTooltip(id: string, targetElem: HTMLElement, origin: any) {
@@ -680,15 +681,15 @@ export class IntroductionPage {
     }
 
     if (this.simpleWorkMetadata === false || this.simpleWorkMetadata === undefined) {
-      this.semanticDataService.getSingleObjectElastic('work', id).subscribe(
-        tooltip => {
+      this.semanticDataService.getSingleObjectElastic('work', id).subscribe({
+        next: tooltip => {
           if ( tooltip.hits.hits[0] === undefined || tooltip.hits.hits[0]['_source'] === undefined ) {
             let noInfoFound = 'Could not get work information';
-            this.translate.get('Occurrences.NoInfoFound').subscribe(
-              translation => {
+            this.translate.get('Occurrences.NoInfoFound').subscribe({
+              next: translation => {
                 noInfoFound = translation;
-              }, err => { }
-            );
+              }, error: err => { }
+            });
             this.setToolTipPosition(targetElem, noInfoFound);
             this.setToolTipText(noInfoFound);
             return;
@@ -699,35 +700,35 @@ export class IntroductionPage {
           this.setToolTipText(description);
           this.tooltips.works[id] = description;
         },
-        error => {
+        error: e => {
           let noInfoFound = 'Could not get work information';
-          this.translate.get('Occurrences.NoInfoFound').subscribe(
-            translation => {
+          this.translate.get('Occurrences.NoInfoFound').subscribe({
+            next: translation => {
               noInfoFound = translation;
-            }, err => { }
-          );
+            }, error: err => { }
+          });
           this.setToolTipPosition(targetElem, noInfoFound);
           this.setToolTipText(noInfoFound);
         }
-      );
+      });
     } else {
-      this.tooltipService.getWorkTooltip(id).subscribe(
-        tooltip => {
+      this.tooltipService.getWorkTooltip(id).subscribe({
+        next: tooltip => {
           this.setToolTipPosition(targetElem, tooltip.description);
           this.setToolTipText(tooltip.description);
           this.tooltips.works[id] = tooltip.description;
         },
-        error => {
+        error: e => {
           let noInfoFound = 'Could not get work information';
-          this.translate.get('Occurrences.NoInfoFound').subscribe(
-            translation => {
+          this.translate.get('Occurrences.NoInfoFound').subscribe({
+            next: translation => {
               noInfoFound = translation;
-            }, err => { }
-          );
+            }, error: err => { }
+          });
           this.setToolTipPosition(targetElem, noInfoFound);
           this.setToolTipText(noInfoFound);
         }
-      );
+      });
     }
   }
 
@@ -767,11 +768,11 @@ export class IntroductionPage {
 
   showFootnoteInfoOverlay(id: string, targetElem: HTMLElement) {
     if (this.tooltips.footnotes[id] && this.userSettingsService.isDesktop()) {
-      this.translate.get('note').subscribe(
-        translation => {
+      this.translate.get('note').subscribe({
+        next: translation => {
           this.setInfoOverlayTitle(translation);
-        }, error => { }
-      );
+        }, error: e => { }
+      });
       this.setInfoOverlayPositionAndWidth(targetElem);
       this.setInfoOverlayText(this.tooltips.footnotes[id]);
       return;
@@ -797,11 +798,11 @@ export class IntroductionPage {
     const footNoteHTML = this.sanitizer.sanitize(SecurityContext.HTML,
       this.sanitizer.bypassSecurityTrustHtml(footnoteWithIndicator));
 
-    this.translate.get('note').subscribe(
-      translation => {
+    this.translate.get('note').subscribe({
+      next: translation => {
         this.setInfoOverlayTitle(translation);
-      }, error => { }
-    );
+      }, error: e => { }
+    });
     this.setInfoOverlayPositionAndWidth(targetElem);
     this.setInfoOverlayText(footNoteHTML || '');
     if (this.userSettingsService.isDesktop()) {
@@ -842,17 +843,16 @@ export class IntroductionPage {
     const vw = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
 
     // Get page content element and adjust viewport height with horizontal scrollbar height if such is present
-    const contentElem = document.querySelector('page-introduction:not([hidden]) > ion-content > .scroll-content') as HTMLElement;
+    const contentElem = document.querySelector('page-introduction:not([ion-page-hidden]) ion-content.publication-ion-content') as HTMLElement;
     let horizontalScrollbarOffsetHeight = 0;
     if (contentElem.clientHeight < contentElem.offsetHeight) {
       horizontalScrollbarOffsetHeight = contentElem.offsetHeight - contentElem.clientHeight;
     }
 
-    // Get bounding rectangle of the div.scroll-content element which is the container for the column that the trigger element resides in.
+    // Get bounding rectangle of the div.scroll-content-container element which is the container for the column that the trigger element resides in.
     let containerElem = triggerElement.parentElement;
     while (containerElem !== null && containerElem.parentElement !== null &&
-     !(containerElem.classList.contains('scroll-content') &&
-     containerElem.parentElement.tagName === 'ION-SCROLL')) {
+     !containerElem.classList.contains('scroll-content-container')) {
        containerElem = containerElem.parentElement;
     }
 
@@ -868,7 +868,10 @@ export class IntroductionPage {
       }
 
       let bottomPos = vh - horizontalScrollbarOffsetHeight - containerElemRect.bottom;
-      if (vw <= bottomPosBreakpointWidth && !(this.userSettingsService.isMobile())) {
+      if (
+        vw <= bottomPosBreakpointWidth && !(this.userSettingsService.isMobile()) ||
+        this.userSettingsService.isMobile()
+      ) {
         bottomPos = 0;
       }
 
@@ -920,11 +923,11 @@ export class IntroductionPage {
     }
   }
 
+  /*
   getTocRoot(id: string) {
     if ( id !== 'mediaCollections' ) {
-      this.tableOfContentsService.getTableOfContents(id)
-      .subscribe(
-        (tocItems: any) => {
+      this.tableOfContentsService.getTableOfContents(id).subscribe({
+        next: (tocItems: any) => {
           this.tocItems = tocItems;
           console.log('get toc root... --- --- in single edition');
           const tocLoadedParams = { tocItems: tocItems } as any;
@@ -933,7 +936,8 @@ export class IntroductionPage {
           this.events.publishTableOfContentsLoaded(tocLoadedParams);
           this.storage.set('toc_' + id, tocItems);
         },
-        error => { this.errorMessage = <any>error });
+        error: e => { this.errorMessage = <any>e }
+      });
     } else {
       this.tocItems = this.collection['accordionToc']['toc'];
       const tocLoadedParams = { tocItems: this.tocItems } as any;
@@ -943,6 +947,7 @@ export class IntroductionPage {
       this.storage.set('toc_' + id, this.tocItems);
     }
   }
+  */
 
   setToolTipText(text: string) {
     this.toolTipText = text;
@@ -1054,7 +1059,7 @@ export class IntroductionPage {
 
   printMainContentClasses() {
     if (this.userSettingsService.isMobile()) {
-      return 'mobile-mode-intro-content';
+      return 'mobile-mode-content';
     } else {
       return '';
     }

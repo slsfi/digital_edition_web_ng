@@ -70,14 +70,7 @@ export class MdContentService {
       const pages = this.getNodeById(jsonObjectID, markdownData);
       return pages;
     } else {
-      try {
-        const startIndex: number = Number(
-          this.config.getSettings('staticPages.about_index')
-        );
-        return markdownData.children[startIndex].children;
-      } catch (e) {
-        return markdownData.children[3].children;
-      }
+      return markdownData.children[0].children;
     }
   }
 

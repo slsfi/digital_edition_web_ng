@@ -219,7 +219,7 @@ export class CommentService {
     ) {
       // Find the comment in the comments view.
       const commentsWrapper = document.querySelector(
-        'page-read:not([hidden]) comments'
+        'page-read:not([ion-page-hidden]) comments'
       ) as HTMLElement;
       elem = commentsWrapper.getElementsByClassName(
         'en' + numericId

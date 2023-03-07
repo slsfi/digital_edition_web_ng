@@ -21,8 +21,6 @@ export class LanguageService {
     private config: ConfigService,
     private events: EventsService
   ) {
-    console.log('initializing language service');
-
     this._langChangeEnabled = this.config.getSettings('i18n.enableLanguageChanges') as boolean;
     this._defaultLanguage = this.config.getSettings('i18n.locale') as string;
     this._availableLanguages = this.config.getSettings('i18n.languages') as Array<string>;

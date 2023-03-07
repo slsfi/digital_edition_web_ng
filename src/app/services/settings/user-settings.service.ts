@@ -14,7 +14,6 @@ export class UserSettingsService {
     private storage: StorageService,
   ) {
     this.detectPlatform();
-    console.log('initializing user settings service');
   }
 
   detectPlatform() {

@@ -95,7 +95,6 @@ export class DigitalEditionsApp {
   aboutMarkdownId = 'aboutMarkdown';
   aboutMarkdownName = 'About';
 
-  sideMenuMobile = false;
   splitPaneMobile = false;
 
   splitPaneOpen = false;
@@ -242,7 +241,6 @@ export class DigitalEditionsApp {
     } catch (e) {
       this.collectionSortOrder = undefined;
     }
-    this.sideMenuMobileConfig();
     this.songTypesMenuMarkdownConfig();
     this.aboutMenuMarkdownConfig();
     try {
@@ -382,14 +380,6 @@ export class DigitalEditionsApp {
       this.aboutMenuMarkdown = this.config.getSettings('AboutMenuAccordion') as any;
     } catch (e) {
       this.aboutMenuMarkdown = false;
-    }
-  }
-
-  sideMenuMobileConfig() {
-    try {
-      this.sideMenuMobile = this.config.getSettings('SidemenuMobile') as any;
-    } catch (e) {
-      this.sideMenuMobile = false;
     }
   }
 

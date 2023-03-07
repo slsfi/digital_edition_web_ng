@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import {Inject, Injectable} from '@angular/core';
 import { ConfigService } from '../config/core/config.service';
 import { LanguageService } from '../languages/language.service';
+import { TranslateService } from '@ngx-translate/core';
 import {DOCUMENT} from "@angular/common";
 
 /*
@@ -17,6 +18,7 @@ export class MetadataService {
   constructor(
     private config: ConfigService,
     private languageService: LanguageService,
+    private translate: TranslateService,
 
     @Inject(DOCUMENT) private _doc: Document
   )
@@ -49,16 +51,20 @@ export class MetadataService {
 
   addDescription(content?: any) {
     this.languageService.getLanguage().subscribe((lang: string) => {
-      this.appName = this.config.getSettings('app.name.' + lang) as string;
-      // Add the new META-Tags
-      const description = this._doc.createElement('meta');
-      description.name = 'description';
-      if ( !content ) {
-        description.content = this.appName + ' - ' + this.siteMetadata['description'];
-      } else {
-        description.content = this.appName + ' - ' + content;
-      }
-      this._doc.getElementsByTagName('head')[0].appendChild(description);
+      this.translate.get('Site.Title').subscribe({
+        next: siteTitle => {
+          // Add the new META-Tags
+          const description = this._doc.createElement('meta');
+          description.name = 'description';
+          if ( !content ) {
+            description.content = siteTitle + ' - ' + this.siteMetadata['description'];
+          } else {
+            description.content = siteTitle + ' - ' + content;
+          }
+          this._doc.getElementsByTagName('head')[0].appendChild(description);
+        },
+        error: e => {}
+      });
     });
   }
 

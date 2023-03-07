@@ -1,13 +1,14 @@
 import { Component, Input, EventEmitter, Output } from '@angular/core';
 import { UserSettingsService } from 'src/app/services/settings/user-settings.service';
-import { GenericSettingsService } from 'src/app/services/settings/generic-settings.service';
+import { LanguageService } from 'src/app/services/languages/language.service';
 import { EventsService } from 'src/app/services/events/events.service';
 import { ModalController, PopoverController } from '@ionic/angular';
 import { ConfigService } from 'src/app/services/config/core/config.service';
-import { StorageService } from 'src/app/services/storage/storage.service';
 import { ReferenceDataModalPage } from 'src/app/modals/reference-data-modal/reference-data-modal';
 import { SearchAppPage } from 'src/app/modals/search-app/search-app';
 import { UserSettingsPopoverPage } from 'src/app/modals/user-settings-popover/user-settings-popover';
+import { Subscription } from 'rxjs';
+import {settings} from "../../services/config/config";
 
 /**
  * Generated class for the TopMenu component.
@@ -21,13 +22,12 @@ import { UserSettingsPopoverPage } from 'src/app/modals/user-settings-popover/us
   styleUrls: ['top-menu.scss']
 })
 export class TopMenuComponent {
-  @Input() showSideMenu?: boolean;
+  @Input() splitPaneMobile?: boolean;
+  @Input() splitPanePossible?: boolean;
+  @Input() splitPaneOpen?: boolean;
   @Output() hamburgerMenuClick = new EventEmitter();
 
-  public title?: string;
-  public subtitle?: string;
-  public showLogo?: boolean;
-  public showHelpButton: boolean;
+  public showHelpButton;
   public showViewToggle: boolean;
   public showTopURNButton: boolean;
   public showTopMusicButton: boolean;
@@ -35,23 +35,20 @@ export class TopMenuComponent {
   public showTopSimpleSearchButton: boolean;
   public showTopContentButton: boolean;
   public showTopAboutButton: boolean;
+  languageSubscription: Subscription | null;
+  firstAboutPageId = '';
+  language = '';
 
   constructor(
     private events: EventsService,
     private popoverCtrl: PopoverController,
     private config: ConfigService,
     public userSettingsService: UserSettingsService,
-    public genericSettingsService: GenericSettingsService,
-    private modalController: ModalController,
-    protected storage: StorageService,
+    public languageService: LanguageService,
+    private modalController: ModalController
   ) {
-    this.registerEventListeners();
+    this.showHelpButton = settings.app.showHelpButton ?? true;
 
-    try {
-      this.showHelpButton = this.config.getSettings('app.showHelpButton') as any;
-    } catch ( e ) {
-      this.showHelpButton = true;
-    }
     try {
       this.showViewToggle = this.config.getSettings('app.showViewToggle') as any;
     } catch ( e ) {
@@ -96,23 +93,40 @@ export class TopMenuComponent {
     } catch ( e ) {
       this.showTopMusicButton = true;
     }
-    this.events.getTitleLogoShow().subscribe((show: any) => {
-      this.storage.set('showLogo', show);
-      this.getShowLogo();
-    })
-    this.getShowLogo();
+
+    let aboutPagesFolderNumber = '03';
+    try {
+      aboutPagesFolderNumber = this.config.getSettings('page.about.markdownFolderNumber') as any;
+    } catch (e) {}
+
+    let initialAboutPageNode = '01';
+    try {
+      initialAboutPageNode = this.config.getSettings('page.about.initialPageNode') as any;
+    } catch (e) {}
+
+    this.firstAboutPageId = aboutPagesFolderNumber + "-" + initialAboutPageNode;
+
+    try {
+      this.language = this.config.getSettings('i18n.locale');
+    } catch (e) {
+      this.language = 'sv';
+    }
+
+    this.languageSubscription = null;
+  }
+
+  ngOnInit() {
+    this.languageSubscription = this.languageService.languageSubjectChange().subscribe(lang => {
+      if (lang) {
+        this.language = lang;
+      }
+    });
   }
 
   ngOnDestroy() {
-    this.events.getTitleLogoShow().complete();
-    this.events.getTitleLogoSetTitle().complete();
-    this.events.getTitleLogoSetSubTitle().complete();
-  }
-
-  getShowLogo() {
-    this.storage.get('showLogo').then((showLogo) => {
-      this.showLogo = showLogo;
-    });
+    if (this.languageSubscription) {
+      this.languageSubscription.unsubscribe();
+    }
   }
 
   help() {
@@ -130,45 +144,17 @@ export class TopMenuComponent {
     modal.present();
   }
 
-  public elasticSearch() {
-    this.events.publishTopMenuElasticSearch();
-    this.storage.set('showLogo', false);
+  public toggleSplitPane() {
+    this.hamburgerMenuClick.emit();
   }
 
-  public front() {
-    this.events.publishTopMenuFront();
-    this.storage.set('showLogo', true);
-  }
-
-  public content() {
-    this.events.publishTopMenuContent();
-    this.storage.set('showLogo', true);
-  }
-
-  public about() {
-    this.events.publishTopMenuAbout();
-    this.storage.set('showLogo', false);
-  }
-
-  public music() {
-    this.events.publishTopMenuMusic();
-    this.storage.set('showLogo', false);
-  }
-
-  public async showUserSettingsPopover(myEvent: any) {
+  public async showUserSettingsPopover(event: any) {
     const popover = await this.popoverCtrl.create({
       component: UserSettingsPopoverPage,
     });
-    popover.present(myEvent);
+    popover.present(event);
   }
-  private registerEventListeners() {
-    this.events.getTitleLogoSetTitle().subscribe((title: any) => {
-      this.title = title;
-    });
-    this.events.getTitleLogoSetSubTitle().subscribe((subTitle: any) => {
-      this.subtitle = subTitle;
-    });
-  }
+
   public async showReference(event: any) {
     // Get URL of Page and then the URI
     const modal = await this.modalController.create({
@@ -176,7 +162,7 @@ export class TopMenuComponent {
       id: document.URL,
       componentProps: {
         type: 'reference',
-        origin: 'top-menu-legacy',
+        origin: 'top-menu',
       }
     });
     modal.present();

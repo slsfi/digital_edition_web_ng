@@ -42,7 +42,6 @@ export class SingleEditionPage {
   errorMessage?: string;
   image?: string;
 
-  appName?: string;
   subTitle?: string;
   tableOfContents?: TableOfContentsCategory[];
   tocItems?: any;
@@ -53,7 +52,6 @@ export class SingleEditionPage {
   language = 'sv';
   defaultSelectedItem: string;
   description?: string;
-  showPage = false;
   show?: string;
   hasCover: boolean;
   hasTitle: boolean;
@@ -83,7 +81,6 @@ export class SingleEditionPage {
     this.collectionDescription = { content: null };
     this.language = this.config.getSettings('i18n.locale');
     this.langService.getLanguage().subscribe((lang) => {
-      this.appName = this.config.getSettings('app.name.' + lang);
       this.show = this.config.getSettings('defaults.ReadModeView');
     });
 

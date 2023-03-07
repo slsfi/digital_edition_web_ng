@@ -7,7 +7,6 @@ import { UserSettingsService } from 'src/app/services/settings/user-settings.ser
 import { MdContentService } from 'src/app/services/md/md-content.service';
 import { ConfigService } from 'src/app/services/config/core/config.service';
 import { CommonFunctionsService } from 'src/app/services/common-functions/common-functions.service';
-import { LanguageService } from 'src/app/services/languages/language.service';
 import { ReferenceDataModalPage } from 'src/app/modals/reference-data-modal/reference-data-modal';
 import { ReadPopoverPage } from 'src/app/modals/read-popover/read-popover';
 
@@ -51,7 +50,6 @@ export class EpubComponent {
   windowResizeTimeoutId: any;
   handleWindowResize: any;
   epubFileExists: boolean;
-  appName?: string;
 
   @Input() epubFileName?: string;
 
@@ -74,8 +72,7 @@ export class EpubComponent {
     private renderer2: Renderer2,
     private ngZone: NgZone,
     private config: ConfigService,
-    public commonFunctions: CommonFunctionsService,
-    private languageService: LanguageService,
+    public commonFunctions: CommonFunctionsService
   ) {
     this.tocMenuOpen = false;
     this.searchMenuOpen = false;
@@ -111,10 +108,6 @@ export class EpubComponent {
     } catch (e) {
       this.showDisplayOptionsButton = true;
     }
-
-    this.languageService.getLanguage().subscribe((lang: string) => {
-      this.appName = this.config.getSettings('app.name.' + lang);
-    });
   }
 
   ngOnInit() {
@@ -581,7 +574,6 @@ export class EpubComponent {
     }
 
     // Select ion-split-pane element in order to observe for mutations
-    const splitPaneElementLegacy = document.querySelector('top-menu-legacy + ion-split-pane');
     const splitPaneElement = document.querySelector('top-menu + ion-split-pane');
 
     // Callback function to execute when mutations are observed

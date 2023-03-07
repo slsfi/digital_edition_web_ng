@@ -1,4 +1,8 @@
 {
+    "Site": {
+        "Title": "Zacharias Topelius Skrifter",
+        "Subtitle": ""
+    },
     "BrowserWarning": "Din webbläsare stöds inte",
     "BrowserWarningInfo": "Internet Explorer stöds inte av denna sida. Använd Edge, Firefox eller nån annan webbläsare.",
     "BrowserWarningClose": "Lukk",

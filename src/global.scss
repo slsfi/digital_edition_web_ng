@@ -550,6 +550,7 @@
   ion-toolbar.secondary ion-button {
     --background: transparent;
     --background-hover: transparent !important;
+    --box-shadow: none;
     --color: var(--text-color-on-secondary-color-background);
     --color-hover: rgba(var(--text-color-on-secondary-color-background-rgb), var(--opacity-hover));
     --ripple-color: transparent;
@@ -1047,7 +1048,7 @@
       background: var(--secondary-color);
   }
   top-menu-legacy ion-toolbar.toolbar .toolbar-background {
-      border-bottom: var(--top-menu-legacy-toolbar-bottom-border);
+      border-bottom: var(--top-menu-toolbar-bottom-border);
   }
   ion-toolbar.toolbar:not(.secondary) .toolbar-content button,
   ion-toolbar.toolbar:not(.secondary) .toolbar-content button:hover:not(.disable-hover) {

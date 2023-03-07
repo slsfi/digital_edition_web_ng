@@ -164,14 +164,14 @@ export class CommentsComponent {
               // Find the lemma in the reading text. Remove all non-digits at the start of the comment's id.
               const numId = targetElem.classList[targetElem.classList.length - 1].replace( /^\D+/g, '');
               const targetId = 'start' + numId;
-              let lemmaStart = document.querySelector('page-read:not([hidden]) read-text') as HTMLElement;
+              let lemmaStart = document.querySelector('page-read:not([ion-page-hidden]) read-text') as HTMLElement;
               lemmaStart = lemmaStart.querySelector('[data-id="' + targetId + '"]') as HTMLElement;
               if ( (lemmaStart.parentElement !== null
               && lemmaStart.parentElement.classList.contains('ttFixed'))
               || (lemmaStart.parentElement?.parentElement !== null
               && lemmaStart.parentElement?.parentElement.classList.contains('ttFixed')) ) {
                 // The lemma is in a footnote, so we should get the second element with targetId
-                lemmaStart = document.querySelector('page-read:not([hidden]) read-text') as HTMLElement;
+                lemmaStart = document.querySelector('page-read:not([ion-page-hidden]) read-text') as HTMLElement;
                 lemmaStart = lemmaStart.querySelectorAll('[data-id="' + targetId + '"]')[1] as HTMLElement;
               }
               if (lemmaStart !== null && lemmaStart !== undefined) {

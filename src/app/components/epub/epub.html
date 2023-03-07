@@ -1,9 +1,5 @@
 <ion-header>
   <ion-toolbar color="secondary" class="secondary">
-    <!-- <ion-title *ngIf="showPage">
-      <div class="page-title">{{appName}}</div>
-      <div class="page-subtitle">Epub</div>
-    </ion-title> -->
     <ion-buttons *ngIf="epubFileExists">
         <ion-grid>
             <ion-row class="secondary-toolbar-icons-wrapper" class="ion-align-items-center" justify-content-end>
@@ -28,7 +24,7 @@
                   <span *ngIf="!(userSettingsService.isMobile())" class="side-title">{{'Epub.Download' | translate }}</span>
                 </ion-button>
                 <ion-button *ngIf="showURNButton" fill="clear" class="sec-menu-button" (click)="showReference()">
-                  <ion-icon class="urn-icon" name="share-alt"></ion-icon>
+                  <ion-icon class="urn-icon" name="arrow-redo-sharp"></ion-icon>
                   <span *ngIf="!(userSettingsService.isMobile())" class="side-title">{{'Reference.refer' | translate }}</span>
                 </ion-button>
                 <ion-button *ngIf="showDisplayOptionsButton" fill="clear" #settingsIconElement (click)="showReadSettingsPopover($event)" class="sec-menu-button" id="settings-icon">
