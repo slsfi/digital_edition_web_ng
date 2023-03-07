@@ -1,0 +1,14 @@
+<div *ngIf="selected">
+  <ion-list>
+    <ng-container *ngFor="let child of children; let i = index">
+      <ion-item class="mainMenuItem" (click)="toggleAccordion(child.id)">
+        <ion-label>{{child.title}}</ion-label>
+        <ion-icon *ngIf="child.children" name="chevron-forward-outline" [class.open]="selectedMenu === child.id"></ion-icon>
+      </ion-item>
+      <app-recursive-accordion
+        [selected]="selectedMenu === child.id"
+        *ngIf="child.children" [children]="child.children"
+      ></app-recursive-accordion>
+    </ng-container>
+  </ion-list>
+</div>

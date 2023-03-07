@@ -5,8 +5,6 @@ import { AlertController, MenuController, Platform } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
 import { TableOfContentsAccordionComponent } from './components/table-of-contents-accordion/table-of-contents-accordion';
 import { DigitalEdition } from './models/digital-edition.model';
-import { SideMenuSettings } from './models/side-menu-settings';
-import { GeneralTocItem } from './models/table-of-contents.model';
 import { TocAccordionMenuOptionModel } from './models/toc-accordion-menu-option.model';
 import { ConfigService } from './services/config/core/config.service';
 import { EventsService } from './services/events/events.service';
@@ -29,12 +27,9 @@ export class DigitalEditionsApp {
   @ViewChild('aboutMenuMarkdownAccordion') aboutMenuMarkdownAccordion?: TableOfContentsAccordionComponent
 
   searchTocItem = false;
-  rootPage = 'HomePage';
   aboutPages: any[];
   language = 'sv';
   languages = [];
-  appName?: string;
-  enableLanguageChanges?: false;
   errorMessage?: string;
   collectionsAccordionOpen = false;
   splitPane = false;
@@ -43,18 +38,12 @@ export class DigitalEditionsApp {
   tocData: any;
   pdfCollections?: any[];
   currentContentName?: string;
-  showBackButton = true;
-  readMenuOpen = false;
-  galleryMenuOpen = false; // legacy
   personSearchTypes = [] as any;
   apiEndPoint: string;
   projectMachineName: string;
   staticPagesMenus = [] as any;
   staticPagesMenusInTOC: any = [];
   collectionsWithoutTOC: Array<Number> = [];
-  menuConditionals = {
-    songTypesMenuOpen: false
-  }
   tocLoaded = false;
   collectionDownloads: any;
 
@@ -69,15 +58,9 @@ export class DigitalEditionsApp {
   accordionTOC = false;
   accordionMusic = false;
 
-  storageCollections = {};
-
   defaultSelectedItem: String = 'title';
 
   collectionSortOrder: any;
-
-  browserWarning?: string;
-  browserWarningInfo?: string;
-  browserWarningClose?: string;
 
   songTypesMenuMarkdownInfo: any;
   aboutMenuMarkdownInfo: any;
@@ -86,16 +69,6 @@ export class DigitalEditionsApp {
   aboutMenuMarkdown = false;
 
   currentAccordionMenu: any = null;
-
-  songTypesMarkdownName = 'songTypesMarkdown';
-  songTypesMarkdownId = 'songTypesMarkdown';
-  songtypesId = 'songtypes';
-  songtypesName = 'songtypes';
-
-  aboutMarkdownId = 'aboutMarkdown';
-  aboutMarkdownName = 'About';
-
-  splitPaneMobile = false;
 
   splitPaneOpen = false;
   previousSplitPaneOpenState = true;
@@ -118,23 +91,9 @@ export class DigitalEditionsApp {
   };
 
   mediaCollectionOptions: any;
-  songTypesOptionsMarkdown = {
-    toc: []
-  };
   aboutOptionsMarkdown = {
     toc: []
   } as any;
-
-  public sideMenuSettings: SideMenuSettings = {
-    accordionMode: true,
-    showSelectedOption: true,
-    selectedOptionClass: 'selected-toc-item',
-    subOptionIndentation: {
-      md: '56px',
-      ios: '64px',
-      wp: '56px'
-    },
-  };
 
   simpleAccordionsExpanded = {
     musicAccordion: false,
@@ -304,7 +263,6 @@ export class DigitalEditionsApp {
     }
 
     this.getCollectionsWithoutTOC();
-    this.initializeApp();
     this.registerEventListeners();
     this.getCollectionList();
     // If we have MediaCollections we need to add these first
@@ -358,15 +316,6 @@ export class DigitalEditionsApp {
     this.setDefaultOpenAccordions();
   }
 
-  async presentAlert() {
-    const alert = await this.alertCtrl.create({
-      header: this.browserWarning,
-      subHeader: this.browserWarningInfo,
-      buttons: [this.browserWarningClose || '']
-    });
-    alert.present();
-  }
-
   songTypesMenuMarkdownConfig() {
     try {
       this.songTypesMenuMarkdown = this.config.getSettings('SongTypesMenuMarkdown') as any;
@@ -388,10 +337,6 @@ export class DigitalEditionsApp {
       this.collectionsWithoutTOC = this.config.getSettings('CollectionsWithoutTOC') as any;
     } catch (e) {
     }
-  }
-
-  toggleSplitPane() {
-    this.splitPaneOpen ? this.hideSplitPane() : this.showSplitPane();
   }
 
   toggleSideMenu() {
@@ -428,62 +373,6 @@ export class DigitalEditionsApp {
 
   enableSplitPane() {
     this.splitPanePossible = true;
-  }
-
-  openBook(collection: any) {
-    collection.isDownloadOnly = true;
-    this.pdfCollections?.forEach(element => {
-      if (collection.id === element.id) {
-        element.highlight = true;
-      } else {
-        element.highlight = false;
-      }
-    });
-    this.openCollectionPage(collection);
-  }
-
-  toggleSingleCollectionAccordion(collection: any) {
-
-    if (collection.isDownload) {
-      if (collection.id in this.collectionDownloads['pdf']) {
-        const dURL = this.apiEndPoint + '/' + this.projectMachineName + '/files/' + collection.id + '/pdf/' +
-          this.collectionDownloads['pdf'][collection.id] + '/';
-        const ref = window.open(dURL, '_self', 'location=no');
-      } else if (collection.id in this.collectionDownloads['epub']) {
-        const dURL = this.apiEndPoint + '/' + this.projectMachineName + '/files/' + collection.id + '/epub/' +
-          this.collectionDownloads['epub'][collection.id] + '/';
-        const ref = window.open(dURL, '_self', 'location=no');
-      }
-    } else {
-      collection.expanded = !collection.expanded;
-
-      // Open collection if accordion is toggled open OR has children pdfs (toggle button isn't shown in this case)
-      if (collection.expanded || collection.has_children_pdfs) {
-        this.openCollectionPage(collection);
-      }
-
-      if (!collection.accordionToc.toc.length) {
-        collection.loading = true;
-        this.tableOfContentsService.getTableOfContents(collection.id)
-          .subscribe(
-            (tocItems: any) => {
-              if (String(tocItems.collectionId) === String(collection.id)) {
-                collection.accordionToc.toc = tocItems.children;
-                collection.loading = false;
-              }
-            },
-            error => {
-              this.errorMessage = <any>error;
-              collection.loading = false;
-            });
-      }
-    }
-  }
-
-  openCollectionPage(collection: any) {
-    this.currentContentName = collection.title;
-    const params = { collection: JSON.stringify(collection), fetch: 'false' };
-    this.router.navigate([`/publication-toc/${collection.id}`], { queryParams: params });
   }
 
   getCollectionsWithTOC(collections: any, media?: any) {
@@ -647,26 +536,6 @@ export class DigitalEditionsApp {
     }
   }
 
-  getSongTypes() {
-    if (this.genericSettingsService.show('TOC.SongTypes')) {
-      if (this.songTypesMenuMarkdown) {
-        (async () => {
-          const songTypesMarkdownMenu = await this.mdcontentService.getMarkdownMenu(this.language, this.songTypesMenuMarkdownInfo.idNumber);
-          this.songTypesOptionsMarkdown.toc = songTypesMarkdownMenu.children;
-        }).bind(this)();
-      } else {
-        this.tableOfContentsService.getTableOfContents('songtypes')
-          .subscribe(
-            (tocItems: any) => {
-              if (this.songTypesOptions) {
-                this.songTypesOptions.toc = tocItems.children;
-              }
-            },
-            error => { this.errorMessage = <any>error });
-      }
-    }
-  }
-
   getAboutPages() {
     if (this.aboutMenuMarkdown) {
       (async () => {
@@ -679,64 +548,6 @@ export class DigitalEditionsApp {
         this.cdRef.detectChanges();
       }).bind(this)();
     }
-  }
-
-  getCollectionTOC(collectionID: any) {
-    console.log('Getting collection TOC in app component');
-    this.tableOfContentsService.getTableOfContents(collectionID)
-      .subscribe(
-        tocItems => {
-          return tocItems;
-        },
-        error => { this.errorMessage = <any>error });
-  }
-
-
-  initializeApp() {
-    this.platform.ready().then(() => {
-      const platforms = [
-        'android',
-        'cordova',
-        'core',
-        'ios',
-        'ipad',
-        'iphone',
-        'mobile',
-        'mobileweb',
-        'phablet',
-        'tablet',
-        'windows',
-      ]
-      // platforms.map(p => console.log(`${p}: ${this.platform.is(p)}`));
-      this.languageService.getLanguage().subscribe((lang: string) => {
-        this.language = lang;
-        this.appName = this.config.getSettings('app.name.' + lang) as any;
-        this.titleService.setTitle(this.appName as string);
-        this.getPersonSearchTypes();
-        this.getStaticPagesMenus();
-        this.setRootPage();
-        this.getSongTypes();
-        this.getAboutPages();
-      });
-      this.events.publishPdfviewOpen({ 'isOpen': false });
-    });
-
-    // Try to remove META-Tags
-    this.metadataService.clearHead();
-    // Add the new META-Tags
-    this.metadataService.addDescription();
-    this.metadataService.addKeywords();
-  }
-
-  resizeTOCMenu( event: MouseEvent, splitPaneItem: any, initialtWidth: any ) {
-    const relativeWidth = Number(String(event.clientX).replace('px', ''));
-    if ( relativeWidth > 0 ) {
-      splitPaneItem.style.minWidth =  (initialtWidth + relativeWidth) + 'px';
-    }
-  }
-
-  toggleMusicAccordion() {
-    this.simpleAccordionsExpanded.musicAccordion = !this.simpleAccordionsExpanded.musicAccordion;
   }
 
   unSelectAllMusicAccordionItems() {
@@ -1143,16 +954,6 @@ export class DigitalEditionsApp {
     this.enableTableOfContentsMenu();
   }
 
-  resetCurrentCollection() {
-    this.currentCollection = null;
-    this.currentCollectionId = null;
-    this.currentCollectionName = '';
-    this.options = null;
-  }
-
-  mobileSplitPaneDetector() {
-  }
-
   doFor(needle: any, haystack: any, callback: any) {
     for (const straw of haystack) {
       if (straw === needle) {
@@ -1292,48 +1093,6 @@ export class DigitalEditionsApp {
     }
   }
 
-  async getCollectionListAsync() {
-    let loadCollectionsFromAssets = false;
-    try {
-      loadCollectionsFromAssets = this.config.getSettings('LoadCollectionsFromAssets') as any
-    } catch (e) {
-
-    }
-
-    if (loadCollectionsFromAssets) {
-      this.digitalEditionListService.getCollectionsFromAssets()
-        .subscribe(digitalEditions => {
-          return digitalEditions;
-        });
-    } else {
-      this.digitalEditionListService.getDigitalEditions()
-        .subscribe(
-          digitalEditions => {
-            return digitalEditions;
-          },
-          error => { this.errorMessage = <any>error }
-        );
-    }
-  }
-
-  menuConditional(menu: any) {
-    return this.menuConditionals[menu as keyof typeof this.menuConditionals];
-  }
-
-  setMenuConditionalFalse(menu: any) {
-    this.menuConditionals[menu as keyof typeof this.menuConditionals] = false;
-  }
-
-  spClickedBack(clickedBack: boolean, menu: any) {
-    if (clickedBack) {
-      this.setMenuConditionalFalse(menu);
-    }
-  }
-
-  getPersonSearchTypes() {
-    this.personSearchTypes = this.config.getSettings('PersonSearchTypes') as any;
-  }
-
   getStaticPagesMenus() {
     try {
       this.staticPagesMenus = this.config.getSettings('StaticPagesMenus') as any;
@@ -1353,20 +1112,6 @@ export class DigitalEditionsApp {
         this.aboutMenuMarkdownInfo = menu;
       }
     }
-  }
-
-  setRootPage() {
-    const homeUrl = document.URL.indexOf('/home');
-    if (homeUrl >= 0 || document.URL.indexOf('#') < 0) {
-      this.rootPage = 'HomePage';
-    }
-  }
-
-  disableMenu() {
-    this.menu.enable(false, 'readMenu');
-    this.menu.enable(false, 'aboutMenu');
-    this.menu.enable(false, 'contentMenu');
-    this.menu.enable(false, 'tableOfContentsMenu');
   }
 
   enableContentMenu() {
@@ -1396,16 +1141,6 @@ export class DigitalEditionsApp {
     this.cdRef.detectChanges();
   }
 
-  openPlaymanTraditionPage() {
-    this.openStaticPage(this.language + '-03-03');
-    this.unSelectCollectionWithChildrenPdf();
-    this.currentAccordionMenu = 'musicAccordion';
-    this.events.publishSelectedItemInMenu({
-      menuID: 'musicAccordion',
-      component: 'app-component'
-    });
-  }
-
   openStaticPage(id: string) {
     this.router.navigate([`/content/${id}`]);
   }
@@ -1430,23 +1165,6 @@ export class DigitalEditionsApp {
     } catch (e) {
       console.error('Error opening page');
     }
-  }
-
-  openPersonSearchPage(searchPage: any, selectedMenu?: any) {
-    if (selectedMenu) {
-      this.unSelectCollectionWithChildrenPdf();
-      // Notify other menus to unselect selected items
-      this.currentAccordionMenu = selectedMenu;
-
-      this.events.publishSelectedItemInMenu({
-        menuID: selectedMenu,
-        component: 'app-component'
-      });
-    }
-    if ( searchPage.object_subtype === undefined || searchPage.object_subtype === '' ) {
-      searchPage.object_subtype = encodeURI('subtype');
-    }
-    this.router.navigate([`/person-search/${searchPage.object_type}/${searchPage.object_subtype}`]);
   }
 
   openFirstPage(collection: DigitalEdition) {
@@ -1596,42 +1314,8 @@ export class DigitalEditionsApp {
     }
   }
 
-  onShowAccordion(show: boolean) {
-    this.showBackButton = show;
-  }
-
-  /* Legacy code */
-  openGalleries() {
-    const params = { fetch: 'true' };
-    this.router.navigate(['/galleries'], { queryParams: params });
-  }
-
-  /* Legacy code */
-  openGalleryPage(galleryPage: string) {
-    const params = { fetch: 'false' };
-    this.router.navigate([`/gallery/${galleryPage}`], { queryParams: params });
-  }
-
   async getMediaCollections(): Promise<any> {
     return await this.galleryService.getGalleries(this.language);
-  }
-
-  openMediaCollections() {
-    this.selectMediaCollectionInToc('all');
-    const params = {};
-    this.router.navigate(['/media-collections'], { queryParams: params });
-  }
-
-  openMediaCollection(gallery: any) {
-    this.mediaCollectionOptions['accordionToc']['toc'].forEach((element: any) => {
-      if (gallery.id === element.id) {
-        element.highlight = true;
-      } else {
-        element.highlight = false;
-      }
-    });
-    const params = { mediaTitle: this.makeTitle(gallery.image_path), fetch: false };
-    this.router.navigate([`/media-collection/${gallery.id}`], { queryParams: params });
   }
 
   selectMediaCollectionInToc(id: string) {
@@ -1674,19 +1358,5 @@ export class DigitalEditionsApp {
         this.availableEpubs[name]['highlight'] = false;
       });
     }
-  }
-
-  public front() {
-    this.events.publishTopMenuFront();
-  }
-
-  public about() {
-    this.events.publishSplitPaneToggleDisable();
-    this.events.publishTopMenuAbout();
-  }
-
-  makeTitle(foldername: any) {
-    foldername = foldername.replace(/_/g, ' ');
-    return foldername.charAt(0).toUpperCase() + foldername.substring(1);
   }
 }

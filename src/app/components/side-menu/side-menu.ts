@@ -3,10 +3,9 @@ import { GenericSettingsService } from "../../services/settings/generic-settings
 import { ConfigService } from "../../services/config/core/config.service";
 import { DigitalEdition } from "../../models/digital-edition.model";
 import { Router } from "@angular/router";
-import { TableOfContentsAccordionComponent } from "../table-of-contents-accordion/table-of-contents-accordion";
 import { TocAccordionMenuOptionModel } from "../../models/toc-accordion-menu-option.model";
 import { SideMenuSettings } from "../../models/side-menu-settings";
-import { AlertController, MenuController, Platform } from "@ionic/angular";
+import { AlertController, IonAccordionGroup, MenuController, Platform } from "@ionic/angular";
 import { TranslateService } from "@ngx-translate/core";
 import { StorageService } from "../../services/storage/storage.service";
 import { LanguageService } from "../../services/languages/language.service";
@@ -18,6 +17,7 @@ import { DigitalEditionListService } from "../../services/toc/digital-edition-li
 import { TableOfContentsService } from "../../services/toc/table-of-contents.service";
 import { GalleryService } from "../../services/gallery/gallery.service";
 import { MetadataService } from "../../services/metadata/metadata.service";
+import { RecursiveAccordion } from "../recursive-accordion/recursive-accordion";
 
 @Component({
   selector: 'app-side-menu',
@@ -26,7 +26,7 @@ import { MetadataService } from "../../services/metadata/metadata.service";
 })
 export class SideMenu implements OnInit {
   @Input() showSideMenu: boolean = false;
-  @ViewChild('aboutMenuMarkdownAccordion') aboutMenuMarkdownAccordion?: TableOfContentsAccordionComponent
+  @ViewChild('accordionAbout') accordionAbout: RecursiveAccordion;
 
   searchTocItem = false;
   rootPage = 'HomePage';
@@ -113,9 +113,11 @@ export class SideMenu implements OnInit {
   songTypesOptionsMarkdown = {
     toc: []
   };
-  aboutOptionsMarkdown = {
-    toc: []
-  } as any;
+
+  aboutOptionsMarkdown: {
+    title: string;
+    [key: string]: any
+  };
 
   public sideMenuSettings: SideMenuSettings = {
     accordionMode: true,
@@ -184,6 +186,7 @@ export class SideMenu implements OnInit {
   tocTagSearchSelected = false;
   tocWorkSearchSelected = false;
   tocHomeSelected = false;
+  selectedMenu: string = '';
 
   constructor(
     public platform: Platform,
@@ -296,7 +299,6 @@ export class SideMenu implements OnInit {
     }
 
     this.getCollectionsWithoutTOC();
-    this.initializeApp();
     this.registerEventListeners();
     this.getCollectionList();
     // If we have MediaCollections we need to add these first
@@ -350,17 +352,8 @@ export class SideMenu implements OnInit {
     this.setDefaultOpenAccordions();
   }
 
-
   ngOnInit(): void {
-  }
-
-  async presentAlert() {
-    const alert = await this.alertCtrl.create({
-      header: this.browserWarning,
-      subHeader: this.browserWarningInfo,
-      buttons: [this.browserWarningClose || '']
-    });
-    alert.present();
+    this.initializeApp();
   }
 
   songTypesMenuMarkdownConfig() {
@@ -663,16 +656,12 @@ export class SideMenu implements OnInit {
     }
   }
 
+  // getting side-menu structure
   getAboutPages() {
     if (this.aboutMenuMarkdown) {
       (async () => {
-        const aboutMarkdownMenu = await this.mdcontentService.getMarkdownMenu(this.language, this.aboutMenuMarkdownInfo.idNumber);
-        this.aboutOptionsMarkdown.toc = aboutMarkdownMenu.children;
-        if (this.aboutMenuMarkdownAccordion !== undefined) {
-          this.aboutMenuMarkdownAccordion.ngOnChanges(aboutMarkdownMenu.children);
-        }
-        this.events.publishAboutMarkdownTOCLoaded(this.aboutOptionsMarkdown.toc);
-        this.cdRef.detectChanges();
+        this.aboutOptionsMarkdown = await this.mdcontentService.getMarkdownMenu(this.language, this.aboutMenuMarkdownInfo.idNumber);
+        console.log( this.aboutOptionsMarkdown);
       }).bind(this)();
     }
   }
@@ -978,13 +967,13 @@ export class SideMenu implements OnInit {
       this.languageService.getLanguage().subscribe((lang: string) => {
         this.language = lang;
 
-        if (this.aboutMenuMarkdown && this.aboutOptionsMarkdown.toc && this.aboutOptionsMarkdown.toc.length) {
-          let firstAboutPageID = this.aboutOptionsMarkdown.toc[0].id;
+        if (this.aboutMenuMarkdown && this.aboutOptionsMarkdown.children && this.aboutOptionsMarkdown.children.length) {
+          let firstAboutPageID = this.aboutOptionsMarkdown.children[0].id;
           if ( (this.config.getSettings('StaticPagesMenus') as any)[0]['initialAboutPage'] !== undefined ) {
             firstAboutPageID = this.language + '-' + (this.config.getSettings('StaticPagesMenus') as any)[0]['initialAboutPage'];
           } else {
-            if (this.aboutOptionsMarkdown.toc[0].type === 'folder') {
-              firstAboutPageID = this.aboutOptionsMarkdown.toc[0].children[0].id;
+            if (this.aboutOptionsMarkdown.children[0].type === 'folder') {
+              firstAboutPageID = this.aboutOptionsMarkdown.children[0].children[0].id;
             }
           }
           this.openStaticPage(firstAboutPageID);
@@ -1272,6 +1261,7 @@ export class SideMenu implements OnInit {
   }
 
   menuConditional(menu: any) {
+    console.log(this.menuConditionals[menu as keyof typeof this.menuConditionals])
     return this.menuConditionals[menu as keyof typeof this.menuConditionals];
   }
 
@@ -1608,17 +1598,12 @@ export class SideMenu implements OnInit {
     }
   }
 
-  public front() {
-    this.events.publishTopMenuFront();
-  }
-
-  public about() {
-    this.events.publishSplitPaneToggleDisable();
-    this.events.publishTopMenuAbout();
-  }
-
   makeTitle(foldername: any) {
     foldername = foldername.replace(/_/g, ' ');
     return foldername.charAt(0).toUpperCase() + foldername.substring(1);
+  }
+
+  toggleAccordion(value: string) {
+    this.selectedMenu = this.selectedMenu === value ? '' : value;
   }
 }

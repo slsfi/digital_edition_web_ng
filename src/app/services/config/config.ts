@@ -31,6 +31,13 @@ export const settings: Settings = {
       initialPageNode: "01-01"
     }
   },
+  "AvailableEpubs": {
+    "Dagböcker": {
+      "filename": "soderholm_dagbocker.epub",
+      "download": "https://www.sls.fi/sv/utgivning/kerstin-soderholms-dagbocker",
+      "cover": "/assets/images/parmbilder/Kerstin-Soderholms-dagbocker-cover-web.jpg"
+    }
+  },
   frontpageConfig: {
     imageOrientationIsPortrait: true,
     imageOnRightIfPortrait: false,
@@ -205,7 +212,7 @@ export const settings: Settings = {
     getFacsimilePagesInfinite: true,
     facsimileDefaultZoomLevel: 4,
     facsimileZoomPageLevel: 1,
-    galleryCollectionMapping: { 214: 44, 206: 19 },
+    galleryCollectionMapping: {214: 44, 206: 19},
     showReadTextIllustrations: ["20212", "20213", "206"],
     sortableLetters: ["220", "219", "215", "211"]
   },
@@ -221,18 +228,18 @@ export const settings: Settings = {
   },
   textDownloadOptions: {
     enabledIntroductionFormats: {
-        xml: true,
-        print: true
+      xml: true,
+      print: true
     },
     enabledEstablishedFormats: {
-        xml: true,
-        txt: false,
-        print: true
+      xml: true,
+      txt: false,
+      print: true
     },
     enabledCommentsFormats: {
-        xml: true,
-        txt: false,
-        print: true
+      xml: true,
+      txt: false,
+      print: true
     },
     usePrintNotDownloadIcon: false
   },
@@ -279,7 +286,8 @@ export const settings: Settings = {
       TagSearch: false,
       WorkSearch: false,
       SongTypes: false,
-      Books: false
+      Books: false,
+      EPUB: true
     },
     highlightedSearchMatches: true
   },

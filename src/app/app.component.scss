@@ -55,6 +55,14 @@ ion-split-pane {
     }
   }
 }
+::ng-deep ion-icon {
+  transform: rotate(0);
+  transition: transform ease-in-out 0.2s;
+  &.open{
+    transform: rotate(90deg);
+    transition: transform ease-in-out 0.2s;
+  }
+}
 
 // On small screens, make the left navigation menu into an overlay menu so the content doesn't reflow when opening or closing the menu.
 @media only screen and (max-width: 820px) {

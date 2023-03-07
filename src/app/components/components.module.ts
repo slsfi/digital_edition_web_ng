@@ -32,35 +32,36 @@ import { IllustrationsComponent } from './illustrations/illustrations';
 import { RouterLink } from "@angular/router";
 import { TopMenuComponent } from "./top-menu/top-menu";
 import { SideMenu} from "./side-menu/side-menu";
+import { RecursiveAccordion } from "./recursive-accordion/recursive-accordion";
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
 }
 
 @NgModule({
-  declarations: [
-    TitleLogoComponent,
-    TopMenuLegacyComponent,
-    TopMenuComponent,
-    // SplitPaneToggleComponent,
-    TableOfContentsDrilldownMenuComponent,
-    StaticPagesTocDrilldownMenuComponent,
-    // TocMenuComponent,
-    TextChangerComponent,
-    SimpleSearchComponent,
-    // SocialSharingComponent,
-    SongExampleComponent,
-    DigitalEditionListChildrenComponent,
-    TableOfContentsAccordionComponent,
-    ListOfSongsComponent,
-    // NgxExtendedPdfViewerComponent,
-    IllustrationsComponent,
-    // TableOfContentLetterFilterComponent,
-    DateHistogram,
-    MathJaxComponent,
-    SideMenu,
-    SideMenu
-  ],
+	declarations: [
+		TitleLogoComponent,
+		TopMenuLegacyComponent,
+		TopMenuComponent,
+		// SplitPaneToggleComponent,
+		TableOfContentsDrilldownMenuComponent,
+		StaticPagesTocDrilldownMenuComponent,
+		// TocMenuComponent,
+		TextChangerComponent,
+		SimpleSearchComponent,
+		// SocialSharingComponent,
+		SongExampleComponent,
+		DigitalEditionListChildrenComponent,
+		TableOfContentsAccordionComponent,
+		ListOfSongsComponent,
+		// NgxExtendedPdfViewerComponent,
+		IllustrationsComponent,
+		// TableOfContentLetterFilterComponent,
+		DateHistogram,
+		MathJaxComponent,
+		SideMenu,
+		RecursiveAccordion
+	],
 	imports: [
 		IonicModule,
 		PipesModule,
