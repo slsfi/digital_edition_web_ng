@@ -192,12 +192,15 @@ export class IntroductionPage {
 
     // Check if we have a pos parmeter in the URL, if we have one we can use it for scrolling the text on the page to that position.
     // The pos parameter must come after the publication id followed by /#, e.g. /publication-introduction/203/#pos1
+    /*
     const currentURL: string = String(window.location.href);
     if (currentURL.match(/publication-introduction\/\d+\/#\w+/) !== null) {
       this.pos = currentURL.split('#').pop();
     } else {
       this.pos = null;
     }
+    */
+    this.pos = null;
 
   }
 
@@ -266,7 +269,7 @@ export class IntroductionPage {
           }
         }
         // Try to scroll to an element in the text, checks if "pos" given
-        this.scrollToPos();
+        // this.scrollToPos();
       },
       error: e =>  {
         this.errorMessage = <any>e;
