@@ -163,7 +163,7 @@ export class TooltipService {
       }
     }
 
-    text = '<b>' + tooltip.name.trim() + '</b>';
+    text = '<b>' + tooltip.full_name.trim() + '</b>';
 
     const yearBornDeceasedString = this.constructYearBornDeceasedString(
       tooltip.date_born,
@@ -275,7 +275,7 @@ export class TooltipService {
     let sidePaneOffsetWidth = 0; // A default value, true value calculated with getBoundingClientRect() below
     let toolbarsHeight = 120; // A default value, true value calculated with getBoundingClientRect() below
     const contentElem = document.querySelector(
-      pageOrigin + ':not([ion-page-hidden]) > ion-content.publication-ion-content'
+      pageOrigin + ':not([ion-page-hidden]):not(.ion-page-hidden) > ion-content.publication-ion-content'
     ) as HTMLElement; // TODO: This selector works for page-introduction but not page-read
     if (contentElem !== null) {
       scrollLeft = contentElem.scrollLeft;
@@ -322,7 +322,7 @@ export class TooltipService {
 
     // Find the tooltip element.
     const tooltipElement: HTMLElement | null = document.querySelector(
-      pageOrigin + ':not([ion-page-hidden]) div.toolTip'
+      pageOrigin + ':not([ion-page-hidden]):not(.ion-page-hidden) div.toolTip'
     );
     if (tooltipElement === null) {
       return null;

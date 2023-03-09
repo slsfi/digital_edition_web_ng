@@ -307,7 +307,7 @@ export class VariationsComponent {
       }
       if (currentVarElemContainer !== null) {
         const varElemColumnIds = [] as any;
-        const columnElems = Array.from(document.querySelectorAll('page-read:not([ion-page-hidden]) div.read-column'));
+        const columnElems = Array.from(document.querySelectorAll('page-read:not([ion-page-hidden]):not(.ion-page-hidden) div.read-column'));
         if (columnElems) {
           columnElems.forEach(function(columnElem) {
             const varElem = columnElem.querySelector('variations');
