@@ -17,7 +17,6 @@ import { IonicModule } from '@ionic/angular';
 import { UserSettingsService } from '../services/settings/user-settings.service';
 import { PipesModule } from 'src/pipes/pipes.module';
 import { CommonModule } from '@angular/common';
-import { LanguageService } from '../services/languages/language.service';
 import { FormsModule } from '@angular/forms';
 import { TitleLogoComponent } from './title-logo/title-logo';
 import { TableOfContentsAccordionComponent } from './table-of-contents-accordion/table-of-contents-accordion';

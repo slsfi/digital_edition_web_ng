@@ -1,9 +1,10 @@
 import { Component, Renderer2, ElementRef, SecurityContext, NgZone } from '@angular/core';
-import { DomSanitizer } from '@angular/platform-browser';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 import { ModalController, NavController, Platform, PopoverController } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
-import { Subscription } from 'rxjs';
+import { combineLatest, Observable, Subscription } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { DownloadTextsModalPage } from 'src/app/modals/download-texts-modal/download-texts-modal';
 import { ReferenceDataModalPage } from 'src/app/modals/reference-data-modal/reference-data-modal';
 import { IllustrationPage } from 'src/app/modals/illustration/illustration';
@@ -20,6 +21,7 @@ import { ReadPopoverService } from 'src/app/services/settings/read-popover.servi
 import { CommonFunctionsService } from 'src/app/services/common-functions/common-functions.service';
 import { StorageService } from 'src/app/services/storage/storage.service';
 import { config } from "src/app/services/config/config";
+import { isBrowser } from "src/standalone/utility-functions";
 
 /**
  * Generated class for the IntroductionPage page.
@@ -42,11 +44,11 @@ import { config } from "src/app/services/config/config";
 export class IntroductionPage {
 
   errorMessage: any;
-  protected id = '';
-  protected text: any;
-  protected textMenu: any;
-  protected collection?: any;
-  protected pos: any;
+  id = '';
+  text: SafeHtml;
+  textMenu: SafeHtml;
+  pos: string | null;
+  public urlParameters$: Observable<any>;
   public tocMenuOpen: boolean;
   public hasSeparateIntroToc: Boolean = false;
   public showURNButton: boolean;
@@ -74,7 +76,7 @@ export class IntroductionPage {
   infoOverlayTitle: string;
   textLoading: Boolean = true;
   tocItems?: any;
-  intervalTimerId: number;
+  intervalTimerId: ReturnType<typeof setInterval> | undefined;
   userIsTouching: Boolean = false;
   collectionLegacyId?: string;
   simpleWorkMetadata?: Boolean;
@@ -109,8 +111,7 @@ export class IntroductionPage {
     private modalController: ModalController,
     private route: ActivatedRoute,
   ) {
-    // this.id = this.params.get('collectionID');
-    // this.collection = this.params.get('collection');
+    this.pos = null;
     this.tocMenuOpen = false;
     this.toolTipPosType = 'fixed';
     this.toolTipMaxWidth = null;
@@ -127,7 +128,7 @@ export class IntroductionPage {
       bottom: 0 + 'px',
       left: -1500 + 'px'
     };
-    this.intervalTimerId = 0;
+    this.intervalTimerId = undefined;
     this.languageSubscription = null;
 
     this.toolTipsSettings = config.settings?.toolTips ?? undefined;
@@ -190,15 +191,6 @@ export class IntroductionPage {
       this.showTextDownloadButton = false;
     }
 
-    // Check if we have a pos parmeter in the URL, if we have one we can use it for scrolling the text on the page to that position.
-    // The pos parameter must come after the publication id followed by /#, e.g. /publication-introduction/203/#pos1
-    const currentURL: string = String(window.location.href);
-    if (currentURL.match(/publication-introduction\/\d+\/#\w+/) !== null) {
-      this.pos = currentURL.split('#').pop();
-    } else {
-      this.pos = null;
-    }
-
   }
 
   ionViewWillEnter() {
@@ -207,52 +199,71 @@ export class IntroductionPage {
   }
 
   ngOnInit() {
-    this.route.params.subscribe(params => {
-      this.id = params['collectionID'];
+    this.urlParameters$ = combineLatest(
+      [this.route.params, this.route.queryParams]
+    ).pipe(
+      map(([params, queryParams]) => ({...params, ...queryParams}))
+    );
+     
+    this.urlParameters$.subscribe(routeParams => {
+      
+      // Check if there is a text position in the route params
+      // (comes from queryParams)
+      if (routeParams['pos'] !== undefined) {
+        this.pos = routeParams['pos'];
+      } else {
+        this.pos = null;
+      }
 
-      if (this.id) {
-        this.languageSubscription = this.langService.languageSubjectChange().subscribe(lang => {
-          if (lang) {
-            this.loadIntroduction(lang, this.id);
+      // If there is a collection id in the route params and it's
+      // not the same as already stored in the component, load
+      // content. If it's the same collection id, try to scroll
+      // the text to this.pos (will only scroll if not null).
+      if (routeParams['collectionID']) {
+        if (routeParams['collectionID'] !== this.id) {
+          this.id = routeParams['collectionID'];
+
+          this.setCollectionLegacyId(this.id);
+
+          if (this.languageSubscription) {
+            this.languageSubscription.unsubscribe();
           }
-        });
+          this.languageSubscription = this.langService.languageSubjectChange().subscribe(lang => {
+            if (lang) {
+              this.loadIntroduction(lang, this.id);
+            }
+          });
 
-        /* This is only for highlighting the current page in the old menu
-        this.events.publishSelectedItemInMenu({
-          menuID: this.id,
-          component: 'introduction'
-        });
-        */
-
-        this.setCollectionLegacyId(this.id);
-        this.setUpTextListeners(this.id);
+        } else {
+          // Try to scroll to a position in the text
+          this.scrollToPos();
+        }
       }
     });
+
+    if (isBrowser()) {
+      this.setUpTextListeners();
+    }
   }
 
   loadIntroduction(lang: string, id: string) {
     this.text = '';
     this.textLoading = true;
     this.textService.getIntroduction(id, lang).subscribe({
-      next: res => {
-        /*
-        if ( this.id !== undefined ) {
-          this.getTocRoot(this.id);
-        }
-        */
-
+      next: (res) => {
         this.textLoading = false;
-        // in order to get id attributes for tooltips
-        this.text = this.sanitizer.bypassSecurityTrustHtml(
-          res.content.replace(/images\//g, 'assets/images/')
-              .replace(/\.png/g, '.svg')
-        );
+        // Fix paths for images and file extensions for icons
+        let textContent = res.content.replace(/images\//g, 'assets/images/').replace(/\.png/g, '.svg');
+
+        // Find the introduction's table of contents in the text
         const pattern = /<div data-id="content">(.*?)<\/div>/;
-        const matches = String(this.text).match(pattern);
-        if ( matches !== null ) {
-          const the_string = matches[0];
-          this.textMenu = the_string;
-          if (!this.platform.is('mobile')) {
+        const matches = textContent.match(pattern);
+        if ( matches && matches.length > 0 ) {
+          // The introduction's table of contents was found,
+          // copy it to this.textMenu and remove it from this.text
+          this.textMenu = this.sanitizer.bypassSecurityTrustHtml(matches[1]);
+          textContent = textContent.replace(pattern, '');
+          if (!this.userSettingsService.isMobile()) {
             if (!this.tocMenuOpen) {
               this.tocMenuOpen = true;
             }
@@ -260,33 +271,22 @@ export class IntroductionPage {
         } else {
           this.hasSeparateIntroToc = false;
         }
-        if (!this.platform.is('mobile')) {
-          if (!this.tocMenuOpen) {
-            this.tocMenuOpen = true;
-          }
-        }
-        // Try to scroll to an element in the text, checks if "pos" given
+
+        this.text = this.sanitizer.bypassSecurityTrustHtml(textContent);
+
+        // Try to scroll to a position in the text
         this.scrollToPos();
       },
-      error: e =>  {
+      error: (e) =>  {
         this.errorMessage = <any>e;
         this.textLoading = false;
         this.text = 'Could not load introduction.';
         this.hasSeparateIntroToc = false;
       }
     });
-    /*
-    const selectedStatic = [] as any;
-    selectedStatic['isIntroduction'] = true;
-    this.events.publishSetSelectedStaticTrue(selectedStatic);
-    */
   }
 
   ionViewWillLeave() {
-    this.unlistenClickEvents?.();
-    this.unlistenMouseoverEvents?.();
-    this.unlistenMouseoutEvents?.();
-    this.unlistenFirstTouchStartEvent?.();
     this.events.publishIonViewWillLeave(this.constructor.name);
   }
 
@@ -294,63 +294,77 @@ export class IntroductionPage {
     if (this.languageSubscription) {
       this.languageSubscription.unsubscribe();
     }
+    this.unlistenClickEvents?.();
+    this.unlistenMouseoverEvents?.();
+    this.unlistenMouseoutEvents?.();
+    this.unlistenFirstTouchStartEvent?.();
   }
 
-  /** Try to scroll to an element in the text, checks if "pos" given.
-   *  Timeout, to give text some time to load on the page. */
+  /**
+   * Try to scroll to an element in the text, checks if this.pos
+   * is null. Interval, to give text some time to load on the page.
+   * */
   private scrollToPos() {
-    const that = this;
-    this.ngZone.runOutsideAngular(() => {
-      let iterationsLeft = 10;
-      clearInterval(this.intervalTimerId);
-      this.intervalTimerId = window.setInterval(function() {
-        if (iterationsLeft < 1) {
-          clearInterval(that.intervalTimerId);
-        } else {
-          iterationsLeft -= 1;
-          if (that.pos !== null && that.pos !== undefined) {
-            let posElem: HTMLElement | null = document.querySelector('page-introduction:not([ion-page-hidden]) [name="' + that.pos + '"]');
-            if (posElem !== null && posElem !== undefined) {
-              const parentElem = posElem.parentElement;
-              if (parentElem) {
-                if ( (parentElem !== null && parentElem.classList.contains('ttFixed'))
-                || (parentElem.parentElement !== null && parentElem.parentElement.classList.contains('ttFixed')) ) {
-                    // Anchor is in footnote --> look for next occurence since the first footnote element
-                    // is not displayed (footnote elements are copied to a list at the end of the introduction and that's
-                    // the position we need to find).
-                    posElem = document.querySelectorAll('page-introduction:not([ion-page-hidden]) [name="' + that.pos + '"]')[1] as HTMLElement;
+    if (isBrowser()) {
+      const that = this;
+      this.ngZone.runOutsideAngular(() => {
+        let iterationsLeft = 10;
+        if (this.intervalTimerId !== undefined) {
+          clearInterval(this.intervalTimerId);
+        }
+        this.intervalTimerId = setInterval(function() {
+          if (iterationsLeft < 1) {
+            clearInterval(that.intervalTimerId);
+            that.pos = null;
+          } else {
+            iterationsLeft -= 1;
+            if (that.pos !== undefined && that.pos !== null) {
+              let posElem: HTMLElement | null = document.querySelector('page-introduction:not([ion-page-hidden]):not(.ion-page-hidden) [name="' + that.pos + '"]');
+              if (posElem !== null && posElem !== undefined) {
+                const parentElem = posElem.parentElement;
+                if (parentElem) {
+                  if ( (parentElem !== null && parentElem.classList.contains('ttFixed'))
+                  || (parentElem.parentElement !== null && parentElem.parentElement.classList.contains('ttFixed')) ) {
+                      // Anchor is in footnote --> look for next occurence
+                      // since the first footnote element is not displayed
+                      // (footnote elements are copied to a list at the
+                      // end of the introduction and that's the position
+                      // we need to find).
+                      posElem = document.querySelectorAll('page-introduction:not([ion-page-hidden]):not(.ion-page-hidden) [name="' + that.pos + '"]')[1] as HTMLElement;
+                  }
+                }
+                if (posElem !== null && posElem !== undefined && posElem.classList !== null
+                && posElem.classList.contains('anchor')) {
+                  that.commonFunctions.scrollToHTMLElement(posElem);
+                  that.pos = null;
+                  clearInterval(that.intervalTimerId);
                 }
               }
-              if (posElem !== null && posElem !== undefined && posElem.classList !== null
-              && posElem.classList.contains('anchor')) {
-                that.commonFunctions.scrollToHTMLElement(posElem);
-                clearInterval(that.intervalTimerId);
-              }
+            } else {
+              clearInterval(that.intervalTimerId);
             }
-          } else {
-            clearInterval(that.intervalTimerId);
           }
-        }
-      }.bind(this), 1000);
-    });
+        }.bind(this), 1000);
+      });
+    }
   }
 
   setCollectionLegacyId(id: string) {
     this.textService.getLegacyIdByCollectionId(id).subscribe({
-      next: collection => {
+      next: (collection) => {
         this.collectionLegacyId = '';
         if (collection[0].legacy_id) {
           this.collectionLegacyId = collection[0].legacy_id;
         }
       },
-      error: e => {
+      error: (e) => {
         this.collectionLegacyId = '';
         console.log('could not get collection data trying to resolve collection legacy id');
       }
     });
   }
 
-  private setUpTextListeners(id: string) {
+  private setUpTextListeners() {
     const nElement: HTMLElement = this.elementRef.nativeElement;
 
     this.ngZone.runOutsideAngular(() => {
@@ -408,7 +422,7 @@ export class IntroductionPage {
 
           if (anchorElem.classList.contains('ref_external')) {
             // Link to external web page, open in new window/tab.
-            if (anchorElem.hasAttribute('href')) {
+            if (anchorElem.hasAttribute('href') && isBrowser()) {
               window.open(anchorElem.href, '_blank');
             }
 
@@ -424,7 +438,12 @@ export class IntroductionPage {
             let chapterId = '';
             let positionId = '';
 
-            if (anchorElem.classList.contains('ref_readingtext') || anchorElem.classList.contains('ref_comment')) {
+            if (
+                (
+                  anchorElem.classList.contains('ref_readingtext') ||
+                  anchorElem.classList.contains('ref_comment')
+                ) && isBrowser()
+              ) {
               // Link to reading text or comment.
 
               const newWindowRef = window.open();
@@ -464,7 +483,7 @@ export class IntroductionPage {
               // Link to introduction.
               if (hrefTargetItems.length === 1 && hrefTargetItems[0].startsWith('#')) {
                 // If only a position starting with a hash, assume it's in the same publication.
-                publicationId = id;
+                publicationId = this.id;
                 positionId = hrefTargetItems[0];
               } else {
                 publicationId = hrefTargetItems[0];
@@ -480,7 +499,7 @@ export class IntroductionPage {
                 positionId = positionId.replace('#', '');
 
                 // Find the element in the correct parent element.
-                const matchingElements = document.querySelectorAll('page-introduction:not([ion-page-hidden]) [name="' + positionId + '"]');
+                const matchingElements = document.querySelectorAll('page-introduction:not([ion-page-hidden]):not(.ion-page-hidden) [name="' + positionId + '"]');
                 let targetElement = null;
                 for (let i = 0; i < matchingElements.length; i++) {
                   targetElement = matchingElements[i] as HTMLElement;
@@ -496,17 +515,17 @@ export class IntroductionPage {
                 if (targetElement !== null && targetElement.classList.contains('anchor')) {
                   this.commonFunctions.scrollToHTMLElement(targetElement);
                 }
-              } else {
+              } else if (isBrowser()) {
                 // Different introduction, open in new window.
                 const newWindowRef = window.open();
                 this.textService.getCollectionAndPublicationByLegacyId(publicationId).subscribe(data => {
                   if (data[0] !== undefined) {
                     publicationId = data[0]['coll_id'];
                   }
-                  let hrefString = '#/publication-introduction/' + publicationId;
+                  let hrefString = '/publication-introduction/' + publicationId;
                   if (hrefTargetItems.length > 1 && hrefTargetItems[1].startsWith('#')) {
-                    positionId = hrefTargetItems[1];
-                    hrefString += '/' + positionId;
+                    positionId = hrefTargetItems[1].replace('#', '');
+                    hrefString += '?pos=' + positionId;
                   }
                   if (newWindowRef) {
                     newWindowRef.location.href = hrefString;
@@ -528,7 +547,7 @@ export class IntroductionPage {
               targetId = anchorElem.parentElement.getAttribute('href');
             }
             const dataIdSelector = '[data-id="' + String(targetId).replace('#', '') + '"]';
-            let target = anchorElem.ownerDocument.querySelector('page-introduction:not([ion-page-hidden])') as HTMLElement;
+            let target = anchorElem.ownerDocument.querySelector('page-introduction:not([ion-page-hidden]):not(.ion-page-hidden)') as HTMLElement;
             target = target.querySelector(dataIdSelector) as HTMLElement;
             if (target !== null) {
               if (anchorElem.classList.contains('footnoteReference')) {
@@ -591,6 +610,7 @@ export class IntroductionPage {
 
     this.tooltipService.getPersonTooltip(id).subscribe({
       next: tooltip => {
+        console.log(tooltip);
         const text = this.tooltipService.constructPersonTooltipText(tooltip, targetElem);
         this.setToolTipPosition(targetElem, text);
         this.setToolTipText(text);
@@ -814,7 +834,7 @@ export class IntroductionPage {
     const vw = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
 
     // Get page content element and adjust viewport height with horizontal scrollbar height if such is present
-    const contentElem = document.querySelector('page-introduction:not([ion-page-hidden]) ion-content.publication-ion-content') as HTMLElement;
+    const contentElem = document.querySelector('page-introduction:not([ion-page-hidden]):not(.ion-page-hidden) ion-content.publication-ion-content') as HTMLElement;
     let horizontalScrollbarOffsetHeight = 0;
     if (contentElem.clientHeight < contentElem.offsetHeight) {
       horizontalScrollbarOffsetHeight = contentElem.offsetHeight - contentElem.clientHeight;
@@ -893,32 +913,6 @@ export class IntroductionPage {
       return document.createElement('div');
     }
   }
-
-  /*
-  getTocRoot(id: string) {
-    if ( id !== 'mediaCollections' ) {
-      this.tableOfContentsService.getTableOfContents(id).subscribe({
-        next: (tocItems: any) => {
-          this.tocItems = tocItems;
-          console.log('get toc root... --- --- in single edition');
-          const tocLoadedParams = { tocItems: tocItems } as any;
-          tocLoadedParams['collectionID'] = this.tocItems['collectionId'];
-          tocLoadedParams['searchTocItem'] = true;
-          this.events.publishTableOfContentsLoaded(tocLoadedParams);
-          this.storage.set('toc_' + id, tocItems);
-        },
-        error: e => { this.errorMessage = <any>e }
-      });
-    } else {
-      this.tocItems = this.collection['accordionToc']['toc'];
-      const tocLoadedParams = { tocItems: this.tocItems } as any;
-      tocLoadedParams['collectionID'] = 'mediaCollections';
-      tocLoadedParams['searchTocItem'] = true;
-      this.events.publishTableOfContentsLoaded(tocLoadedParams);
-      this.storage.set('toc_' + id, this.tocItems);
-    }
-  }
-  */
 
   setToolTipText(text: string) {
     this.toolTipText = text;

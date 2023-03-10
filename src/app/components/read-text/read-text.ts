@@ -111,11 +111,11 @@ export class ReadTextComponent {
           }
 
           if (posId) {
-            let target = document.querySelector('page-read:not([ion-page-hidden]) [name="' + posId + '"]') as HTMLAnchorElement;
+            let target = document.querySelector('page-read:not([ion-page-hidden]):not(.ion-page-hidden) [name="' + posId + '"]') as HTMLAnchorElement;
             if ( target && ((target.parentElement && target.parentElement.classList.contains('ttFixed'))
             || (target.parentElement?.parentElement && target.parentElement?.parentElement.classList.contains('ttFixed'))) ) {
               // Position in footnote --> look for second target
-              target = document.querySelectorAll('page-read:not([ion-page-hidden]) [name="' + posId + '"]')[1] as HTMLAnchorElement;
+              target = document.querySelectorAll('page-read:not([ion-page-hidden]):not(.ion-page-hidden) [name="' + posId + '"]')[1] as HTMLAnchorElement;
             }
             if (target) {
               that.commonFunctions.scrollToHTMLElement(target);
@@ -314,7 +314,7 @@ export class ReadTextComponent {
             // Check if we have an image to show in the illustrations-view
             if (image !== null) {
               // Check if we have an illustrations-view open, if not, open and display the clicked image there
-              if (document.querySelector('page-read:not([ion-page-hidden]) illustrations') === null) {
+              if (document.querySelector('page-read:not([ion-page-hidden]):not(.ion-page-hidden) illustrations') === null) {
                 this.ngZone.run(() => {
                   this.openIllustrationInNewView(image);
                 });

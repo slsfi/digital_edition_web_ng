@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { EventsService } from '../events/events.service';
-import { StorageService } from '../storage/storage.service';
+// import { StorageService } from '../storage/storage.service';
 import { config } from "src/app/services/config/config";
 
 @Injectable()
@@ -16,7 +16,7 @@ export class LanguageService {
 
   constructor(
     public translate: TranslateService,
-    public storage: StorageService,
+    // public storage: StorageService,
     private events: EventsService
   ) {
     this._langChangeEnabled = config.i18n?.enableLanguageChanges ?? true;
@@ -25,6 +25,7 @@ export class LanguageService {
     this.translate.addLangs(this._availableLanguages);
     this.translate.setDefaultLang(this._defaultLanguage);
 
+    /*
     if (!this._langChangeEnabled) {
       this.translate.use(this._defaultLanguage);
     } else {
@@ -43,14 +44,27 @@ export class LanguageService {
         this.translate.use(this._defaultLanguage);
       });
     }
+    */
+
+    if (!this._langChangeEnabled) {
+      this.translate.use(this._defaultLanguage);
+    } else {
+      const browserLang = this.translate.getBrowserLang();
+      if (browserLang && this._availableLanguages.includes(browserLang)) {
+        this.translate.use(browserLang);
+      } else {
+        this.translate.use(this._defaultLanguage);
+      }
+    }
 
     this._language = this.translate.currentLang;
-    this.storage.set('language', this.translate.currentLang);
     this.languageSubject = new BehaviorSubject<string>(this.translate.currentLang);
+
+    // this.storage.set('language', this.translate.currentLang);
 
     this.translate.onLangChange.subscribe((event: LangChangeEvent) => {
       const prevLang = this._language;
-      this.storage.set('language', this.translate.currentLang);
+      // this.storage.set('language', this.translate.currentLang);
       this._language = this.translate.currentLang;
       if (this._language !== undefined && prevLang !== this._language) {
         this.updateLanguageSubject(this._language);
@@ -59,8 +73,8 @@ export class LanguageService {
   }
 
   public getLanguage(): Observable<string> {
-    const translate = this.translate;
-    const storage = this.storage;
+    // const translate = this.translate;
+    // const storage = this.storage;
     const _language = this._language;
     const that = this as any;
     return new Observable(function (subscriber: any) {
@@ -74,8 +88,13 @@ export class LanguageService {
         subscriber.next(_language);
         subscriber.complete();
         return;
+      } else {
+        subscriber.next(that._defaultLanguage);
+        subscriber.complete();
+        return;
       }
 
+      /*
       storage.get('language').then((lang) => {
         if (lang) {
           subscriber.next(lang);
@@ -90,6 +109,7 @@ export class LanguageService {
           subscriber.next(that.lang);
           subscriber.complete();
       });
+      */
     }.bind(this));
   }
 

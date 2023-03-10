@@ -162,10 +162,10 @@ export class CommonFunctionsService {
           clearInterval(that.intervalTimerId);
         } else {
           iterationsLeft -= 1;
-          const viewElements = document.querySelector('page-read:not([ion-page-hidden])')?.getElementsByClassName('read-column');
+          const viewElements = document.querySelector('page-read:not([ion-page-hidden]):not(.ion-page-hidden)')?.getElementsByClassName('read-column');
           if (viewElements && viewElements[0] !== undefined) {
             const lastViewElement = viewElements[viewElements.length - 1] as HTMLElement;
-            let scrollingContainer = document.querySelector('page-read:not([ion-page-hidden]) ion-content.publication-ion-content');
+            let scrollingContainer = document.querySelector('page-read:not([ion-page-hidden]):not(.ion-page-hidden) ion-content.publication-ion-content');
             if (scrollingContainer) {
               const shadowContainer = scrollingContainer.shadowRoot;
               if (shadowContainer) {

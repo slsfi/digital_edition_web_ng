@@ -139,7 +139,7 @@ export class LegendComponent {
             clearInterval(that.intervalTimerId);
           } else {
             iterationsLeft -= 1;
-            const legendElements = document.querySelectorAll('page-read:not([ion-page-hidden]) legend');
+            const legendElements = document.querySelectorAll('page-read:not([ion-page-hidden]):not(.ion-page-hidden) legend');
             const element = legendElements[legendElements.length - 1].querySelector('[data-id="' + that.scrollToElementId + '"]') as any;
             if (element) {
               that.commonFunctions.scrollElementIntoView(element, 'top');
