@@ -1,4 +1,14 @@
 <ion-app>
-    <top-menu (hamburgerMenuClick)="toggleSideMenu()" [splitPanePossible]="splitPanePossible" [splitPaneOpen]="splitPaneOpen" [ngClass]="{'splitPanePossible': splitPanePossible}"></top-menu>
-    <app-side-menu [showSideMenu]="showSideMenu"></app-side-menu>
+  <top-menu (hamburgerMenuClick)="toggleSideMenu()" [ngClass]="{'splitPanePossible': splitPanePossible}"
+            [showSideMenu]="showSideMenu" [splitPanePossible]="splitPanePossible"></top-menu>
+  <ion-split-pane [when]="showSideMenu" contentId="content">
+    <!-- This is the default, main menu -->
+    <ion-menu contentId="content" id="contentMenu">
+      <app-side-menu></app-side-menu>
+    </ion-menu>
+    <!-- Page content, which is displayed in the right container of <ion-split-pane> -->
+    <div class="ion-page" id="content">
+      <ion-router-outlet [animated]="false"></ion-router-outlet>
+    </div>
+  </ion-split-pane>
 </ion-app>

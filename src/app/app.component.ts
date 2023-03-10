@@ -198,7 +198,7 @@ export class DigitalEditionsApp {
 
     this.songTypesMenuMarkdownConfig();
     this.aboutMenuMarkdownConfig();
-    
+
     this.accordionTOC = config.AccordionTOC ?? false;
     this.openCollectionFromToc = config.OpenCollectionFromToc ?? false;
     this.galleryInReadMenu = config.ImageGallery?.ShowInReadMenu ?? true;
@@ -286,16 +286,6 @@ export class DigitalEditionsApp {
 
   toggleSideMenu() {
     this.showSideMenu = !this.showSideMenu
-  }
-
-  hideSplitPane() {
-    this.splitPaneOpen = false;
-  }
-
-  showSplitPane() {
-    this.splitPaneOpen = true;
-
-    this.closeSplitPane();
   }
 
   closeSplitPane() {
@@ -702,7 +692,6 @@ export class DigitalEditionsApp {
         this.setupPageSettings(currentPage);
       } else if ( document.URL.indexOf('/') > 0 ) {
         if ( this.splitPaneOpen === false && this.pageFirstLoad === true ) {
-          this.showSplitPane();
           this.pageFirstLoad = false;
         }
       }
@@ -898,31 +887,6 @@ export class DigitalEditionsApp {
     }
   }
 
-  setSplitPaneState(currentPage: any) {
-    const p = currentPage;
-    this.previousSplitPaneOpenState = this.splitPaneOpen;
-    this.previousSplitPanePossibleState = this.splitPanePossible;
-
-    if (!this.platform.is('mobile')) {
-      this.showSplitPane();
-      this.enableSplitPane();
-    }
-    this.doFor(p, this.pagesWithoutMenu, () => {
-      this.hideSplitPane();
-      this.disableSplitPane();
-      this.splitPanePossible = false;
-    });
-
-    this.doFor(p, this.pagesWithClosedMenu, () => {
-      this.hideSplitPane();
-    });
-
-    // this closes the menu after opening a page when you are on mobile
-    if (this.platform.is('mobile')) {
-      this.hideSplitPane();
-    }
-  }
-
   setupPageSettings(currentPage: any) {
     const p = currentPage;
     const pagesWith = this.pagesThatShallShow;
@@ -949,7 +913,6 @@ export class DigitalEditionsApp {
       this.enableContentMenu();
     });
 
-    this.setSplitPaneState(p);
   }
 
   sortCollectionsRoman() {

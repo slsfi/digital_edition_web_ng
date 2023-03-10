@@ -4,8 +4,8 @@
   </div>
   <ion-buttons slot="start" class="top-menu-buttons">
     <ion-button (click)="toggleSplitPane()">
-      <ion-icon *ngIf="!splitPaneOpen" name="menu"></ion-icon>
-      <ion-icon *ngIf="splitPaneOpen" name="close"></ion-icon>
+      <ion-icon *ngIf="!showSideMenu" name="menu"></ion-icon>
+      <ion-icon *ngIf="showSideMenu" name="close"></ion-icon>
     </ion-button>
     <ion-button>
       <a [routerLink]="['/home']">

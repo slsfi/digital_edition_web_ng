@@ -23,7 +23,7 @@ import { config } from "src/app/services/config/config";
 export class TopMenuComponent {
   @Input() splitPaneMobile?: boolean;
   @Input() splitPanePossible?: boolean;
-  @Input() splitPaneOpen?: boolean;
+  @Input() showSideMenu: boolean;
   @Output() hamburgerMenuClick = new EventEmitter();
 
   public showHelpButton;

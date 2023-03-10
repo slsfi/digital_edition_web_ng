@@ -1,14 +1,20 @@
-<div *ngIf="selected">
-  <ion-list>
+<li class="accordion" [class.open]="selected">
+  <ul>
     <ng-container *ngFor="let child of children; let i = index">
-      <ion-item class="mainMenuItem" (click)="toggleAccordion(child.id)">
-        <ion-label>{{child.title}}</ion-label>
+      <li class="mainMenuItem" (click)="toggleAccordion(child.id)" [class.menu-highlight]="router.url.includes(child.id) && !child.children">
+        <ng-container [ngSwitch]="!!child.children?.length">
+          <a *ngSwitchDefault routerLink="{{parentPath + '/' + child.id}}">{{child.title}}</a>
+          <span *ngSwitchCase="true">{{child.title}}</span>
+        </ng-container>
         <ion-icon *ngIf="child.children" name="chevron-forward-outline" [class.open]="selectedMenu === child.id"></ion-icon>
-      </ion-item>
+      </li>
       <app-recursive-accordion
         [selected]="selectedMenu === child.id"
-        *ngIf="child.children" [children]="child.children"
-      ></app-recursive-accordion>
+        [childId]="child.id"
+        *ngIf="child.children"
+        [children]="child.children"
+        [parentPath]="parentPath">
+      </app-recursive-accordion>
     </ng-container>
-  </ion-list>
-</div>
+  </ul>
+</li>

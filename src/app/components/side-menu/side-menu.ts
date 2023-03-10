@@ -1,12 +1,11 @@
 import { ChangeDetectorRef, Component, Input, NgZone, OnInit, ViewChild } from '@angular/core';
 import { Title } from "@angular/platform-browser";
-import { Router } from "@angular/router";
-import { AlertController, IonAccordionGroup, MenuController, Platform } from "@ionic/angular";
+import { NavigationEnd, Router } from "@angular/router";
+import { AlertController, MenuController, Platform } from "@ionic/angular";
 import { TranslateService } from "@ngx-translate/core";
 import { DigitalEdition } from "../../models/digital-edition.model";
 import { TocAccordionMenuOptionModel } from "../../models/toc-accordion-menu-option.model";
 import { SideMenuSettings } from "../../models/side-menu-settings";
-import { GenericSettingsService } from "../../services/settings/generic-settings.service";
 import { StorageService } from "../../services/storage/storage.service";
 import { LanguageService } from "../../services/languages/language.service";
 import { EventsService } from "../../services/events/events.service";
@@ -18,6 +17,8 @@ import { GalleryService } from "../../services/gallery/gallery.service";
 import { MetadataService } from "../../services/metadata/metadata.service";
 import { config } from "src/app/services/config/config";
 import { RecursiveAccordion } from "../recursive-accordion/recursive-accordion";
+import { filter, map } from "rxjs/operators";
+import { Observable } from "rxjs";
 
 @Component({
   selector: 'app-side-menu',
@@ -28,6 +29,7 @@ export class SideMenu implements OnInit {
   @Input() showSideMenu: boolean = false;
   @ViewChild('accordionAbout') accordionAbout: RecursiveAccordion;
 
+  _config = config
   searchTocItem = false;
   rootPage = 'HomePage';
   aboutPages: any[];
@@ -197,7 +199,6 @@ export class SideMenu implements OnInit {
     public events: EventsService,
     public mdcontentService: MdContentService,
     private userSettingsService: UserSettingsService,
-    public genericSettingsService: GenericSettingsService,
     public titleService: Title,
     public digitalEditionListService: DigitalEditionListService,
     protected tableOfContentsService: TableOfContentsService,
@@ -206,22 +207,22 @@ export class SideMenu implements OnInit {
     private galleryService: GalleryService,
     private metadataService: MetadataService,
     private ngZone: NgZone,
-    private router: Router
+    private router: Router,
   ) {
     this.mediaCollectionOptions = {};
 
     this.aboutPages = [];
-    this.apiEndPoint = config.app?.apiEndpoint ?? '';
-    this.collectionDownloads = config.collectionDownloads ?? undefined;
-    this.projectMachineName = config.app?.machineName ?? '';
+    this.apiEndPoint = this._config.app?.apiEndpoint ?? '';
+    this.collectionDownloads = this._config.collectionDownloads ?? undefined;
+    this.projectMachineName = this._config.app?.machineName ?? '';
     try {
-      this.showBooks = this.genericSettingsService.show('TOC.Books');
+      this.showBooks = this._config.show?.TOC?.Books;
     } catch (e) {
       this.showBooks = false;
     }
 
     try {
-      this.splitReadCollections = this.genericSettingsService.show('TOC.splitReadCollections') as any;
+      this.splitReadCollections = this._config.show?.TOC?.splitReadCollections as any;
       if ( this.splitReadCollections === null || this.splitReadCollections.length <= 0 ) {
         this.splitReadCollections = [''];
       }
@@ -229,21 +230,21 @@ export class SideMenu implements OnInit {
       this.splitReadCollections = [''];
     }
 
-    this.collectionSortOrder = config.app?.CollectionSortOrder ?? undefined;
+    this.collectionSortOrder = this._config.app?.CollectionSortOrder ?? undefined;
 
     this.sideMenuMobileConfig();
     this.songTypesMenuMarkdownConfig();
     this.aboutMenuMarkdownConfig();
 
-    this.accordionTOC = config.AccordionTOC ?? false;
-    this.openCollectionFromToc = config.OpenCollectionFromToc ?? false;
-    this.galleryInReadMenu = config.ImageGallery?.ShowInReadMenu ?? true;
-    this.accordionMusic = config.AccordionMusic ?? false;
-    this.hasCover = config.HasCover ?? false;
-    this.hasTitle = config.HasTitle ?? false;
-    this.hasForeword = config.HasForeword ?? false;
-    this.hasIntro = config.HasIntro ?? false;
-    this.availableEpubs = config.AvailableEpubs ?? undefined;
+    this.accordionTOC = this._config.AccordionTOC ?? false;
+    this.openCollectionFromToc = this._config.OpenCollectionFromToc ?? false;
+    this.galleryInReadMenu = this._config.ImageGallery?.ShowInReadMenu ?? true;
+    this.accordionMusic = this._config.AccordionMusic ?? false;
+    this.hasCover = this._config.HasCover ?? false;
+    this.hasTitle = this._config.HasTitle ?? false;
+    this.hasForeword = this._config.HasForeword ?? false;
+    this.hasIntro = this._config.HasIntro ?? false;
+    this.availableEpubs = this._config.AvailableEpubs ?? undefined;
     if (this.availableEpubs !== undefined) {
       this.epubNames = Object.keys(this.availableEpubs);
     } else {
@@ -252,13 +253,13 @@ export class SideMenu implements OnInit {
     }
     this.unSelectAllEpubsInToc();
 
-    this.defaultSelectedItem = config.defaultSelectedItem ?? 'title';
+    this.defaultSelectedItem = this._config.defaultSelectedItem ?? 'title';
 
     this.getCollectionsWithoutTOC();
     this.registerEventListeners();
     this.getCollectionList();
     // If we have MediaCollections we need to add these first
-    if (this.genericSettingsService.show('TOC.MediaCollections')) {
+    if (this._config.show?.TOC?.MediaCollections) {
       this.getMediaCollections().then((mediaCollectionMenu) => {
         if (mediaCollectionMenu && mediaCollectionMenu.length > 0) {
           mediaCollectionMenu.sort(function (a: any, b: any) {
@@ -313,19 +314,19 @@ export class SideMenu implements OnInit {
   }
 
   songTypesMenuMarkdownConfig() {
-    this.songTypesMenuMarkdown = config.SongTypesMenuMarkdown ?? false;
+    this.songTypesMenuMarkdown = this._config.SongTypesMenuMarkdown ?? false;
   }
 
   aboutMenuMarkdownConfig() {
-    this.aboutMenuMarkdown = config.AboutMenuAccordion ?? false;
+    this.aboutMenuMarkdown = this._config.AboutMenuAccordion ?? false;
   }
 
   sideMenuMobileConfig() {
-    this.sideMenuMobile = config.SidemenuMobile ?? false;
+    this.sideMenuMobile = this._config.SidemenuMobile ?? false;
   }
 
   getCollectionsWithoutTOC() {
-    this.collectionsWithoutTOC = config.CollectionsWithoutTOC ?? [];
+    this.collectionsWithoutTOC = this._config.CollectionsWithoutTOC ?? [];
   }
 
   hideSplitPane() {
@@ -417,7 +418,7 @@ export class SideMenu implements OnInit {
   }
 
   getCollectionsWithTOC(collections: any, media?: any) {
-    if (this.genericSettingsService.show('TOC.MediaCollections') && this.galleryInReadMenu) {
+    if (this._config.show?.TOC?.MediaCollections && this.galleryInReadMenu) {
       collections.push(media);
     }
     if (!collections || !collections.length) {
@@ -479,7 +480,7 @@ export class SideMenu implements OnInit {
 
   collectionHasChildrenPdfs(collectionID: any) {
     let hasChildrenPdfs = false;
-    let childrenPdfs = config.collectionChildrenPdfs?.[collectionID] ?? [];
+    let childrenPdfs = this._config.collectionChildrenPdfs?.[collectionID] ?? [];
 
     if (childrenPdfs.length) {
       hasChildrenPdfs = true;
@@ -509,7 +510,7 @@ export class SideMenu implements OnInit {
   sortListDefined(list: any, sort: any) {
     for (const coll of list) {
       let order = sort[coll.id];
-      // If the sort order is not defined in the config, just set a high number
+      // If the sort order is not defined in the this._config, just set a high number
       // so that it will be at the end of the list.
       if ( order === undefined ) {
         order = 9999;
@@ -542,11 +543,11 @@ export class SideMenu implements OnInit {
       return;
     }
 
-    this.musicAccordion.personSearchTypes.show = config.MusicAccordionShow?.PersonSearchTypes ?? undefined;
-    this.musicAccordion.tagSearch.show = config.MusicAccordionShow?.TagSearch ?? undefined;
-    this.musicAccordion.placeSearch.show = config.MusicAccordionShow?.PlaceSearch ?? undefined;
-    this.musicAccordion.music.show = config.MusicAccordionShow?.Music ?? undefined;
-    this.musicAccordion.playmanTraditionPage.show = config.MusicAccordionShow?.PlaymanTraditionPage ?? undefined;
+    this.musicAccordion.personSearchTypes.show = this._config.MusicAccordionShow?.PersonSearchTypes ?? undefined;
+    this.musicAccordion.tagSearch.show = this._config.MusicAccordionShow?.TagSearch ?? undefined;
+    this.musicAccordion.placeSearch.show = this._config.MusicAccordionShow?.PlaceSearch ?? undefined;
+    this.musicAccordion.music.show = this._config.MusicAccordionShow?.Music ?? undefined;
+    this.musicAccordion.playmanTraditionPage.show = this._config.MusicAccordionShow?.PlaymanTraditionPage ?? undefined;
   }
 
   resetMusicAccordion() {
@@ -558,15 +559,15 @@ export class SideMenu implements OnInit {
       return;
     }
 
-    this.simpleAccordionsExpanded.songTypesAccordion = config.AccordionsExpandedDefault?.SongTypes ?? false;
-    this.simpleAccordionsExpanded.musicAccordion = config.AccordionsExpandedDefault?.Music ?? false;
+    this.simpleAccordionsExpanded.songTypesAccordion = this._config.AccordionsExpandedDefault?.SongTypes ?? false;
+    this.simpleAccordionsExpanded.musicAccordion = this._config.AccordionsExpandedDefault?.Music ?? false;
     for ( let i = 0; i < this.splitReadCollections.length; i++ ) {
-      this.simpleAccordionsExpanded.collectionsAccordion[i] = config.AccordionsExpandedDefault?.Collections ?? false;
+      this.simpleAccordionsExpanded.collectionsAccordion[i] = this._config.AccordionsExpandedDefault?.Collections ?? false;
     }
   }
 
   getSongTypes() {
-    if (this.genericSettingsService.show('TOC.SongTypes')) {
+    if (this._config.show?.TOC?.SongTypes) {
       if (this.songTypesMenuMarkdown) {
         (async () => {
           const songTypesMarkdownMenu = await this.mdcontentService.getMarkdownMenu(this.language, this.songTypesMenuMarkdownInfo.idNumber);
@@ -624,7 +625,7 @@ export class SideMenu implements OnInit {
       // platforms.map(p => console.log(`${p}: ${this.platform.is(p)}`));
       this.languageService.getLanguage().subscribe((lang: string) => {
         this.language = lang;
-        this.appName = config.app?.name?.[lang] ?? '';
+        this.appName = this._config.app?.name?.[lang] ?? '';
         this.titleService.setTitle(this.appName as string);
         this.getPersonSearchTypes();
         this.getStaticPagesMenus();
@@ -899,10 +900,10 @@ export class SideMenu implements OnInit {
         if (this.aboutMenuMarkdown && this.aboutOptionsMarkdown.children && this.aboutOptionsMarkdown.children.length) {
           let firstAboutPageID = this.aboutOptionsMarkdown.children[0].id;
           if (
-            config.page?.about?.markdownFolderNumber !== undefined &&
-            config.page?.about?.initialPageNode !== undefined
+            this._config.page?.about?.markdownFolderNumber !== undefined &&
+            this._config.page?.about?.initialPageNode !== undefined
           ) {
-            firstAboutPageID = this.language + '-' + config.page.about.markdownFolderNumber + '-' + config.page.about.initialPageNode;
+            firstAboutPageID = this.language + '-' + this._config.page.about.markdownFolderNumber + '-' + this._config.page.about.initialPageNode;
           } else {
             if (this.aboutOptionsMarkdown.children[0].type === 'folder') {
               firstAboutPageID = this.aboutOptionsMarkdown.children[0].children[0].id;
@@ -913,12 +914,12 @@ export class SideMenu implements OnInit {
 
           this.enableAboutMenu();
           if (
-            config.page?.about?.markdownFolderNumber === undefined ||
-            config.page?.about?.initialPageNode === undefined
+            this._config.page?.about?.markdownFolderNumber === undefined ||
+            this._config.page?.about?.initialPageNode === undefined
           ) {
             this.staticPagesMenus['initialAboutPage'] = this.language + '-03-01';
           } else {
-            this.staticPagesMenus['initialAboutPage'] = this.language + '-' + config.page.about.markdownFolderNumber + '-' + config.page.about.initialPageNode;
+            this.staticPagesMenus['initialAboutPage'] = this.language + '-' + this._config.page.about.markdownFolderNumber + '-' + this._config.page.about.initialPageNode;
           }
           this.openStaticPage(this.staticPagesMenus['initialAboutPage']);
         }
@@ -963,7 +964,7 @@ export class SideMenu implements OnInit {
 
     this.events.getDigitalEditionListRecieveData().subscribe((data: any) => {
       this.collectionsList = data.digitalEditions;
-      const sortCollectionsByRomanNumerals = config.SortCollectionsByRomanNumerals ?? false;
+      const sortCollectionsByRomanNumerals = this._config.SortCollectionsByRomanNumerals ?? false;
 
       if (sortCollectionsByRomanNumerals) {
         this.sortCollectionsRoman();
@@ -1169,7 +1170,7 @@ export class SideMenu implements OnInit {
   }
 
   getCollectionList() {
-    const loadCollectionsFromAssets = config.LoadCollectionsFromAssets ?? false;
+    const loadCollectionsFromAssets = this._config.LoadCollectionsFromAssets ?? false;
 
     if (loadCollectionsFromAssets) {
       this.digitalEditionListService.getCollectionsFromAssets()
@@ -1203,12 +1204,12 @@ export class SideMenu implements OnInit {
   }
 
   getPersonSearchTypes() {
-    this.personSearchTypes = config.PersonSearchTypes ?? undefined;
+    this.personSearchTypes = this._config.PersonSearchTypes ?? undefined;
   }
 
   getStaticPagesMenus() {
-    this.staticPagesMenus = config.StaticPagesMenus ?? [];
-    this.staticPagesMenusInTOC = config.StaticPagesMenusInTOC ?? [];
+    this.staticPagesMenus = this._config.StaticPagesMenus ?? [];
+    this.staticPagesMenusInTOC = this._config.StaticPagesMenusInTOC ?? [];
 
     for (const menu of this.staticPagesMenusInTOC) {
       if (menu.menuID === 'songTypesMenu') {
@@ -1385,7 +1386,7 @@ export class SideMenu implements OnInit {
     if (this.hasCover === false && this.hasTitle === false && this.hasForeword === false && this.hasIntro === false) {
       this.getTocRoot(collection);
     } else {
-      const downloadOnly = config.collectionDownloads?.isDownloadOnly ?? false;
+      const downloadOnly = this._config.collectionDownloads?.isDownloadOnly ?? false;
       if (collection.isDownload && downloadOnly) {
         if (collection.id in this.collectionDownloads['pdf']) {
           const dURL = this.apiEndPoint + '/' + this.projectMachineName + '/files/' + collection.id + '/pdf/' +

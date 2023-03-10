@@ -21,3 +21,18 @@ ion-split-pane {
     --side-width: 270px;
   }
 }
+
+
+ul, ::ng-deep ul {
+  padding: 0 16px;
+  list-style-type: none;
+  li {
+    color: #000;
+    padding: 8px 0;
+    display: flex;
+  }
+}
+
+.menu-highlight, ::ng-deep .menu-highlight {
+  background: #abc;
+}

@@ -487,16 +487,17 @@ export const config: Config = {
       logo: "https://topelius.sls.fi/assets/images/logo.svg"
     }
   },
-  AvailableEpubs: {
-    "Dummy epub": {
+  AvailableEpubs: [
+    {
+      title: "Dummy epub",
       filename: "2685.epub",
       download: "https://www.sls.fi/",
       cover: ""
-    },
-    "Another dummy epub": {
+    },{
+      title: "Another dummy epub",
       filename: "2685.epub",
       download: "https://www.sls.fi/",
       cover: ""
     }
-  }
+  ]
 }
