@@ -1,4 +1,4 @@
-<li class="accordion" [class.open]="selected">
+<li class="accordion" [class.open]="selected || router.url.includes(childId)">
   <ul>
     <ng-container *ngFor="let child of children; let i = index">
       <li class="mainMenuItem" (click)="toggleAccordion(child.id)" [class.menu-highlight]="router.url.includes(child.id) && !child.children">
@@ -6,10 +6,10 @@
           <a *ngSwitchDefault routerLink="{{parentPath + '/' + child.id}}">{{child.title}}</a>
           <span *ngSwitchCase="true">{{child.title}}</span>
         </ng-container>
-        <ion-icon *ngIf="child.children" name="chevron-forward-outline" [class.open]="selectedMenu === child.id"></ion-icon>
+        <ion-icon *ngIf="child.children" name="chevron-forward-outline" [class.open]="selectedMenu === child.id || router.url.includes(child.id)"></ion-icon>
       </li>
       <app-recursive-accordion
-        [selected]="selectedMenu === child.id"
+        [selected]="selectedMenu === child.id || router.url.includes(child.id)"
         [childId]="child.id"
         *ngIf="child.children"
         [children]="child.children"

@@ -207,7 +207,7 @@ export class SideMenu implements OnInit {
     private galleryService: GalleryService,
     private metadataService: MetadataService,
     private ngZone: NgZone,
-    private router: Router,
+    public router: Router,
   ) {
     this.mediaCollectionOptions = {};
 

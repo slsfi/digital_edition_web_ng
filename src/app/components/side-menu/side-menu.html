@@ -6,7 +6,7 @@
       <span>
         {{aboutOptionsMarkdown.title}}
       </span>
-      <ion-icon *ngIf="aboutOptionsMarkdown.children" [class.open]="selectedMenu === 'accordionAbout'"
+      <ion-icon *ngIf="aboutOptionsMarkdown.children" [class.open]="selectedMenu === 'accordionAbout' || router.url.includes(aboutOptionsMarkdown.id)"
                 name="chevron-forward-outline"></ion-icon>
     </li>
     <app-recursive-accordion
