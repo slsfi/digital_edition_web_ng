@@ -88,7 +88,7 @@ export class TopMenuComponent {
         'data': true,
       }
     });
-    modal.present();
+    return await modal.present();
   }
 
   public toggleSplitPane() {
@@ -99,7 +99,7 @@ export class TopMenuComponent {
     const popover = await this.popoverCtrl.create({
       component: UserSettingsPopoverPage,
     });
-    popover.present(event);
+    return await popover.present(event);
   }
 
   public async showReference(event: any) {
@@ -112,6 +112,6 @@ export class TopMenuComponent {
         origin: 'top-menu',
       }
     });
-    modal.present();
+    return await modal.present();
   }
 }

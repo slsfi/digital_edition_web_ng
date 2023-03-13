@@ -951,7 +951,7 @@ export class IntroductionPage {
       component: OccurrencesPage,
       componentProps: { id, type: 'subject' },
     });
-    modal.present();
+    return await modal.present();
   }
 
   async showPlaceModal(id: string) {
@@ -959,7 +959,7 @@ export class IntroductionPage {
       component: OccurrencesPage,
       componentProps: { id, type: 'location' },
     });
-    modal.present();
+    return await modal.present();
   }
 
   async showWorkModal(id: string) {
@@ -967,7 +967,7 @@ export class IntroductionPage {
       component: OccurrencesPage,
       componentProps: { id, type: 'work' },
     });
-    modal.present();
+    return await modal.present();
   }
 
   async showIllustrationModal(imageNumber: string) {
@@ -976,17 +976,20 @@ export class IntroductionPage {
       componentProps: { 'imageNumber': imageNumber },
       cssClass: 'foo',
     });
-    modal.present();
+    return await modal.present();
   }
 
-  async showPopover(myEvent: any) {
+  async showPopover(event: any) {
     const toggles = this.readPopoverTogglesIntro;
-    const modal = await this.popoverCtrl.create({
+    const popover = await this.popoverCtrl.create({
       component: ReadPopoverPage,
       componentProps: { toggles },
-      cssClass: 'share-popover_settings'
+      cssClass: 'read-popover',
+      reference: 'trigger',
+      side: 'bottom',
+      alignment: 'end'
     });
-    modal.present(myEvent);
+    return await popover.present(event);
   }
 
   public async showReference() {
@@ -995,7 +998,7 @@ export class IntroductionPage {
       component: ReferenceDataModalPage,
       componentProps: {id: document.URL, type: 'reference', origin: 'page-introduction'}
     });
-    modal.present();
+    return await modal.present();
   }
 
   public async showDownloadModal() {
@@ -1003,7 +1006,7 @@ export class IntroductionPage {
       component: DownloadTextsModalPage,
       componentProps: {textId: this.id, origin: 'page-introduction'}
     });
-    modal.present();
+    return await modal.present();
   }
 
   toggleTocMenu() {

@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ModalController, NavParams } from '@ionic/angular';
+import { NavParams, PopoverController } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
 import { EventsService } from 'src/app/services/events/events.service';
 import { Fontsize, ReadPopoverService } from 'src/app/services/settings/read-popover.service';
@@ -50,7 +50,7 @@ export class ReadPopoverPage {
   togglesCounter: number;
 
   constructor(
-    public viewCtrl: ModalController,
+    public viewCtrl: PopoverController,
     public readPopoverService: ReadPopoverService,
     public translate: TranslateService,
     private events: EventsService,
@@ -90,7 +90,8 @@ export class ReadPopoverPage {
   }
 
   toggleAll( e: any ) {
-    if ( e.value === true ) {
+    console.log(e);
+    if ( e.detail.checked === true ) {
       if (this.readToggles.comments) {
         this.show.comments = true;
       }

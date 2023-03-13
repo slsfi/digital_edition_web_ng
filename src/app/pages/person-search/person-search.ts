@@ -289,7 +289,7 @@ export class PersonSearchPage {
         this.getPersons();
       }
     });
-    filterModal.present();
+    return await filterModal.present();
   }
 
   showAll() {
@@ -353,7 +353,7 @@ export class PersonSearchPage {
         }
       });
 
-      occurrenceModal.present();
+      return await occurrenceModal.present();
     }
   }
 

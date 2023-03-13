@@ -315,7 +315,7 @@ export class WorkSearchPage {
         }
       });
 
-      occurrenceModal.present();
+      return await occurrenceModal.present();
     }
   }
 
@@ -477,7 +477,7 @@ export class WorkSearchPage {
         }
       }
     });
-    filterModal.present();
+    return await filterModal.present();
   }
 
   getSubjectsOccurrencesByCollection(filterCollections: any, callback: any) {

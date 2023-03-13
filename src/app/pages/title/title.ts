@@ -43,7 +43,7 @@ export class TitlePage {
 
   protected text: SafeHtml = this.sanitizer.bypassSecurityTrustHtml('<h1>Text from non-Observable</h1>')
 
-  public text$: Observable<SafeHtml> = of("<h1>Text from Obserable</h1>")
+  public text$: Observable<SafeHtml>;
 
 
   protected collection: any;
@@ -274,7 +274,7 @@ export class TitlePage {
 
 
 
-  async showReadSettingsPopover(myEvent: any) {
+  async showReadSettingsPopover(event: any) {
     const toggles = {
       'comments': false,
       'personInfo': false,
@@ -290,9 +290,12 @@ export class TitlePage {
     const popover = await this.popoverCtrl.create({
       component: ReadPopoverPage,
       componentProps: { toggles },
-      cssClass: 'popover_settings'
+      cssClass: 'read-popover',
+      reference: 'trigger',
+      side: 'bottom',
+      alignment: 'end'
     })
-    popover.present(myEvent);
+    return await popover.present(event);
   }
 
   public async showReference() {
@@ -301,7 +304,7 @@ export class TitlePage {
       component: ReferenceDataModalPage,
       componentProps: {id: document.URL, type: 'reference', origin: 'page-title'}
     });
-    modal.present();
+    return await modal.present();
   }
 
   printMainContentClasses() {

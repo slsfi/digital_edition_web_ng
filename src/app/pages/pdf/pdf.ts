@@ -74,7 +74,7 @@ export class PdfPage {
       message: 'Laddar ' + this.title
     });
     this.analyticsService.doPageView('PDF - ' + this.title);
-    this.loading.present();
+    await this.loading.present();
 
     this.route.params.subscribe(params => {
       this.facsimileId = params['facsimileId'];

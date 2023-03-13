@@ -478,6 +478,11 @@
   ion-popover ion-item.item:last-child {
     --border-width: 0;
   }
+  ion-popover.read-popover {
+    --min-width: 300px;
+    --width: min-content;
+    --offset-y: -30px;
+  }
 
   // Ion-button styles
   ion-button.close {
@@ -496,6 +501,12 @@
   }
   ion-item.item-radio-checked {
     --color: var(--button-background-color);
+  }
+
+  // Ion-toggle styles
+  ion-toggle {
+    --background-checked: rgba(var(--button-background-color-rgb), 0.2);
+    --handle-background-checked: var(--button-background-color);
   }
 
   // Crescent ion-spinner styles
@@ -1237,33 +1248,6 @@
     z-index: 7 !important;
   }
 
-
-
-  // Adjust placement of read-page/intro settings and share popovers
-  .popover_settings .popover-content,
-  .share-popover .popover-content {
-    top: 70px !important;
-    left: unset !important;
-    right: 12px !important;
-    transform-origin: right top 0 !important;
-  }
-  .popover_settings .popover-content {
-    width: min-content !important;
-    min-width: 300px;
-    background-color: var(--ion-popover-content-background-color);
-  }
-  // on very small screens, place popovers further right
-  @media screen and (max-width: 360px) {
-    .popover_settings .popover-content,
-    .share-popover .popover-content {
-      right: 6px !important;
-    }
-  }
-
-  // This is the opacity of the darkened background around modals.
-  ion-backdrop {
-    opacity: 0.3 !important;
-  }
 
   // Buttons in the secondary toolbar.
   button.sec-menu-button.button,

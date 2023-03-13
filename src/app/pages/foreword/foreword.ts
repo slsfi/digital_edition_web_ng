@@ -160,7 +160,7 @@ export class ForewordPage {
     }
   }
 
-  async showReadSettingsPopover(myEvent: any) {
+  async showReadSettingsPopover(event: any) {
     const toggles = {
       'comments': false,
       'personInfo': false,
@@ -176,9 +176,12 @@ export class ForewordPage {
     const popover = await this.popoverCtrl.create({
       component: ReadPopoverPage,
       componentProps: { toggles },
-      cssClass: 'popover_settings',
+      cssClass: 'read-popover',
+      reference: 'trigger',
+      side: 'bottom',
+      alignment: 'end'
     });
-    popover.present(myEvent);
+    return await popover.present(event);
   }
 
   public async showReference() {
@@ -187,7 +190,7 @@ export class ForewordPage {
       component: ReferenceDataModalPage,
       componentProps: {id: document.URL, type: 'reference', origin: 'page-foreword'},
     });
-    modal.present();
+    return await modal.present();
   }
 
   printMainContentClasses() {

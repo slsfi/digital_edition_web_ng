@@ -73,6 +73,6 @@ export class FeaturedFacsimilePage {
         'images': facsimileCollection.urls, 'activeImage': 0
       }
     });
-    modal.present();
+    return await modal.present();
   }
 }

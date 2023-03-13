@@ -239,7 +239,7 @@ export class PlaceSearchPage {
         }
       });
 
-      occurrenceModal.present();
+      return await occurrenceModal.present();
     }
   }
 
@@ -291,7 +291,7 @@ export class PlaceSearchPage {
         this.getPlaces();
       }
     });
-    filterModal.present();
+    return await filterModal.present();
   }
 
   getMdContent(fileID: string) {

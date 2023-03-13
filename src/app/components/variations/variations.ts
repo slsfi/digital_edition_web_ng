@@ -221,7 +221,7 @@ export class VariationsComponent {
     alert.inputs = inputs;
     
 
-    alert.present();
+    await alert.present();
   }
 
   async selectVariationForNewView() {
@@ -263,7 +263,7 @@ export class VariationsComponent {
       }
     });
 
-    alert.present();
+    await alert.present();
   }
 
   openVariationInNewView(variation?: any) {

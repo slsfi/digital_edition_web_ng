@@ -240,7 +240,7 @@ export class TagSearchPage {
         }
       });
 
-      occurrenceModal.present();
+      return await occurrenceModal.present();
     }
   }
 
@@ -290,7 +290,7 @@ export class TagSearchPage {
         this.getTags();
       }
     });
-    filterModal.present();
+    return await filterModal.present();
   }
 
   getMdContent(fileID: string) {

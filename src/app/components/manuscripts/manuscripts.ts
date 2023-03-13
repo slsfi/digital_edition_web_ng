@@ -235,7 +235,7 @@ export class ManuscriptsComponent {
     alert.inputs = inputs;
     alert.buttons = buttons;
 
-    alert.present();
+    await alert.present();
   }
 
 }

@@ -515,7 +515,7 @@ export class EpubComponent {
     this.rendition.prev();
   }
 
-  async showReadSettingsPopover(myEvent: any) {
+  async showReadSettingsPopover(event: any) {
     const toggles = {
       'comments': false,
       'personInfo': false,
@@ -530,12 +530,13 @@ export class EpubComponent {
     };
     const popover = await this.popoverCtrl.create({
       component: ReadPopoverPage,
-      componentProps: {
-        toggles,
-      },
-      cssClass: 'popover_settings'
+      componentProps: { toggles },
+      cssClass: 'read-popover',
+      reference: 'trigger',
+      side: 'bottom',
+      alignment: 'end'
     });
-    popover.present(myEvent);
+    return await popover.present(event);
   }
 
   downloadEpub() {
@@ -741,9 +742,8 @@ export class EpubComponent {
     // Get URL of Page and then the URI
     const modal = await this.modalController.create({
       component: ReferenceDataModalPage,
-      componentProps: {id: document.URL, type: 'reference', origin: 'page-epub'},
-      cssClass: 'popover_settings'
+      componentProps: {id: document.URL, type: 'reference', origin: 'page-epub'}
     });
-    modal.present();
+    return await modal.present();
   }
 }

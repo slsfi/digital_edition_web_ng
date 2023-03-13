@@ -89,7 +89,7 @@ export class IllustrationsComponent {
       componentProps: { 'images': this.selectedImage, 'activeImage': 0 },
       cssClass: 'facsimile-zoom-modal'
     });
-    illustrationZoomModal.present();
+    return await illustrationZoomModal.present();
   }
 
   scrollToPositionInText(image: any) {

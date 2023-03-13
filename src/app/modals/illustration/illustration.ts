@@ -95,7 +95,7 @@ export class IllustrationPage {
         'zoomImage': true
       }
     });
-    modal.present();
+    return await modal.present();
     modal.onDidDismiss().then((data: any) => {
       console.log('dismissed', data);
       this.showDescription = true;

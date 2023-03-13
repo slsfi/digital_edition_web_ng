@@ -557,7 +557,7 @@ export class FacsimilesComponent {
       cssClass: 'facsimile-zoom-modal',
     });
 
-    modal.present();
+    return await modal.present();
   }
 
   zoomIn() {

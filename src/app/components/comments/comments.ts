@@ -239,6 +239,6 @@ export class CommentsComponent {
         'imageNumber': imageNumber,
       }
     });
-    modal.present();
+    return await modal.present();
   }
 }

@@ -177,7 +177,7 @@ export class ReadTextComponent {
       componentProps: { 'imageNumber': imageNumber },
       cssClass: 'foo',
     });
-    modal.present();
+    return await modal.present();
   }
 
   setText() {

@@ -231,7 +231,7 @@ export class MediaCollectionPage {
       componentProps: { 'images': zoomedImages, 'activeImage': index, 'backsides': backsides, 'descriptions': descriptions, 'imageTitles': imageTitles },
       cssClass: 'facsimile-zoom-modal',
     });
-    modal.present();
+    return await modal.present();
   }
 
   getCollectionTags(filter?: any) {
@@ -469,6 +469,6 @@ export class MediaCollectionPage {
       component: ReferenceDataModalPage,
       componentProps: {id: document.URL, type: 'reference', origin: 'media-collection'}
     });
-    modal.present();
+    return await modal.present();
   }
 }

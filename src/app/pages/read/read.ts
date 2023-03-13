@@ -688,7 +688,7 @@ export class ReadPage /*implements OnDestroy*/ {
         }
       });
 
-      occurrenceModal.present();
+      return await occurrenceModal.present();
     }
   }
 
@@ -697,7 +697,7 @@ export class ReadPage /*implements OnDestroy*/ {
       component: SearchAppPage,
       componentProps: { searchResult: this.searchResult }
     });
-    searchModal.present();
+    return await searchModal.present();
   }
 
   /**
@@ -2597,7 +2597,7 @@ export class ReadPage /*implements OnDestroy*/ {
       componentProps: { id: id, title: this.texts.CommentsFor + ' ' + this.establishedText?.title },
       showBackdrop: true
     });
-    modal.present();
+    return await modal.present();
   }
 
   async showPersonModal(id: string) {
@@ -2605,7 +2605,7 @@ export class ReadPage /*implements OnDestroy*/ {
       component: OccurrencesPage,
       componentProps: { id: id, type: 'subject' }
     });
-    modal.present();
+    return await modal.present();
   }
 
   async showPlaceModal(id: string) {
@@ -2613,7 +2613,7 @@ export class ReadPage /*implements OnDestroy*/ {
       component: OccurrencesPage,
       componentProps: { id: id, type: 'location' }
     });
-    modal.present();
+    return await modal.present();
   }
 
   async showWorkModal(id: string) {
@@ -2621,15 +2621,18 @@ export class ReadPage /*implements OnDestroy*/ {
       component: OccurrencesPage,
       componentProps: { id: id, type: 'work' }
     });
-    modal.present();
+    return await modal.present();
   }
 
-  async showPopover(myEvent: any) {
+  async showPopover(event: any) {
     const popover = await this.popoverCtrl.create({
       component: ReadPopoverPage,
-      cssClass: 'popover_settings'
+      cssClass: 'read-popover',
+      reference: 'trigger',
+      side: 'bottom',
+      alignment: 'end'
     });
-    popover.present(myEvent);
+    return await popover.present(event);
   }
 
   public async showReference() {
@@ -2638,7 +2641,7 @@ export class ReadPage /*implements OnDestroy*/ {
       component: DownloadTextsModalPage,
       componentProps: { id: document.URL, type: 'reference', origin: 'page-read' }
     })
-    modal.present();
+    return await modal.present();
   }
 
   public async showDownloadModal() {
@@ -2646,7 +2649,7 @@ export class ReadPage /*implements OnDestroy*/ {
       component: DownloadTextsModalPage,
       componentProps: { textId: this.establishedText?.link, origin: 'page-read' }
     })
-    modal.present();
+    return await modal.present();
   }
 
   async presentDownloadActionSheet() {

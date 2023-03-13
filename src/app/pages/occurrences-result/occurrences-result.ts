@@ -705,7 +705,7 @@ export class OccurrencesResultPage {
       component: SearchAppPage,
       componentProps: { searchResult: this.searchResult }
     });
-    searchModal.present();
+    return await searchModal.present();
   }
 
   doInfinite(infiniteScroll: any) {

@@ -95,7 +95,7 @@ export class ListOfSongsComponent {
       header: song.song_name,
       buttons: btns
     });
-    actionSheet.present();
+    await actionSheet.present();
 
   }
 
