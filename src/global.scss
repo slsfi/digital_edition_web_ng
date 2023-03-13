@@ -531,6 +531,9 @@
     display: flex;
     padding: 26px;
   }
+  page-read ion-content.publication-ion-content::part(scroll) {
+    padding: 16px;
+  }
   .scroll-content-container {
     max-width: 710px;
     background-color: var(--page-read-columns-background-color);

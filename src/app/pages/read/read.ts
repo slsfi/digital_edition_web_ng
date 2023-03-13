@@ -28,6 +28,7 @@ import { TableOfContentsService } from 'src/app/services/toc/table-of-contents.s
 import { TooltipService } from 'src/app/services/tooltips/tooltip.service';
 import { config } from "src/app/services/config/config";
 import { DragScrollComponent } from 'src/directives/ngx-drag-scroll/public-api';
+import { isBrowser } from 'src/standalone/utility-functions';
 
 /**
  * A page used for reading publications.
@@ -99,6 +100,7 @@ export class ReadPage /*implements OnDestroy*/ {
   showTextDownloadButton: Boolean = false;
   usePrintNotDownloadIcon: Boolean = false;
   backdropWidth: number;
+  showAddViewsFabBackdrop: boolean = false;
 
   prevItem: any;
   nextItem: any;
@@ -2699,13 +2701,8 @@ export class ReadPage /*implements OnDestroy*/ {
   }
 
   addView(type: string, id?: string | null, fab?: IonFab | null, external?: boolean | null, image?: any | null, language?: string | null, variationSortOrder?: number) {
-    if (fab !== undefined) {
-      try {
-        fab?.close();
-      } catch (e) {
-
-      }
-    }
+    /* fab is no longer needed by this function*/
+    
     if (external === true) {
       this.external = id ? id : undefined;
     } else {
@@ -3227,9 +3224,26 @@ export class ReadPage /*implements OnDestroy*/ {
   }
 
   setFabBackdropWidth() {
-    const pageReadElem = document.querySelector('page-read:not([ion-page-hidden]):not(.ion-page-hidden) > ion-content > div.scroll-content');
-    if (pageReadElem) {
-      this.backdropWidth = pageReadElem.scrollWidth;
+    if (isBrowser()) {
+      let scrollingContainer = document.querySelector('page-read:not([ion-page-hidden]):not(.ion-page-hidden) ion-content.publication-ion-content');
+      if (scrollingContainer) {
+        const shadowContainer = scrollingContainer.shadowRoot;
+        if (shadowContainer) {
+          scrollingContainer = shadowContainer.querySelector('[part="scroll"]');
+          if (scrollingContainer) {
+            this.backdropWidth = scrollingContainer.scrollWidth;
+          }
+        }
+      }
+    }
+  }
+
+  toggleFabBackdrop() {
+    if (this.showAddViewsFabBackdrop) {
+      this.showAddViewsFabBackdrop = false;
+    } else {
+      this.setFabBackdropWidth();
+      this.showAddViewsFabBackdrop = true;
     }
   }
 

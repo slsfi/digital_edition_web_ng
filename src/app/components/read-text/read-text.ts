@@ -174,8 +174,7 @@ export class ReadTextComponent {
   async openIllustration(imageNumber: any) {
     const modal = await this.modalController.create({
       component: IllustrationPage,
-      componentProps: { 'imageNumber': imageNumber },
-      cssClass: 'foo',
+      componentProps: { 'imageNumber': imageNumber }
     });
     return await modal.present();
   }
