@@ -40,6 +40,10 @@ match {
     background-color: $search-match-color !important;
 }
 
+.tei {
+    transition: padding-left linear 0.2s;
+  }
+
 .tei.XMLcomment{
     display: none;
 }

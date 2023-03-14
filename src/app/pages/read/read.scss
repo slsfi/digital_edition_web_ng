@@ -1,3 +1,56 @@
+/* Styles for the columns */
+.column-container {
+  width: 100%;
+}
+.read-columns-wrapper {
+  -webkit-overflow-scrolling: touch;
+  white-space: nowrap;
+  display: flex;
+  align-content: center;
+  width: 100%;
+
+  .read-column {
+    position: relative;
+    flex: 1 1 auto;
+    width: 100%;
+    max-width: 730px;
+    min-width: 500px;
+
+    ion-card {
+      --background: var(--page-read-columns-background-color);
+      border-radius: 0;
+      box-shadow: none;
+      height: 100%;
+      margin: 0 10px;
+
+      .column-card-title {
+        background: var(--page-read-columns-header-background-color);
+        font-size: 0.75rem;
+        font-weight: bold;
+        padding: 16px 22px;
+      }
+
+      .column-card-content {
+        padding: 0;
+      }
+
+      .scroll-content-container {
+        max-height: calc(100vh - 235px);
+      }
+    }
+  }
+
+  .read-column.column_type_facsimiles {
+    max-width: 100%;
+
+    ion-card .scroll-content-container {
+      max-width: 100%;
+      overflow-y: hidden;
+    }
+  }
+}
+
+/* Styles for the ion-fabs at the top of the columns */
 ion-fab {
   ion-fab-button {
     --background: var(--fab-button-secondary-background-color);
@@ -16,7 +69,36 @@ ion-fab.column-options {
   top: -18px;
   right: -8px;
 }
+
+/* Styles for the narrow column where you can add new columns */
 .add-view-column {
+  position: relative;
+  flex: 0 0 auto;
+  width: 80px;
+  display: flex;
+  visibility: hidden; /* Hides the column by default, set to visible below when preceded by a read-column in the DOM. This prevents the column from flashing to the left in page-read when read-columns have not been loaded yet. */
+
+  .add-column {
+    background: var(--page-read-add-column-background-color);
+    color: var(--page-read-add-column-text-color);
+    margin: 10px 25px 0 25px;
+    width: 30px;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    align-items: center;
+  }
+
+  .add-column p {
+    transform: rotate(90deg) translateX(100%);
+    text-transform: uppercase;
+    font-size: 0.8125rem;
+    font-weight: bold;
+    line-height: 1;
+    margin: 0;
+  }
+
   ion-fab {
     top: -18px;
     left: 50%;
@@ -27,27 +109,7 @@ ion-fab.column-options {
     }
   }
 
-  /*
-  ion-fab-list {
-  
-    ion-label {
-      position: absolute;
-      top: -4px;
-      right: 40px;
-      padding-right: 5px;
-      color: #f1f1f1;
-      line-height: 24px;
-      transition: right 0.5s;
-      font-weight: 600;
-    }
-  
-    &:hover ion-label {
-      right: 35px;
-      font-weight: bold;
-    }
-  }
-  */
-
+  /* Old backdrop for ion-fab-list for adding columns
   .fab-backdrop {
     display: none;
     position: fixed;
@@ -62,10 +124,11 @@ ion-fab.column-options {
       display: block;
     }
   }
-
+  */
 }
-  
-
+.read-column + .add-view-column {
+  visibility: visible;
+}
 
 
 /*
@@ -118,97 +181,9 @@ ion-fab.column-options {
 
 */
 
-.read-columns-wrapper {
-  -webkit-overflow-scrolling: touch;
-  white-space: nowrap;
-  display: flex;
-  align-content: center;
-  margin-top: 10px;
 
-  .read-column {
-    position: relative;
-    flex: 1 1 auto;
-    width: 100%;
-    max-width: 730px;
-    min-width: 500px;
 
-    ion-card {
-      --background: var(--page-read-columns-background-color);
-      border-radius: 0;
-      box-shadow: none;
-      height: 100%;
-      margin: 0 10px;
 
-      /*the bar with a heading for the column*/
-      .column-card-title {
-        background: var(--page-read-columns-header-background-color);
-        font-size: 0.75rem;
-        font-weight: bold;
-        padding: 16px 22px;
-      }
-
-      .column-card-content {
-        padding: 0;
-      }
-
-      .scroll-content-container {
-        max-height: calc(100vh - 235px);
-      }
-    }
-  }
-
-  .read-column.column_type_facsimiles {
-    max-width: 100%;
-
-    ion-card .scroll-content-container {
-      max-width: 100%;
-      overflow-x: hidden;
-    }
-  }
-}
-
-.add-view-column {
-  position: relative;
-  flex: 0 0 auto;
-  width: 80px;
-  display: flex;
-  visibility: hidden; /* Hides the column by default, set to visible below when preceded by a read-column in the DOM. This prevents the column from flashing to the left in page-read when read-columns have not been loaded yet. */
-
-  /*
-  ion-fab {
-    top:-5px;
-  }
-
-  ion-fab-list button.fab.fab-in-list {
-    background-color: #f4f4f4;
-    color: #000;
-  }
-  */
-
-  .add-column {
-    background: var(--page-read-add-column-background-color);
-    color: var(--page-read-add-column-text-color);
-    margin: 10px 25px 0 25px;
-    width: 30px;
-    display: flex;
-    flex-direction: column;
-    flex-wrap: nowrap;
-    justify-content: flex-start;
-    align-items: center;
-  }
-
-  .add-column p {
-    transform: rotate(90deg) translateX(100%);
-    text-transform: uppercase;
-    font-size: 0.8125rem;
-    font-weight: bold;
-    line-height: 1;
-    margin: 0;
-  }
-}
-.read-column + .add-view-column {
-  visibility: visible;
-}
 
 /*
 .swipeCenter {
@@ -223,11 +198,6 @@ ion-fab.column-options {
   transform: translateY(-50%);
 }
 */
-
-.tei {
-  transition-property: padding-left;
-  transition-duration: 0.2s;
-}
 
 /*
 ion-slides {
@@ -308,11 +278,6 @@ ion-fab {
   color: #78756f;
 }
 
-.content h1 {
-  font-size: 1.3rem;
-  text-transform: none;
-}
-
 .places {
   font-size: 1.0rem;
   color: #78756f;
@@ -361,15 +326,6 @@ ion-fab {
   }
 }
 */
-
-/* Make room for the text-changer at the bottom in mobile mode. */
-.mobile-mode-read-content > .scroll-content {
-  padding: 50px 0 50px 0 !important;
-}
-
-.mobile-mode-read-content .scroll-zoom-wrapper {
-  padding: 10px;
-}
 
 /* Adjust padding and background color of text and facsimile columns in mobile mode. */
 div.mobile-mode-established {

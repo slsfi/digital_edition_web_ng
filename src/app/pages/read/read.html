@@ -22,200 +22,191 @@
 </ion-header>
 
 <!-- Main content with scroll -->
-<ion-content class="publication-ion-content" [ngClass]="printMainContentClasses()" [scrollX]="true" [scrollY]="false">
-  <div *ngIf="userSettingsService.isDesktop()" class="column-container">
-    <!-- TO DO: Fix fab buttons -->
-    <!--
-    <ion-fab *ngIf="showOccurrencesModal && hasOccurrenceResults" class="occurrenceButton">
-      <button ion-button small
-        (click)="openOccurrenceResult()">{{ (occurrenceResult?.name)?occurrenceResult?.name:("Read.ShowSearchResults" | translate) }}
-        &nbsp;<ion-icon name="search"></ion-icon></button>
-    </ion-fab>
-    <ion-fab class="occurrenceButton" *ngIf="searchResult!=null">
-      <button ion-button small (click)="openSearchResult()">{{searchResult}}&nbsp;<ion-icon name="search"></ion-icon>
-      </button>
-    </ion-fab>
-    -->
+<ng-container *ngIf="userSettingsService.isDesktop()">
+  <ion-content class="publication-ion-content" [ngClass]="printMainContentClasses()" [scrollX]="true" [scrollY]="false">
+    <div class="column-container">
+      <!-- TO DO: What to do with these fab buttons, they are currently not in use -->
+      <!--
+      <ion-fab *ngIf="showOccurrencesModal && hasOccurrenceResults" class="occurrenceButton">
+        <button ion-button small
+          (click)="openOccurrenceResult()">{{ (occurrenceResult?.name)?occurrenceResult?.name:("Read.ShowSearchResults" | translate) }}
+          &nbsp;<ion-icon name="search"></ion-icon></button>
+      </ion-fab>
+      <ion-fab class="occurrenceButton" *ngIf="searchResult!=null">
+        <button ion-button small (click)="openSearchResult()">{{searchResult}}&nbsp;<ion-icon name="search"></ion-icon>
+        </button>
+      </ion-fab>
+      -->
 
-    <!-- Wrapper for all columns -->
-    <div class="read-columns-wrapper" [ngClass]="views.length > 1 ? 'multiple-columns' : 'single-column'" [class.illustrations-view-shown]="illustrationsViewShown">
+      <!-- Wrapper for all columns -->
+      <div class="read-columns-wrapper" [ngClass]="views.length > 1 ? 'multiple-columns' : 'single-column'" [class.illustrations-view-shown]="illustrationsViewShown">
 
-      <!-- Tooltip wrapper -->
-      <div
-        [ngClass]="'toolTip tei teiContainer ' + ((readPopoverService.fontsize==0)?'xsmallFontSize':(readPopoverService.fontsize==1)?'smallFontSize':(readPopoverService.fontsize==2)?'mediumFontSize':(readPopoverService.fontsize==3)?'largeFontSize':'xlargeFontSize')"
-        [class.show_comments]="readPopoverService.show.comments"
-        [class.show_personInfo]="readPopoverService.show.personInfo"
-        [class.show_placeInfo]="readPopoverService.show.placeInfo"
-        [class.show_workInfo]="readPopoverService.show.workInfo"
-        [class.show_normalisations]="readPopoverService.show.normalisations"
-        [class.show_changes]="readPopoverService.show.changes"
-        [class.show_abbreviations]="readPopoverService.show.abbreviations"
-        [ngStyle]="{'position': toolTipPosType, 'top': toolTipPosition.top, 'left': toolTipPosition.left, 'max-width': toolTipMaxWidth, 'transform': 'scale(' + toolTipScaleValue + ')'}"
-        [MathJax]="toolTipText">
-      </div>
-
-      <!-- Info overlay wrapper -->
-      <div
-        [ngClass]="'infoOverlay tei teiContainer ' + ((readPopoverService.fontsize==0)?'xsmallFontSize':(readPopoverService.fontsize==1)?'smallFontSize':(readPopoverService.fontsize==2)?'mediumFontSize':(readPopoverService.fontsize==3)?'largeFontSize':'xlargeFontSize')"
-        [class.show_comments]="readPopoverService.show.comments"
-        [class.show_personInfo]="readPopoverService.show.personInfo"
-        [class.show_placeInfo]="readPopoverService.show.placeInfo"
-        [class.show_workInfo]="readPopoverService.show.workInfo"
-        [class.show_normalisations]="readPopoverService.show.normalisations"
-        [class.show_changes]="readPopoverService.show.changes"
-        [class.show_abbreviations]="readPopoverService.show.abbreviations"
-        [ngStyle]="{'position': infoOverlayPosType, 'bottom': infoOverlayPosition.bottom, 'left': infoOverlayPosition.left, 'width': infoOverlayWidth}">
-        <div class="infoOverlayHeader">
-          <h6 class="infoOverlayTitle" [innerHTML]="infoOverlayTitle"></h6>
-          <ion-icon name="close" class="infoOverlayButton" (click)="hideInfoOverlay()"></ion-icon>
+        <!-- Tooltip wrapper -->
+        <div
+          [ngClass]="'toolTip tei teiContainer ' + ((readPopoverService.fontsize==0)?'xsmallFontSize':(readPopoverService.fontsize==1)?'smallFontSize':(readPopoverService.fontsize==2)?'mediumFontSize':(readPopoverService.fontsize==3)?'largeFontSize':'xlargeFontSize')"
+          [class.show_comments]="readPopoverService.show.comments"
+          [class.show_personInfo]="readPopoverService.show.personInfo"
+          [class.show_placeInfo]="readPopoverService.show.placeInfo"
+          [class.show_workInfo]="readPopoverService.show.workInfo"
+          [class.show_normalisations]="readPopoverService.show.normalisations"
+          [class.show_changes]="readPopoverService.show.changes"
+          [class.show_abbreviations]="readPopoverService.show.abbreviations"
+          [ngStyle]="{'position': toolTipPosType, 'top': toolTipPosition.top, 'left': toolTipPosition.left, 'max-width': toolTipMaxWidth, 'transform': 'scale(' + toolTipScaleValue + ')'}"
+          [MathJax]="toolTipText">
         </div>
-        <div class="infoOverlayContent" [MathJax]="infoOverlayText"></div>
-      </div>
 
-      <!-- Wrapper for each column -->
-      <div *ngFor="let view of views; let i = index;" id="read_div_{{i}}" class="column_type_{{view.type}}" [ngClass]="views.length > 1 ? 'read-column multiple-columns' : 'read-column single-column'">
+        <!-- Info overlay wrapper -->
+        <div
+          [ngClass]="'infoOverlay tei teiContainer ' + ((readPopoverService.fontsize==0)?'xsmallFontSize':(readPopoverService.fontsize==1)?'smallFontSize':(readPopoverService.fontsize==2)?'mediumFontSize':(readPopoverService.fontsize==3)?'largeFontSize':'xlargeFontSize')"
+          [class.show_comments]="readPopoverService.show.comments"
+          [class.show_personInfo]="readPopoverService.show.personInfo"
+          [class.show_placeInfo]="readPopoverService.show.placeInfo"
+          [class.show_workInfo]="readPopoverService.show.workInfo"
+          [class.show_normalisations]="readPopoverService.show.normalisations"
+          [class.show_changes]="readPopoverService.show.changes"
+          [class.show_abbreviations]="readPopoverService.show.abbreviations"
+          [ngStyle]="{'position': infoOverlayPosType, 'bottom': infoOverlayPosition.bottom, 'left': infoOverlayPosition.left, 'width': infoOverlayWidth}">
+          <div class="infoOverlayHeader">
+            <h6 class="infoOverlayTitle" [innerHTML]="infoOverlayTitle"></h6>
+            <ion-icon name="close" class="infoOverlayButton" (click)="hideInfoOverlay()"></ion-icon>
+          </div>
+          <div class="infoOverlayContent" [MathJax]="infoOverlayText"></div>
+        </div>
 
-        <!-- Ion fab column options -->
-        <ion-fab *ngIf="views.length>1" class="column-options" #fabmenu>
-          <ion-fab-button class="toggle-fab-list-button" size="small">
-            <ion-icon name="ellipsis-vertical"></ion-icon>
-          </ion-fab-button>
-          <ion-fab-list *ngIf="views.length>1" side="bottom">
-            <ion-fab-button *ngIf="displayToggle" (click)="removeSlide(i)">
-              <ion-icon name="trash-sharp"></ion-icon>
+        <!-- Wrapper for each column -->
+        <div *ngFor="let view of views; let i = index;" id="read_div_{{i}}" class="column_type_{{view.type}}" [ngClass]="views.length > 1 ? 'read-column multiple-columns' : 'read-column single-column'">
+
+          <!-- Ion fab column options -->
+          <ion-fab *ngIf="views.length>1" class="column-options" #fabmenu>
+            <ion-fab-button class="toggle-fab-list-button" size="small">
+              <ion-icon name="ellipsis-vertical"></ion-icon>
             </ion-fab-button>
-            <ion-fab-button *ngIf="i > -1 && views.length-1 > i" (click)="moveViewRight(i, fabmenu)">
-              <ion-icon name="return-down-forward-sharp"></ion-icon>
-            </ion-fab-button>
-            <ion-fab-button *ngIf="views.length > i && i > 0" (click)="moveViewLeft(i, fabmenu)">
-              <ion-icon name="return-down-back-sharp"></ion-icon>
-            </ion-fab-button>
-          </ion-fab-list>
-        </ion-fab>
+            <ion-fab-list *ngIf="views.length>1" side="bottom">
+              <ion-fab-button *ngIf="displayToggle" (click)="removeSlide(i)">
+                <ion-icon name="trash-bin-sharp"></ion-icon>
+              </ion-fab-button>
+              <ion-fab-button *ngIf="i > -1 && views.length-1 > i" (click)="moveViewRight(i, fabmenu)">
+                <ion-icon name="return-down-forward-sharp"></ion-icon>
+              </ion-fab-button>
+              <ion-fab-button *ngIf="views.length > i && i > 0" (click)="moveViewLeft(i, fabmenu)">
+                <ion-icon name="return-down-back-sharp"></ion-icon>
+              </ion-fab-button>
+            </ion-fab-list>
+          </ion-fab>
 
-        <!-- Ion card for each column-->
-        <ion-card>
-          <ion-card-header class="column-card-title">
-            {{ view.type | translate }}
-          </ion-card-header>
-          <ion-card-content class="column-card-content">
-            <div class="scroll-content-container">
-              <ng-container *ngIf="view.established.show && !multilingualEST && establishedText?.link">
-                <read-text [link]="establishedText?.link" [matches]="matches" [external]="external" [nochapterPos]="nochapterPos" (openNewIllustrView)="openNewView($event)"></read-text>
-              </ng-container>
+          <!-- Ion card for each column-->
+          <ion-card>
+            <ion-card-header class="column-card-title">
+              {{ view.type | translate }}
+            </ion-card-header>
+            <ion-card-content class="column-card-content">
+              <div class="scroll-content-container">
+                <ng-container *ngIf="view.established.show && !multilingualEST && establishedText?.link">
+                  <read-text [link]="establishedText?.link" [matches]="matches" [external]="external" [nochapterPos]="nochapterPos" (openNewIllustrView)="openNewView($event)"></read-text>
+                </ng-container>
 
-              <ng-container *ngIf="multilingualEST && displayToggles['established'] && establishedText?.link">
-                <ng-container *ngFor="let lang of estLanguages">
-                  <ng-container *ngIf="view['established_' + lang].show">
-                    <read-text [link]="establishedText?.link + '_' + lang" [matches]="matches" [external]="external" [nochapterPos]="nochapterPos" (openNewIllustrView)="openNewView($event)"></read-text>
+                <ng-container *ngIf="multilingualEST && displayToggles['established'] && establishedText?.link">
+                  <ng-container *ngFor="let lang of estLanguages">
+                    <ng-container *ngIf="view['established_' + lang].show">
+                      <read-text [link]="establishedText?.link + '_' + lang" [matches]="matches" [external]="external" [nochapterPos]="nochapterPos" (openNewIllustrView)="openNewView($event)"></read-text>
+                    </ng-container>
                   </ng-container>
                 </ng-container>
-              </ng-container>
 
-              <ng-container *ngIf="view.comments.show">
-                <comments [link]="establishedText?.link" [matches]="matches" [external]="external" (openNewIntroView)="openNewView($event)">
-                </comments>
-              </ng-container>
-              <ng-container *ngIf="view.facsimiles.show">
-                <facsimiles [itemId]="establishedText?.link" [selectedFacsimile]="view.facsimiles.id" [matches]="matches"
-                  [facsID]="facs_id" [facsNr]="facs_nr" [songID]="song_id" (openNewFacsimileView)="openNewView($event)">
-                </facsimiles>
-              </ng-container>
-              <ng-container *ngIf="view.manuscripts.show">
-                <manuscripts [linkID]="view.manuscripts.id" [itemId]="establishedText?.link" [matches]="matches"
-                  (openNewManView)="openNewView($event)" (openNewLegendView)="openNewView($event)"></manuscripts>
-              </ng-container>
-              <ng-container *ngIf="view.variations.show">
-                <variations [linkID]="view.variations.id" [itemId]="establishedText?.link" [matches]="matches" [sortOrder]="view.variations.variationSortOrder"
-                  (openNewVarView)="openNewView($event)" (openNewLegendView)="openNewView($event)"></variations>
-              </ng-container>
-              <!--
-              <ng-container *ngIf="view.introduction.show">
-                <introduction [linkID]="view.introduction.id" [itemId]="establishedText?.link" [matches]="matches">
-                </introduction>
-              </ng-container>
-              <ng-container *ngIf="view.songexample.show">
-                <song-example [songDatafile]="song_id" [legacyId]="legacyId"></song-example>
-              </ng-container>
-              -->
-              <ng-container *ngIf="view.illustrations.show">
-                <illustrations [initialImage]="view.illustrations.image" [itemId]="establishedText?.link"></illustrations>
-              </ng-container>
-              <ng-container *ngIf="view.legend.show">
-                <legend [itemId]="establishedText?.link" [scrollToElementId]="view.legend.id"></legend>
-              </ng-container>
-            </div>
-          </ion-card-content>
-        </ion-card>
-      </div>
+                <ng-container *ngIf="view.comments.show">
+                  <comments [link]="establishedText?.link" [matches]="matches" [external]="external" (openNewIntroView)="openNewView($event)">
+                  </comments>
+                </ng-container>
+                <ng-container *ngIf="view.facsimiles.show">
+                  <facsimiles [itemId]="establishedText?.link" [selectedFacsimile]="view.facsimiles.id" [matches]="matches"
+                    [facsID]="facs_id" [facsNr]="facs_nr" [songID]="song_id" (openNewFacsimileView)="openNewView($event)">
+                  </facsimiles>
+                </ng-container>
+                <ng-container *ngIf="view.manuscripts.show">
+                  <manuscripts [linkID]="view.manuscripts.id" [itemId]="establishedText?.link" [matches]="matches"
+                    (openNewManView)="openNewView($event)" (openNewLegendView)="openNewView($event)"></manuscripts>
+                </ng-container>
+                <ng-container *ngIf="view.variations.show">
+                  <variations [linkID]="view.variations.id" [itemId]="establishedText?.link" [matches]="matches" [sortOrder]="view.variations.variationSortOrder"
+                    (openNewVarView)="openNewView($event)" (openNewLegendView)="openNewView($event)"></variations>
+                </ng-container>
+                <ng-container *ngIf="view.illustrations.show">
+                  <illustrations [initialImage]="view.illustrations.image" [itemId]="establishedText?.link"></illustrations>
+                </ng-container>
+                <ng-container *ngIf="view.legend.show">
+                  <legend [itemId]="establishedText?.link" [scrollToElementId]="view.legend.id"></legend>
+                </ng-container>
+              </div>
+            </ion-card-content>
+          </ion-card>
+        </div>
 
-      <!-- Add view -->
-      <div *ngIf="!userSettingsService.isMobile() && displayToggle" class="add-view-column">
-        <div class="fab-backdrop" [ngClass]="showAddViewsFabBackdrop ? 'show-fab-backdrop' : ''" [ngStyle]="{'width':backdropWidth+'px'}" (click)="toggleFabBackdrop(); fabmenuadd.close()"></div>
-        <ion-fab id="readFabMenu" #fabmenuadd>
-          <ion-fab-button (click)="toggleFabBackdrop()" class="toggle-fab-list-button" size="small" attr.aria-label="{{ 'Read.AddColumn' | translate }}">
-            <ion-icon name="add-outline" [attr.aria-hidden]="true"></ion-icon>
-          </ion-fab-button>
-          <ion-fab-list>
-            <ion-fab-button (click)="toggleFabBackdrop(); showAllViews(); commonFunctions.scrollLastViewIntoView()" *ngIf="displayToggles['showAll']">
-              <ion-icon name="albums"></ion-icon>
-              <ion-label>{{ "Read.ShowAll" | translate }}</ion-label>
+        <!-- Add view -->
+        <div *ngIf="!userSettingsService.isMobile() && displayToggle" class="add-view-column">
+          <!--
+          <div class="fab-backdrop" [ngClass]="showAddViewsFabBackdrop ? 'show-fab-backdrop' : ''" [ngStyle]="{'width':backdropWidth+'px'}" (click)="toggleFabBackdrop(); fabmenuadd.close()"></div>
+          -->
+          <ion-fab id="add-view-fab" #fabmenuadd>
+            <ion-fab-button id="add-view-fab-button" class="toggle-fab-list-button" size="small" attr.aria-label="{{ 'Read.AddColumn' | translate }}" (click)="showaddViewPopover($event)">
+              <ion-icon name="add-outline" [attr.aria-hidden]="true"></ion-icon>
             </ion-fab-button>
-            <ion-fab-button (click)="toggleFabBackdrop(); addView('established'); commonFunctions.scrollLastViewIntoView()" *ngIf="!multilingualEST && displayToggles['established']">
-              <ion-icon name="book"></ion-icon>
-              <ion-label>{{ "Read.Established.AddButtonText" | translate }}</ion-label>
-            </ion-fab-button>
-            <ng-container *ngIf="multilingualEST && displayToggles['established']">
-              <ion-fab-button (click)="toggleFabBackdrop(); addView('established', undefined, fabmenuadd, null, null, lang); commonFunctions.scrollLastViewIntoView()" *ngFor="let lang of estLanguages">
-                <ion-icon name="book"></ion-icon>
-                <ion-label>{{ "Read.Established.AddButtonText" | translate }} – {{lang}}</ion-label>
-              </ion-fab-button>
-            </ng-container>
-            <ion-fab-button (click)="toggleFabBackdrop(); addView('comments'); commonFunctions.scrollLastViewIntoView()" *ngIf="displayToggles['comments']">
-              <ion-icon name="chatbubbles"></ion-icon>
-              <ion-label>{{ "Read.Comments.AddButtonText" | translate }}</ion-label>
-            </ion-fab-button>
-            <ion-fab-button (click)="toggleFabBackdrop(); addView('facsimiles'); commonFunctions.scrollLastViewIntoView()" *ngIf="displayToggles['facsimiles']">
-              <ion-icon name="image"></ion-icon>
-              <ion-label>{{ "Read.Facsimiles.AddButtonText" | translate }}</ion-label>
-            </ion-fab-button>
-            <ion-fab-button (click)="toggleFabBackdrop(); addView('illustrations'); commonFunctions.scrollLastViewIntoView()" *ngIf="displayToggles['illustrations']">
-              <ion-icon name="images"></ion-icon>
-              <ion-label>{{ "Read.Illustrations.AddButtonText" | translate }}</ion-label>
-            </ion-fab-button>
-            <ion-fab-button (click)="toggleFabBackdrop(); addView('manuscripts'); commonFunctions.scrollLastViewIntoView()" *ngIf="displayToggles['manuscripts']">
-              <ion-icon name="clipboard"></ion-icon>
-              <ion-label>{{ "Read.Manuscripts.AddButtonText" | translate }}</ion-label>
-            </ion-fab-button>
-            <ion-fab-button (click)="toggleFabBackdrop(); addView('variations'); addVariationSortOrderToService(0); commonFunctions.scrollLastViewIntoView()" *ngIf="displayToggles['variations']">
-              <ion-icon name="copy"></ion-icon>
-              <ion-label>{{ "Read.Variations.AddButtonText" | translate }}</ion-label>
-            </ion-fab-button>
-            <ion-fab-button (click)="toggleFabBackdrop(); addView('songexample'); commonFunctions.scrollLastViewIntoView()" *ngIf="displayToggles['song-example']">
-              <ion-icon name="musical-note"></ion-icon>
-              <ion-label>{{ "Read.SongExample.AddButtonText" | translate }}</ion-label>
-            </ion-fab-button>
-            <!--
-            <ion-fab-button (click)="toggleFabBackdrop(); addView('introduction'); commonFunctions.scrollLastViewIntoView()" *ngIf="displayToggles['introduction']">
-              <ion-icon name="information-circle"></ion-icon>
-              <ion-label>{{ "Read.Introduction.AddButtonText" | translate }}</ion-label>
-            </ion-fab-button>
-            -->
-            <ion-fab-button (click)="toggleFabBackdrop(); addView('legend'); commonFunctions.scrollLastViewIntoView()" *ngIf="displayToggles['legend']">
-              <ion-icon name="bulb"></ion-icon>
-              <ion-label>{{ "Read.Legend.AddButtonText" | translate }}</ion-label>
-            </ion-fab-button>
-          </ion-fab-list>
-        </ion-fab>
-        <div class="add-column">
-          <p>{{ "Read.AddColumn" | translate }}</p>
+          </ion-fab>
+          <ion-popover #addViewPopover class="page-read-add-view-popover" reference="trigger" side="bottom" alignment="end" [isOpen]="addViewPopoverisOpen" (didDismiss)="addViewPopoverisOpen = false" [dismissOnSelect]="true">
+            <ng-template>
+              <ion-content>
+                <ion-chip *ngIf="displayToggles['showAll']" (click)="showAllViews(); commonFunctions.scrollLastViewIntoView()">
+                  <ion-icon name="albums-sharp"></ion-icon>
+                  <ion-label>{{ "Read.ShowAll" | translate }}</ion-label>
+                </ion-chip>
+                <ion-chip *ngIf="!multilingualEST && displayToggles['established']" (click)="addView('established'); commonFunctions.scrollLastViewIntoView()">
+                  <ion-icon name="reader-sharp"></ion-icon>
+                  <ion-label>{{ "Read.Established.AddButtonText" | translate }}</ion-label>
+                </ion-chip>
+                <ng-container *ngIf="multilingualEST && displayToggles['established']">
+                  <ion-chip *ngFor="let lang of estLanguages" (click)="addView('established', undefined, undefined, null, null, lang); commonFunctions.scrollLastViewIntoView()">
+                    <ion-icon name="reader-sharp"></ion-icon>
+                    <ion-label>{{ "Read.Established.AddButtonText" | translate }} – {{lang}}</ion-label>
+                  </ion-chip>
+                </ng-container>
+                <ion-chip *ngIf="displayToggles['comments']" (click)="addView('comments'); commonFunctions.scrollLastViewIntoView()">
+                  <ion-icon name="chatbubble-ellipses-sharp"></ion-icon>
+                  <ion-label>{{ "Read.Comments.AddButtonText" | translate }}</ion-label>
+                </ion-chip>
+                <ion-chip *ngIf="displayToggles['facsimiles']" (click)="addView('facsimiles'); commonFunctions.scrollLastViewIntoView()">
+                  <ion-icon name="image-sharp"></ion-icon>
+                  <ion-label>{{ "Read.Facsimiles.AddButtonText" | translate }}</ion-label>
+                </ion-chip>
+                <ion-chip *ngIf="displayToggles['illustrations']" (click)="addView('illustrations'); commonFunctions.scrollLastViewIntoView()">
+                  <ion-icon name="images-sharp"></ion-icon>
+                  <ion-label>{{ "Read.Illustrations.AddButtonText" | translate }}</ion-label>
+                </ion-chip>
+                <ion-chip *ngIf="displayToggles['manuscripts']" (click)="addView('manuscripts'); commonFunctions.scrollLastViewIntoView()">
+                  <ion-icon name="document-text-sharp"></ion-icon>
+                  <ion-label>{{ "Read.Manuscripts.AddButtonText" | translate }}</ion-label>
+                </ion-chip>
+                <ion-chip *ngIf="displayToggles['variations']" (click)="addView('variations'); commonFunctions.scrollLastViewIntoView()">
+                  <ion-icon name="documents-sharp"></ion-icon>
+                  <ion-label>{{ "Read.Variations.AddButtonText" | translate }}</ion-label>
+                </ion-chip>
+                <ion-chip *ngIf="displayToggles['legend']" (click)="addView('legend'); commonFunctions.scrollLastViewIntoView()">
+                  <ion-icon name="bulb-sharp"></ion-icon>
+                  <ion-label>{{ "Read.Legend.AddButtonText" | translate }}</ion-label>
+                </ion-chip>
+              </ion-content>
+            </ng-template>
+          </ion-popover>
+          <div class="add-column">
+            <p>{{ "Read.AddColumn" | translate }}</p>
+          </div>
         </div>
       </div>
     </div>
-  </div>
+  </ion-content>
+</ng-container>
 
-  <!-- Mobile Read -->
-  <ng-container *ngIf="userSettingsService.isMobile()">
+<!-- Mobile Read -->
+<ng-container *ngIf="userSettingsService.isMobile()">
+  <ion-content [ngClass]="printMainContentClasses()" [scrollX]="false" [scrollY]="true">
     <div
       [ngClass]="'toolTip tei teiContainer ' + ((readPopoverService.fontsize==0)?'xsmallFontSize':(readPopoverService.fontsize==1)?'smallFontSize':(readPopoverService.fontsize==2)?'mediumFontSize':(readPopoverService.fontsize==3)?'largeFontSize':'xlargeFontSize')"
       [class.show_comments]="readPopoverService.show.comments"
@@ -244,44 +235,44 @@
       </div>
       <div class="infoOverlayContent" [MathJax]="infoOverlayText"></div>
     </div>
-      <div
-        *ngIf="(userSettingsService.isMobile() || userSettingsService.isTablet()) && hasOccurrenceResults && showOccurrencesModal">
-        <button class="readpage-occurrences-mobile" ion-button
-          (click)="openOccurrenceResult()">{{ "Read.ShowSearchResults" | translate }} &nbsp;<ion-icon name="search">
-          </ion-icon></button>
+    <div
+      *ngIf="(userSettingsService.isMobile() || userSettingsService.isTablet()) && hasOccurrenceResults && showOccurrencesModal">
+      <button class="readpage-occurrences-mobile" ion-button
+        (click)="openOccurrenceResult()">{{ "Read.ShowSearchResults" | translate }} &nbsp;<ion-icon name="search">
+        </ion-icon></button>
+    </div>
+    <div (swipe)="swipePrevNext($event)" *ngIf="(userSettingsService.isMobile() || userSettingsService.isTablet())">
+      <div>
+        <ion-segment [(ngModel)]="show">
+          <ion-segment-button value="established" *ngIf="displayToggles['established']">
+            <ion-label>{{ "Read.Established.Title" | translate }}</ion-label>
+          </ion-segment-button>
+          <!--ion-segment-button value="manuscripts" *ngIf="displayToggles['manuscripts']">
+            {{ "Read.Manuscripts.Title" | translate }}
+          </ion-segment-button-->
+          <ion-segment-button value="facsimiles" *ngIf="displayToggles['facsimiles']">
+            <ion-label>{{ "Read.Facsimiles.Title" | translate }}</ion-label>
+          </ion-segment-button>
+        </ion-segment>
       </div>
-      <div (swipe)="swipePrevNext($event)" *ngIf="(userSettingsService.isMobile() || userSettingsService.isTablet())">
-        <div>
-          <ion-segment [(ngModel)]="show" color="secondary">
-            <ion-segment-button value="established" *ngIf="displayToggles['established']">
-              {{ "Read.Established.Title" | translate }}
-            </ion-segment-button>
-            <!--ion-segment-button value="manuscripts" *ngIf="displayToggles['manuscripts']">
-              {{ "Read.Manuscripts.Title" | translate }}
-            </ion-segment-button-->
-            <ion-segment-button value="facsimiles" *ngIf="displayToggles['facsimiles']">
-              {{ "Read.Facsimiles.Title" | translate }}
-            </ion-segment-button>
-          </ion-segment>
+      <div [ngSwitch]="show">
+        <div *ngSwitchCase="'established'" class="mobile-mode-established">
+          <read-text [link]="establishedText?.link" [matches]="matches"></read-text>
         </div>
-        <div [ngSwitch]="show">
-          <div *ngSwitchCase="'established'" class="mobile-mode-established">
-            <read-text [link]="establishedText?.link" [matches]="matches"></read-text>
-          </div>
-          <!--div *ngSwitchCase="'manuscripts'" class="mobile-mode-manuscripts">
-            <manuscripts [linkID]="views[0].manuscripts.id" [itemId]="establishedText?.link" [matches]="matches"></manuscripts>
-          </div-->
-          <div *ngSwitchCase="'facsimiles'" class="mobile-mode-facsimiles">
-            <facsimiles [itemId]="establishedText?.link" [matches]="matches" [facsID]="facs_id" [facsNr]="facs_nr"
-              [songID]="song_id"></facsimiles>
-          </div>
+        <!--div *ngSwitchCase="'manuscripts'" class="mobile-mode-manuscripts">
+          <manuscripts [linkID]="views[0].manuscripts.id" [itemId]="establishedText?.link" [matches]="matches"></manuscripts>
+        </div-->
+        <div *ngSwitchCase="'facsimiles'" class="mobile-mode-facsimiles">
+          <facsimiles [itemId]="establishedText?.link" [matches]="matches" [facsID]="facs_id" [facsNr]="facs_nr"
+            [songID]="song_id"></facsimiles>
         </div>
-        <!-- NOTE: Temporarily hidden since this doesn't work as intended.
-        <div class="read-from-beginning-button" *ngIf="!prevnext && displayToggle === true && show != 'facsimile'">
-          <button ion-button round icon-end (click)="firstPage()">{{"Read.ReadFromBeginning" | translate }}</button>
-        </div> -->
       </div>
-  </ng-container>
-</ion-content>
+      <!-- NOTE: Temporarily hidden since this doesn't work as intended.
+      <div class="read-from-beginning-button" *ngIf="!prevnext && displayToggle === true && show != 'facsimile'">
+        <button ion-button round icon-end (click)="firstPage()">{{"Read.ReadFromBeginning" | translate }}</button>
+      </div> -->
+    </div>
+  </ion-content>
+</ng-container>
 
 <text-changer *ngIf="(userSettingsService.isMobile()) && (show=='established' || show=='manuscripts' || show=='facsimiles')" class="text-changer-mobile-view" [recentlyOpenViews]="views"></text-changer>

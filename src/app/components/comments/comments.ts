@@ -78,13 +78,11 @@ export class CommentsComponent {
   setText() {
     console.log('link', this.link);
     this.commentService.getComment(this.link || '').subscribe({
-      next: text => {
+      next: (text) => {
         this.textLoading = false;
         if (text === '' || text === null || text === undefined || text.length < 1) {
           this.translate.get('Read.Comments.NoComments').subscribe(
-            translation => {
-              this.text = translation;
-            }, err => { }
+            (translation) => { this.text = translation; }
           );
         } else {
           this.text = this.commonFunctions.insertSearchMatchTags(String(text), this.matches ?? []);
@@ -97,7 +95,7 @@ export class CommentsComponent {
         }
         this.doAnalytics();
       },
-      error: e =>  {
+      error: (e) =>  {
         console.error('Error loading comments...', this.link);
         this.errorMessage = <any>e;
         this.textLoading = false;

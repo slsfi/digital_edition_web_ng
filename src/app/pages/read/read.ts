@@ -1,7 +1,7 @@
 import { Component, Renderer2, ElementRef, OnDestroy, ViewChild, Input, EventEmitter, SecurityContext, NgZone } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ActionSheetController, IonFab, ModalController, PopoverController, ToastController } from '@ionic/angular';
+import { ActionSheetController, IonFab, IonPopover, ModalController, PopoverController, ToastController } from '@ionic/angular';
 import { TranslateModule, LangChangeEvent, TranslateService, TranslatePipe } from '@ngx-translate/core';
 import { global } from 'src/app/global';
 import { CommentModalPage } from 'src/app/modals/comment-modal/comment-modal';
@@ -54,6 +54,7 @@ enum TextType {
 })
 export class ReadPage /*implements OnDestroy*/ {
   @ViewChild('nav', { read: DragScrollComponent }) ds!: DragScrollComponent;
+  @ViewChild('addViewPopover') addViewPopover: IonPopover;
   // @ViewChild('content') content!: ElementRef;
   // @ViewChild('readColumn') readColumn!: ElementRef;
   // @ViewChild('scrollBar') scrollBar!: ElementRef;
@@ -99,8 +100,10 @@ export class ReadPage /*implements OnDestroy*/ {
   showViewOptionsButton: Boolean = true;
   showTextDownloadButton: Boolean = false;
   usePrintNotDownloadIcon: Boolean = false;
-  backdropWidth: number;
-  showAddViewsFabBackdrop: boolean = false;
+  // backdropWidth: number;
+  // showAddViewsFabBackdrop: boolean = false;
+
+  addViewPopoverisOpen: boolean = false;
 
   prevItem: any;
   nextItem: any;
@@ -234,7 +237,7 @@ export class ReadPage /*implements OnDestroy*/ {
     };
     this.intervalTimerId = 0;
 
-    this.backdropWidth = 0;
+    // this.backdropWidth = 0;
 
     this.appUsesAccordionToc = config.AccordionTOC ?? undefined;
 
@@ -620,7 +623,7 @@ export class ReadPage /*implements OnDestroy*/ {
         }
       }.bind(this), 500);
     });
-    this.setFabBackdropWidth();
+    // this.setFabBackdropWidth();
   }
 
   ngOnDestroy() {
@@ -3223,6 +3226,7 @@ export class ReadPage /*implements OnDestroy*/ {
     return varIndex;
   }
 
+  /*
   setFabBackdropWidth() {
     if (isBrowser()) {
       let scrollingContainer = document.querySelector('page-read:not([ion-page-hidden]):not(.ion-page-hidden) ion-content.publication-ion-content');
@@ -3245,6 +3249,12 @@ export class ReadPage /*implements OnDestroy*/ {
       this.setFabBackdropWidth();
       this.showAddViewsFabBackdrop = true;
     }
+  }
+  */
+
+  showaddViewPopover(e: Event) {
+    this.addViewPopover.event = e;
+    this.addViewPopoverisOpen = true;
   }
 
   scrollReadTextToAnchorPosition(posId: string) {
